@@ -1,6 +1,6 @@
-Group 12
+# Group 12
 
-Members:
+### Members:
 150119870 - Ali Reza Ibrahimzada
 150119563 - Khaled Yassen
 150119562 - Amela Karmaj

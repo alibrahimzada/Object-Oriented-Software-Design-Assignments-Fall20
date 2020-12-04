@@ -1,6 +1,6 @@
 {
     "dataset directory": "datasets",
-    "labeled data directory": "labeled data",
+    "labeled data directory": "labeled_datasets",
     "number of users": 3,
     "users": [
         {"user id": 1, "user name": "RandomLabelingMechanism1", "user type": "RandomBot", "is available": 1},

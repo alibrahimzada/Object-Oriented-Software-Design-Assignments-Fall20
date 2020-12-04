@@ -1,5 +1,6 @@
 package main;
 
+
 import tests.TestSuiteRunner;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,6 +10,8 @@ import java.util.LinkedHashMap;
 import java.util.logging.Level;
 import java.io.FileReader;
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.PrintWriter;
@@ -55,8 +58,9 @@ public class DataLabelingSystem {
             Parses the config.json file, converts the json object into 
             a hashmap, then assigns it to the attribute configurations. 
         */
+        Path workingDirectory= Paths.get("").toAbsolutePath();
         try {
-            Object obj = new JSONParser().parse(new FileReader("config.json"));
+            Object obj = new JSONParser().parse(new FileReader(workingDirectory + "/DataLabelingSystem/Iteration 1/config.json"));
             JSONObject jsonObject = (JSONObject) obj;
             this.configurations = (HashMap) jsonObject;
         } catch (Exception ex) {
@@ -87,7 +91,8 @@ public class DataLabelingSystem {
     }
 
     private File[] getDatasetFiles(String directoryName) {
-        File dir = new File(directoryName);
+        Path workingDirectory= Paths.get("").toAbsolutePath();
+        File dir = new File(workingDirectory + "/DataLabelingSystem/" + "Iteration 1/" + directoryName);
         File[] files = dir.listFiles(new FilenameFilter() { 
             public boolean accept(File dir, String filename){ 
                 return filename.endsWith(".json"); 
@@ -102,11 +107,12 @@ public class DataLabelingSystem {
             Parses each dataset file in the given directory. Casts the JSON object
             as a hashmap, then passes it to the method add datasets. 
         */
+        Path workingDirectory= Paths.get("").toAbsolutePath();
         for (File file : datasetNames) {
             String fileName = file.getName();
-
             try {
-                Object obj = new JSONParser().parse(new FileReader(datasetDirectory + "/" + fileName));
+                ;
+                Object obj = new JSONParser().parse(new FileReader(workingDirectory + "/DataLabelingSystem/" + "Iteration 1/" + datasetDirectory + "/" + fileName));
                 JSONObject jsonObject = (JSONObject) obj;
                 HashMap<String, Object> dataset = (HashMap) jsonObject;
                 this.addDataset(dataset);

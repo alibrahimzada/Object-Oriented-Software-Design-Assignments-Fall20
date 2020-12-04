@@ -112,7 +112,7 @@ public class DataLabelingSystem {
 
             } catch (Exception ex) {
                 ex.printStackTrace();
-                System.exit(1);
+                this.systemLog.getLogger().info(String.format("The %s is not in proper format", fileName));
             }
         }
     } 
@@ -161,7 +161,7 @@ public class DataLabelingSystem {
                 this.labelAssignments.clear();
             } catch (FileNotFoundException ex) {
                 ex.printStackTrace();
-                System.exit(1);
+                this.systemLog.getLogger().info("could not export the labeled dataset");
             }
         }
     }
@@ -231,6 +231,8 @@ public class DataLabelingSystem {
           
         pw.flush(); 
         pw.close();
+
+        this.systemLog.getLogger().info(String.format("the labels for dataset %d have been assigned, and the JSON file has been created", dataset.getId()));
     }
 
     public static void main(String[] args){

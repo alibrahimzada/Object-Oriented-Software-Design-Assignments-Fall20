@@ -1,4 +1,5 @@
 package main;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.FileHandler;
@@ -25,7 +26,7 @@ public class Log {
         fileHandler.setFormatter(formatter); // Print a brief summary of the LogRecord in a readable format.
     }
 
-    public String getFileName(){
+    public String getFileName() {
         return this.fileName;
     }
 

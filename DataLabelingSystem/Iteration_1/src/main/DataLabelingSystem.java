@@ -19,7 +19,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.Gson;
 
 public class DataLabelingSystem {
-
     private Log systemLog; // Declaration of an object of type Log 
     private HashMap<String, Object> configurations;
     private ArrayList<User> users;
@@ -42,7 +41,6 @@ public class DataLabelingSystem {
         try {
             this.systemLog = new Log(); 
             this.systemLog.getLogger().setLevel(Level.INFO);
-
         } catch (Exception ex) {
             ex.printStackTrace();
             System.exit(1);
@@ -109,7 +107,6 @@ public class DataLabelingSystem {
                 JSONObject jsonObject = (JSONObject) obj;
                 HashMap<String, Object> dataset = (HashMap) jsonObject;
                 this.addDataset(dataset);
-
             } catch (Exception ex) {
                 ex.printStackTrace();
                 this.systemLog.getLogger().info(String.format("The %s is not in proper format", fileName));
@@ -156,6 +153,7 @@ public class DataLabelingSystem {
                     this.systemLog.getLogger().info(String.format("an instance with id %d from a dataset with id %d has been labeled by a user with id %d", instances.get(k).getId(), this.datasets.get(i).getId(), this.users.get(j).getId()));
                 }
             }
+
             try {
                 this.exportLabelAssignments(this.datasets.get(i));
                 this.labelAssignments.clear();
@@ -235,8 +233,7 @@ public class DataLabelingSystem {
         this.systemLog.getLogger().info(String.format("the labels for dataset %d have been assigned, and the JSON file has been created", dataset.getId()));
     }
 
-    public static void main(String[] args){
-
+    public static void main(String[] args) {
         if (!new TestSuiteRunner().runTests()) return; // run all unit tests, return if any not passed.
 
         DataLabelingSystem system = new DataLabelingSystem(); //creating a DataLabelingSystem object
@@ -246,7 +243,6 @@ public class DataLabelingSystem {
         long userCount = (long) system.configurations.get("number of users"); // getting the #of users from the configurations 
         JSONArray users = (JSONArray) system.configurations.get("users"); // getting the users info from the configurations
         system.addUsers((int) userCount, users); //passing the userCount and users' info to addUsers to populate the attributes users
-
         
         String datasetDirectory = (String) system.configurations.get("dataset directory"); // getting the datasets' directory's name from the configurations 
         File[] datasetNames = system.getDatasetFiles(datasetDirectory); // creating an array of File type containing the datasets

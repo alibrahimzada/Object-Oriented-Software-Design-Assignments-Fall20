@@ -5,8 +5,8 @@ public class Instance {
     private String text ;
     
     public Instance(int id, String text){
-	this.id = id;
-	this.text = text;
+        this.id = id;
+        this.text = text;
     }
 
     public int getId() {

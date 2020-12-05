@@ -1,8 +1,10 @@
 package main;
+
 import java.util.ArrayList;
 import java.util.Random;
 
 public class RandomLabelingMechanism extends LabelingMechanism {
+
     public RandomLabelingMechanism() {
         this.assignedLabels = new ArrayList<Label>();
     }
@@ -17,7 +19,7 @@ public class RandomLabelingMechanism extends LabelingMechanism {
         } else { // if maxLabel is > 1
             Random rand = new Random(); 
             int selectionCount = rand.nextInt(maxLabel); // get a random number(#of labels to assign) from 0 to (maxLabel-1)
-            do { 
+            do {
                 Label selectedLabel = getRandomElement(labels); // get a random label
                 if (!this.assignedLabels.contains(selectedLabel)) {
                     this.assignedLabels.add(selectedLabel); // add the selected label to the assignedLabels

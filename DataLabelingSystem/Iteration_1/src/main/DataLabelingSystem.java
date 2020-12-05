@@ -48,7 +48,7 @@ public class DataLabelingSystem {
         this.systemLog.getLogger().info("successfully created logger for this simulation");
     }
 
-    private void parseConfigurations() {
+    public void parseConfigurations() {
         /*
             Parses the config.json file, converts the json object into 
             a hashmap, then assigns it to the attribute configurations. 
@@ -64,7 +64,7 @@ public class DataLabelingSystem {
         this.systemLog.getLogger().info("successfully parsed software configurations");
     }
 
-    private void addUsers(int userCount, JSONArray users) {
+    public void addUsers(int userCount, JSONArray users) {
         /*
             Iterates over the users JSONArray, pulls out the values of all the keys, 
             then creates an object of the class User and adds it to the attribute users
@@ -84,7 +84,7 @@ public class DataLabelingSystem {
         }
     }
 
-    private File[] getDatasetFiles(String directoryName) {
+    public File[] getDatasetFiles(String directoryName) {
         File dir = new File(directoryName);
         File[] files = dir.listFiles(new FilenameFilter() { 
             public boolean accept(File dir, String filename){ 
@@ -95,7 +95,7 @@ public class DataLabelingSystem {
         return files;
     }
 
-    private void parseDatasets(File[] datasetNames, String datasetDirectory) {
+    public void parseDatasets(File[] datasetNames, String datasetDirectory) {
         /*
             Parses each dataset file in the given directory. Casts the JSON object
             as a hashmap, then passes it to the method add datasets. 
@@ -114,7 +114,7 @@ public class DataLabelingSystem {
         }
     } 
 
-    private void addDataset(HashMap<String, Object> dataset) {
+    public void addDataset(HashMap<String, Object> dataset) {
         /*
             Given a dataset in a hashmap, this method extracts the information from the 
             hashmap, and uses them to create a dataset object. Then, stores the dataset
@@ -132,7 +132,7 @@ public class DataLabelingSystem {
         this.systemLog.getLogger().info(String.format("successfully added a dataset %s with id=%d", datasetName, datasetId));
     }
 
-    private void assignLabels() {
+    public void assignLabels() {
         /*
             For every dataset, iterates through all the users. For every user, iterates through
             all the instances of that dataset. Then, creates an object of the LabelAssignment class,
@@ -164,7 +164,7 @@ public class DataLabelingSystem {
         }
     }
 
-    private void exportLabelAssignments(Dataset dataset) throws FileNotFoundException {
+    public void exportLabelAssignments(Dataset dataset) throws FileNotFoundException {
         String outputDirectory = (String) this.configurations.get("labeled data directory");
         Map<String, Object> linkedHM = new LinkedHashMap<String, Object>();
 

@@ -10,6 +10,7 @@ public class Dataset {
     private int maxLabel;
     private ArrayList<Instance> instances;
     private ArrayList<Label> labels;
+    private ArrayList<User> assignedUsers;
 
     public Dataset(int id, String name, int maxLabel) {
         this.id = id;
@@ -17,6 +18,7 @@ public class Dataset {
         this.maxLabel = maxLabel;
         this.instances = new ArrayList<Instance>();
         this.labels = new ArrayList<Label>();
+        this.assignedUsers = new ArrayList<User>();
     }
 
     public void addInstances(JSONArray instances) {
@@ -47,6 +49,10 @@ public class Dataset {
             Label labelObject = new Label((int) labelId, labelText);
             this.labels.add(labelObject);
         }
+    }
+
+    public void addAssignedUser(User user) {
+        this.assignedUsers.add(user);
     }
 
     public int getId() {

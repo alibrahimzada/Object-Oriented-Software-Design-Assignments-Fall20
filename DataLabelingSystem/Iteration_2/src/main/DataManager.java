@@ -102,73 +102,8 @@ public class DataManager {
         }
     }
 
-    public void exportLabelAssignments(Dataset dataset) throws FileNotFoundException {
-        // String outputDirectory = (String) this.dataLabelingSystem.getConfigurations().get("labeled data directory");
-        // Map<String, Object> linkedHM = new LinkedHashMap<String, Object>();
+    public void exportLabelAssignments() {
 
-        // Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-        // linkedHM.put("dataset id", dataset.getId());
-        // linkedHM.put("dataset name", dataset.getName());
-        // linkedHM.put("maximum number of labels per instance", dataset.getMaxLabel());
-
-        // JSONArray classLabels = new JSONArray();
-        // for (int i = 0; i < dataset.getLabels().size(); i++) {
-        //     Map label = new LinkedHashMap(2);
-        //     label.put("label id", dataset.getLabels().get(i).getId());
-        //     label.put("label text", dataset.getLabels().get(i).getText());
-        //     classLabels.add(label);
-        // }
-        // linkedHM.put("class labels", classLabels);
-
-        // JSONArray instances = new JSONArray();
-        // for (int i = 0; i < dataset.getInstances().size(); i++) {
-        //     Map instance = new LinkedHashMap(2);
-        //     instance.put("id", dataset.getInstances().get(i).getId());
-        //     instance.put("instance", dataset.getInstances().get(i).getText());
-        //     instances.add(instance);
-        // }
-        // linkedHM.put("instances", instances);
-
-        // JSONArray labelAssignments = new JSONArray();
-        // for (int i = 0; i < this.labelAssignments.size(); i++) {
-        //     Map assignmentMap = new LinkedHashMap(4);
-        //     LabelAssignment currentLabelAssignment = this.labelAssignments.get(i);
-        //     assignmentMap.put("instance id", currentLabelAssignment.getInstance().getId());
-        //     ArrayList<Integer> assignedLabelsId = new ArrayList<Integer>();
-        //     for (int j = 0; j < currentLabelAssignment.getAssignedLabels().size(); j++) {
-        //         assignedLabelsId.add(currentLabelAssignment.getAssignedLabels().get(j).getId());
-        //     }
-        //     assignmentMap.put("class label ids", assignedLabelsId);
-        //     assignmentMap.put("user id", currentLabelAssignment.getUser().getId());
-        //     assignmentMap.put("datetime", currentLabelAssignment.getDate().toString());
-        //     labelAssignments.add(assignmentMap);
-        // }
-        // linkedHM.put("class label assignments", labelAssignments);
-
-        // JSONArray users = new JSONArray();
-        // for (int i = 0; i < this.users.size(); i++) {
-        //     Map userMap = new LinkedHashMap<>(3);
-        //     userMap.put("user id", this.users.get(i).getId());
-        //     userMap.put("user name", this.users.get(i).getName());
-        //     userMap.put("user type", this.users.get(i).getType());
-        //     users.add(userMap);
-        // }
-        // linkedHM.put("users", users);
-        // String json = gson.toJson(linkedHM);
-
-        // File directory = new File(outputDirectory);
-        // if (!directory.exists()) {
-        //     directory.mkdir();
-        // }
-
-        // PrintWriter pw = new PrintWriter(String.format("%s/dataset%d-output.json", outputDirectory, dataset.getId()));
-        // pw.write(json);
-          
-        // pw.flush(); 
-        // pw.close();
-
-        // this.dataLabelingSystem.getSystemLog().getLogger().info(String.format("the labels for dataset %d have been assigned, and the JSON file has been created", dataset.getId()));
     }
 
 }

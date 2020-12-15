@@ -72,36 +72,7 @@ public class DataLabelingSystem {
     }
 
     public void assignLabels() {
-        /*
-            For every dataset, iterates through all the users. For every user, iterates through
-            all the instances of that dataset. Then, creates an object of the LabelAssignment class,
-            passing the user, the labels, the instance and the specified LabelingMechanism. 
-
-            It also invokes the method assignLabels of the LabelAssignment object then stores all
-            the labelAssignments in the arrayList labelAssignments. 
-        */
-
-        // for (int i = 0; i < this.datasets.size(); i++) {
-        //     for (int j = 0; j < this.users.size(); j++) {
-        //         ArrayList<Instance> instances = this.datasets.get(i).getInstances();
-        //         ArrayList<Label> labels = this.datasets.get(i).getLabels();
-        //         int maxLabel = this.datasets.get(i).getMaxLabel();
-        //         for (int k = 0; k < instances.size(); k++) {
-        //             LabelAssignment labelAssignment = new LabelAssignment(this.users.get(j), instances.get(k), labels, new RandomLabelingMechanism());
-        //             labelAssignment.assignLabels(maxLabel);
-        //             this.labelAssignments.add(labelAssignment);
-        //             this.systemLog.getLogger().info(String.format("an instance with id %d from a dataset with id %d has been labeled by a user with id %d", instances.get(k).getId(), this.datasets.get(i).getId(), this.users.get(j).getId()));
-        //         }
-        //     }
-
-        //     try {
-        //         this.exportLabelAssignments(this.datasets.get(i));
-        //         this.labelAssignments.clear();
-        //     } catch (FileNotFoundException ex) {
-        //         ex.printStackTrace();
-        //         this.systemLog.getLogger().info("could not export the labeled dataset");
-        //     }
-        // }
+        
     }
 
     public static void main(String[] args) {

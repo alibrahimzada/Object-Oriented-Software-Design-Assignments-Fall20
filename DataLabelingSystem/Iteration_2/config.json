@@ -1,10 +1,13 @@
 {
-    "dataset directory": "datasets",
+    "currentDatasetId": 1,
     "labeled data directory": "labeled_datasets",
-    "number of users": 3,
     "users": [
         {"user id": 1, "user name": "RandomLabelingMechanism1", "user type": "RandomBot", "is available": 1},
         {"user id": 2, "user name": "RandomLabelingMechanism2", "user type": "RandomBot", "is available": 1},
         {"user id": 3, "user name": "MachineLearningLabelingMechanism1", "user type": "MachineLearningBot", "is available": 0}
+    ],
+    "datasets": [
+        {"dataset id": 1, "dataset name": "Sentiment Dataset", "file path": "datasets/dataset1.json", "users": [1]},
+        {"dataset id": 2, "dataset name": "Multilabel Topic Classification Dataset", "file path": "datasets/dataset2.json", "users": [1, 2]}
     ]
 }

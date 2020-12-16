@@ -68,7 +68,6 @@ public class DataLabelingSystem {
     public void loadDatasets() {
         JSONArray datasets = (JSONArray) this.configurations.get("datasets");
         this.dataManager.addDatasets(datasets);
-
     }
 
     public void assignLabels() {

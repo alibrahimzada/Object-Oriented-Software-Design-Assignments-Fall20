@@ -64,6 +64,7 @@ public class DataManager {
         for (int i = 0; i < assignedUsers.size(); i++) {
             for (int j = 0; j < this.users.size(); j++) {
                 if (((Long) assignedUsers.get(i)).intValue() == this.users.get(j).getId()) {
+                    this.users.get(j).addAssignedDataset(dataset);
                     dataset.addAssignedUser(this.users.get(j));
                 }
             }

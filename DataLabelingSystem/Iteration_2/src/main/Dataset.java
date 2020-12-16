@@ -32,6 +32,7 @@ public class Dataset {
             long instanceId = (long) currentInstance.get("id");
             String instanceText = (String) currentInstance.get("instance");
             Instance instanceObject = new Instance((int) instanceId, instanceText);
+            instanceObject.setDataset(this);
             this.instances.add(instanceObject);
         }
     }
@@ -47,6 +48,7 @@ public class Dataset {
             long labelId = (long) currentLabel.get("label id");
             String labelText = (String) currentLabel.get("label text");
             Label labelObject = new Label((int) labelId, labelText);
+            labelObject.setDataset(this);
             this.labels.add(labelObject);
         }
     }

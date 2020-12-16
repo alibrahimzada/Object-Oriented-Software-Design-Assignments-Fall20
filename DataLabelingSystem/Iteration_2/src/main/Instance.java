@@ -1,16 +1,23 @@
 package main;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class Instance {
-    private final int id;
-    private final String text;
+    private int id;
+    private String text;
     private Dataset dataset;
     private ArrayList<LabelAssignment> labelAssignments;
     
-    public Instance(int id, String text){
+    public Instance(int id, String text) {
         this.id = id;
         this.text = text;
+    }
+
+    public void addLabelAssignment(LabelAssignment labelAssignment) {
+        this.labelAssignments.add(labelAssignment);
     }
 
     public int getId() {
@@ -21,6 +28,10 @@ public class Instance {
     	return this.text;
     }
 
+    public void setDataset(Dataset dataset) {
+        this.dataset = dataset;
+    }
+    
     public Dataset getDataset() {
         return this.dataset;
     }
@@ -30,10 +41,10 @@ public class Instance {
     }
 
     public int getUniqueAssignments() {
-        ArrayList<String> labelNames = new ArrayList<>();
-        for(LabelAssignment la : labelAssignments){
+        ArrayList<String> labelNames = new ArrayList<String>();
+        for (LabelAssignment la : this.labelAssignments) {
             for (Label label : la.getLabels()){
-                if(!labelNames.contains(label.getText())){
+                if (!labelNames.contains(label.getText())) {
                     labelNames.add(label.getText());
                 }
             }
@@ -42,21 +53,21 @@ public class Instance {
     }
 
     public int getUniqueUsers() {
-        ArrayList<Integer> usersID = new ArrayList<>();
-        for(LabelAssignment la : labelAssignments){
-            if(!usersID.contains(la.getUser().getId())){
-                usersID.add(la.getUser().getId());
+        ArrayList<Integer> userIds = new ArrayList<Integer>();
+        for (LabelAssignment la : this.labelAssignments) {
+            if (!userIds.contains(la.getUser().getId())) {
+                userIds.add(la.getUser().getId());
             }
         }
-    return usersID.size();
+        return userIds.size();
     }
 
     public String getFrequentLabel() {
         Map<String, Integer> labelFrequencies = new HashMap<String, Integer>();
-        ArrayList<String> labelNames = new ArrayList<>();
+        ArrayList<String> labelNames = new ArrayList<String>();
 
         //Parse the labels
-        for(LabelAssignment la : labelAssignments){
+        for(LabelAssignment la : this.labelAssignments){
             for (Label label : la.getLabels()){
                 labelNames.add(label.getText());
             }
@@ -86,8 +97,8 @@ public class Instance {
         ArrayList<String> labelNames = new ArrayList<>();
 
         //Parse the labels
-        for(LabelAssignment la : labelAssignments){
-            for (Label label : la.getLabels()){
+        for (LabelAssignment la : this.labelAssignments) {
+            for (Label label : la.getLabels()) {
                 labelNames.add(label.getText());
             }
         }
@@ -96,7 +107,6 @@ public class Instance {
             Integer j = labels.get(i);
             labels.put(i, (j == null) ? 1 : j + 1);
         }
-
 
         double i = 0;
         for (Map.Entry<String, Integer> entry : labels.entrySet()) {

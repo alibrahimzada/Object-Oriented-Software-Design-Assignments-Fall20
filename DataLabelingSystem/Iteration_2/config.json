@@ -1,13 +1,15 @@
 {
+    "consistencyCheckProbability": 0.1,
     "currentDatasetId": 1,
-    "labeled data directory": "labeled_datasets",
+    "labeledDataDirectory": "labeled_datasets",
     "users": [
-        {"user id": 1, "user name": "RandomLabelingMechanism1", "user type": "RandomBot", "is available": 1},
-        {"user id": 2, "user name": "RandomLabelingMechanism2", "user type": "RandomBot", "is available": 1},
-        {"user id": 3, "user name": "MachineLearningLabelingMechanism1", "user type": "MachineLearningBot", "is available": 0}
+        {"userId": 1, "userName": "RandomLabelingMechanism1", "userType": "RandomBot", "isAvailable": 1},
+        {"userId": 2, "userName": "RandomLabelingMechanism2", "userType": "RandomBot", "isAvailable": 1},
+        {"userId": 3, "userName": "RandomLabelingMechanism3", "userType": "RandomBot", "isAvailable": 1},
+        {"userId": 4, "userName": "MachineLearningLabelingMechanism1", "userType": "MachineLearningBot", "isAvailable": 0}
     ],
     "datasets": [
-        {"dataset id": 1, "dataset name": "Sentiment Dataset", "file path": "datasets/dataset1.json", "users": [1]},
-        {"dataset id": 2, "dataset name": "Multilabel Topic Classification Dataset", "file path": "datasets/dataset2.json", "users": [1, 2]}
+        {"datasetId": 1, "datasetName": "Sentiment Dataset", "filePath": "datasets/dataset1.json", "assignedUsers": [1, 3]},
+        {"datasetId": 2, "datasetName": "Multilabel Topic Classification Dataset", "filePath": "datasets/dataset2.json", "assignedUsers": [1, 2]}
     ]
 }

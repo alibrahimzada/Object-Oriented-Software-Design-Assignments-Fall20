@@ -2,12 +2,6 @@ package main;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.LinkedHashMap;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 import java.io.FileReader;
 
 import org.json.simple.JSONArray;
@@ -38,10 +32,10 @@ public class DataManager {
         */
         for (int i = 0; i < users.size(); i++) {
             HashMap<String, Object> currentUser = (HashMap) users.get(i);
-            long userId = (long) currentUser.get("user id");
-            String userName = (String) currentUser.get("user name");
-            String userType = (String) currentUser.get("user type");
-            long isAvailable = (long) currentUser.get("is available");
+            long userId = (long) currentUser.get("userId");
+            String userName = (String) currentUser.get("userName");
+            String userType = (String) currentUser.get("userType");
+            long isAvailable = (long) currentUser.get("isAvailable");
             if (isAvailable == 1) {
                 User userObject = new User((int) userId, userName, userType);
                 this.users.add(userObject);
@@ -53,7 +47,7 @@ public class DataManager {
     private HashMap<String, Object> parseDatasetFile(HashMap<String, Object> currentDataset) {
         HashMap<String, Object> dataset = new HashMap<String, Object>();
         try {
-            String datasetFilePath = (String) currentDataset.get("file path");
+            String datasetFilePath = (String) currentDataset.get("filePath");
             Object obj = new JSONParser().parse(new FileReader(datasetFilePath));
             JSONObject jsonObject = (JSONObject) obj;
             dataset = (HashMap) jsonObject;
@@ -69,7 +63,7 @@ public class DataManager {
     private void addAssignedUsers(JSONArray assignedUsers, Dataset dataset) {
         for (int i = 0; i < assignedUsers.size(); i++) {
             for (int j = 0; j < this.users.size(); j++) {
-                if (i == this.users.get(j).getId()) {
+                if (((Long) assignedUsers.get(i)).intValue() == this.users.get(j).getId()) {
                     dataset.addAssignedUser(this.users.get(j));
                 }
             }
@@ -90,7 +84,7 @@ public class DataManager {
             long maxLabel = (long) dataset.get("maximum number of labels per instance");
             JSONArray labels = (JSONArray) dataset.get("class labels");
             JSONArray instances = (JSONArray) dataset.get("instances");
-            JSONArray assignedUsers = (JSONArray) currentDataset.get("users");
+            JSONArray assignedUsers = (JSONArray) currentDataset.get("assignedUsers");
             
             Dataset datasetObject = new Dataset((int) datasetId, datasetName, (int) maxLabel);
 

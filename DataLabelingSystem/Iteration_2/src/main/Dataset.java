@@ -74,4 +74,8 @@ public class Dataset {
     public ArrayList<Label> getLabels() {
         return this.labels;
     }
+
+    public ArrayList<User> getAssignedUsers() {
+        return this.assignedUsers;
+    }
 }

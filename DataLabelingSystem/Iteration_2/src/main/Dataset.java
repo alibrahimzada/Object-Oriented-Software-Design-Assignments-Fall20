@@ -78,4 +78,28 @@ public class Dataset {
     public ArrayList<User> getAssignedUsers() {
         return this.assignedUsers;
     }
+
+    public String getCompleteness() {
+        return "";
+    }
+
+    public ArrayList<String> getDistribution() {
+        return new ArrayList<String>();
+    }
+
+    public ArrayList<String> getUniqueInstances() {
+        return new ArrayList<String>();
+    }
+
+    public int getTotalAssignedUsers() {
+        return 1;
+    }
+
+    public ArrayList<String> getUserCompletenessPercentange() {
+        return new ArrayList<String>();
+    }
+
+    public ArrayList<String> getUserConsistencyPercentage() {
+        return new ArrayList<String>();
+    }
 }

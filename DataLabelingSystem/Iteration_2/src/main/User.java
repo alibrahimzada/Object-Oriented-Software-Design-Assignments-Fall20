@@ -1,6 +1,7 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class User {
     private int id;
@@ -27,6 +28,16 @@ public class User {
         this.labelAssignments.add(labelAssignment);
     }
 
+    public ArrayList<LabelAssignment> getLabelAssignments() {
+        return this.labelAssignments;
+    }
+
+    public Instance getRandomInstance() {
+        Random random = new Random();
+        int randomIndex = random.nextInt(this.getTotalLabelings());
+        return this.labelAssignments.get(randomIndex).getInstance();
+    }
+
     public int getId() {
         return this.id;
     }
@@ -48,7 +59,7 @@ public class User {
     }
 
     public int getTotalLabelings() {
-        return 1;
+        return this.labelAssignments.size();
     }
 
     public int getUniqueLabelings() {

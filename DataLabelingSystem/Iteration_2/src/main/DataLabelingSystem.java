@@ -1,8 +1,10 @@
 package main;
 
 import tests.TestSuiteRunner;
-import java.util.HashMap;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
 import java.util.logging.Level;
 import java.io.FileReader;
 
@@ -71,7 +73,39 @@ public class DataLabelingSystem {
     }
 
     public void assignLabels() {
-        
+        int currentDatasetId = ((Long) this.configurations.get("currentDatasetId")).intValue();
+        int datasetCount = this.dataManager.getDatasets().size();
+        int consistencyCheckProbability = ((Long) this.configurations.get("consistencyCheckProbability")).intValue();
+
+        for (int i = 0; i < datasetCount; i++) {
+            Dataset dataset = this.dataManager.getDataset(currentDatasetId);
+            ArrayList<User> assignedUsers = dataset.getAssignedUsers();
+            
+            for (User user : assignedUsers) {
+
+                for (Instance instance : dataset.getInstances()) {
+                    Random random = new Random();
+                    int randomNumber = random.nextInt(100) + 1;
+
+                    if (randomNumber <= consistencyCheckProbability && user.getLabelAssignments().size() > 0) {
+                        instance = user.getRandomInstance();
+                    }
+
+                    LabelAssignment labelAssignment = new LabelAssignment(user, instance, dataset.getLabels(), new RandomLabelingMechanism());
+                    labelAssignment.assignLabels(dataset.getMaxLabel());
+                    this.dataManager.addLabelAssignment(labelAssignment);
+
+                    this.dataManager.updateLabelAssignments();
+                    this.dataManager.updateReport();
+                }
+            }
+
+
+            currentDatasetId++;
+            if (currentDatasetId > datasetCount) {
+                currentDatasetId = 1;
+            }
+        }
     }
 
     public static void main(String[] args) {

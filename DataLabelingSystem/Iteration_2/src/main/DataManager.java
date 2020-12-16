@@ -97,8 +97,29 @@ public class DataManager {
         }
     }
 
-    public void exportLabelAssignments() {
+    public ArrayList<Dataset> getDatasets() {
+        return this.datasets;
+    }
+
+    public Dataset getDataset(int id) {
+        Dataset dataset = null;
+        for (int i = 0; i < this.datasets.size(); i++) {
+            if (this.datasets.get(i).getId() == id) {
+                dataset = this.datasets.get(i);
+            }
+        }
+        return dataset;
+    }
+
+    public void addLabelAssignment(LabelAssignment labelAssignment) {
+        this.labelAssignments.add(labelAssignment);
+    }
+
+    public void updateLabelAssignments() {
 
     }
 
+    public void updateReport() {
+        
+    }
 }

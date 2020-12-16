@@ -25,6 +25,8 @@ public class LabelAssignment {
             an instance might have.
         */
         this.assignedLabels = this.labelingMechanism.labelInstance(this.instance, this.labels, maxLabel);
+        this.user.addLabelAssignment(this);
+        this.instance.addLabelAssignment(this);
         this.date = new Date();
     }
 

@@ -82,26 +82,59 @@ public class Dataset {
     }
 
     public String getCompleteness() {
-        return "";
+        //C- Dataset Performance Metrics: 1
+        int instance_labeled_count = 0;
+        for (Instance instance : instances){
+            if (instance.getUniqueAssignments() >= 1) 
+                instance_labeled_count++;
+        }
+        return String.format("%.0f", instance_labeled_count/instances.size()*100)+ "%";
     }
 
-    public ArrayList<String> getDistribution() {
-        return new ArrayList<String>();
+    public HashMap<String,Double> getDistribution() {
+        //C- Dataset Performance Metrics: 2
+        HashMap<String,Double> labelFreqs = new HashMap<String,Double>();
+        for (Instance instance : instances){
+            labelFreqs.merge(instance.getFrequentLabel(), 1.0, Double::sum);
+        }
+        for (String key: labelFreqs.keySet()){
+            labelFreqs.put(key, labelFreqs.get(key)/instances.size() * 100);
+        }
+        return labelFreqs;
     }
 
-    public ArrayList<String> getUniqueInstances() {
-        return new ArrayList<String>();
+    public HashMap<String,Integer> getUniqueInstances() {
+        //C- Dataset Performance Metrics: 3
+        HashMap<String,Integer> labelFreqsUniqueInstances = new HashMap<String,Integer>();
+        for (Instance instance : instances){
+            labelFreqsUniqueInstances.merge(instance.getFrequentLabel(), 1, Integer::sum);
+        }
+        return labelFreqsUniqueInstances;
     }
 
     public int getTotalAssignedUsers() {
-        return 1;
+         //C- Dataset Performance Metrics: 4
+        return this.assignedUsers.size();
     }
 
-    public ArrayList<String> getUserCompletenessPercentange() {
-        return new ArrayList<String>();
+    public HashMap<String,Double> getUserCompletenessPercentange() {
+        //C- Dataset Performance Metrics: 5
+        HashMap<String,Double> userCompletenessPercentage = new HashMap<String,Double>();
+        for (User user : assignedUsers){
+            userCompletenessPercentage.put(user.getName(), (double)user.getUniqueLabelings());
+        }
+        for (String key: userCompletenessPercentage.keySet()){
+            userCompletenessPercentage.put(key, userCompletenessPercentage.get(key)/instances.size() * 100);
+        }
+        return userCompletenessPercentage;
     }
 
-    public ArrayList<String> getUserConsistencyPercentage() {
-        return new ArrayList<String>();
+    public HashMap<String,Double> getUserConsistencyPercentage() {
+        //C- Dataset Performance Metrics: 6
+        HashMap<String,Double> userConsistencyPercentage = new HashMap<String,Double>();
+        for (User user : assignedUsers)
+           userConsistencyPercentage.put(user.getName(), user.getConsistencyPercentage());
+
+        return userConsistencyPercentage;
     }
 }

@@ -74,7 +74,7 @@ public class User {
         return instanceIds.size();
     }
 
-    public String getConsistencyPercentage() {
+    public double getConsistencyPercentage() {
         ArrayList<LabelAssignment> reccurrentLabelings = new ArrayList<LabelAssignment>();
 
         for (LabelAssignment labelAssignment : this.labelAssignments) {

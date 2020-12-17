@@ -29,6 +29,9 @@ public class Instance {
     	return this.text;
     }
 
+    public ArrayList<LabelAssignment> getLabels(){
+        return this.labelAssignments;
+    }
     public void setDataset(Dataset dataset) {
         this.dataset = dataset;
     }

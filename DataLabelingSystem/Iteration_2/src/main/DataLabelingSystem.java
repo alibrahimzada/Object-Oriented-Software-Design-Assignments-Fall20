@@ -74,38 +74,27 @@ public class DataLabelingSystem {
 
     public void assignLabels() {
         int currentDatasetId = ((Long) this.configurations.get("currentDatasetId")).intValue();
-        int datasetCount = this.dataManager.getDatasets().size();
-        int consistencyCheckProbability = ((Long) this.configurations.get("consistencyCheckProbability")).intValue();
+        double consistencyCheckProbability = ((Double) this.configurations.get("consistencyCheckProbability"));
+        Dataset dataset = this.dataManager.getDataset(currentDatasetId);
+        ArrayList<User> assignedUsers = dataset.getAssignedUsers();
+        
+        for (User user : assignedUsers) {
+            for (Instance instance : dataset.getInstances()) {
+                Random random = new Random();
+                int randomNumber = random.nextInt(100) + 1;
 
-        for (int i = 0; i < datasetCount; i++) {
-            Dataset dataset = this.dataManager.getDataset(currentDatasetId);
-            ArrayList<User> assignedUsers = dataset.getAssignedUsers();
-            
-            for (User user : assignedUsers) {
-
-                for (Instance instance : dataset.getInstances()) {
-                    Random random = new Random();
-                    int randomNumber = random.nextInt(100) + 1;
-
-                    if (randomNumber <= consistencyCheckProbability && user.getLabelAssignments().size() > 0) {
-                        instance = user.getRandomInstance();
-                    }
-
-                    LabelAssignment labelAssignment = new LabelAssignment(user, instance, dataset.getLabels(), new RandomLabelingMechanism());
-                    labelAssignment.assignLabels(dataset.getMaxLabel());
-                    this.dataManager.addLabelAssignment(labelAssignment);
-
-                    this.dataManager.updateLabelAssignments();
-                    this.dataManager.updateReport();
+                if (randomNumber <= consistencyCheckProbability && user.getLabelAssignments().size() > 0) {
+                    instance = user.getRandomInstance();
                 }
-            }
 
+                LabelAssignment labelAssignment = new LabelAssignment(user, instance, dataset.getLabels(), new RandomLabelingMechanism());
+                labelAssignment.assignLabels(dataset.getMaxLabel());
+                this.dataManager.addLabelAssignment(labelAssignment);
 
-            currentDatasetId++;
-            if (currentDatasetId > datasetCount) {
-                currentDatasetId = 1;
+                this.dataManager.updateLabelAssignments();
+                this.dataManager.updateReport();
             }
-        }
+        }        
     }
 
     public static void main(String[] args) {

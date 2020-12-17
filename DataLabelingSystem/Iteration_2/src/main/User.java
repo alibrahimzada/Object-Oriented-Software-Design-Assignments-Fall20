@@ -9,7 +9,6 @@ public class User {
     private String type;
     private ArrayList<Dataset> assignedDatasets;
     private ArrayList<LabelAssignment> labelAssignments;
-    private double timeSpent;
 
     public User(int id, String name, String type) {
         this.id = id;
@@ -17,7 +16,6 @@ public class User {
         this.type = type;
         this.assignedDatasets = new ArrayList<Dataset>();
         this.labelAssignments = new ArrayList<LabelAssignment>();
-        this.timeSpent = 0;
     }
 
     public void addAssignedDataset(Dataset dataset) {
@@ -54,8 +52,12 @@ public class User {
         return this.assignedDatasets.size();
     }
 
-    public String getCompletenessPercentage(Dataset dataset) {
-        return "";
+    public String getCompletenessPercentage() {
+        String completenessPercentage = "";
+        for (Dataset dataset : this.assignedDatasets) {
+            completenessPercentage += String.format("Dataset%d %s, ", dataset.getId(), dataset.getCompleteness());
+        }
+        return completenessPercentage;
     }
 
     public int getTotalLabelings() {
@@ -63,18 +65,41 @@ public class User {
     }
 
     public int getUniqueLabelings() {
-        return 1;
+        ArrayList<Integer> instanceIds = new ArrayList<Integer>();
+        for (LabelAssignment la : this.labelAssignments) {
+            if (!instanceIds.contains(la.getInstance().getId())) {
+                instanceIds.add(la.getInstance().getId());
+            }
+        }
+        return instanceIds.size();
     }
 
     public String getConsistencyPercentage() {
+        ArrayList<LabelAssignment> reccurrentLabelings = new ArrayList<LabelAssignment>();
+
+        for (LabelAssignment labelAssignment : this.labelAssignments) {
+
+        }
+
         return "";
     }
 
     public double getAverageTime() {
-        return 1.0;
+        double totalTimeSpent = 0;
+        for (LabelAssignment labelAssignment : this.labelAssignments) {
+            totalTimeSpent += labelAssignment.getTimeSpent();
+        }
+
+        return totalTimeSpent / this.labelAssignments.size();
     }
 
     public double getStdDevTime() {
-        return 1.0;
+        double standardDeviation = 0;
+
+        for (LabelAssignment labelAssignment : this.labelAssignments) {
+            standardDeviation += Math.pow(labelAssignment.getTimeSpent() - this.getAverageTime(), 2);
+        }
+
+        return Math.sqrt(standardDeviation / this.getTotalLabelings());
     }
 }

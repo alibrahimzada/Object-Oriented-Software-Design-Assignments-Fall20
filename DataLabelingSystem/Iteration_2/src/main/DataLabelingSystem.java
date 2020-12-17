@@ -91,8 +91,13 @@ public class DataLabelingSystem {
                 labelAssignment.assignLabels(dataset.getMaxLabel());
                 this.dataManager.addLabelAssignment(labelAssignment);
 
-                this.dataManager.updateLabelAssignments();
-                this.dataManager.updateReport();
+                try {
+                    this.dataManager.updateLabelAssignments();
+                    this.dataManager.updateReport();                        
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    System.out.println("could not update the files due to an error");
+                }
             }
         }        
     }

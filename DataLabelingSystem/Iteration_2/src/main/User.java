@@ -22,6 +22,10 @@ public class User {
         this.assignedDatasets.add(dataset);
     }
 
+    public ArrayList<Dataset> getAssignedDatasets() {
+        return this.assignedDatasets;
+    }
+
     public void addLabelAssignment(LabelAssignment labelAssignment) {
         this.labelAssignments.add(labelAssignment);
     }
@@ -81,7 +85,7 @@ public class User {
 
         }
 
-        return "";
+        return 0;
     }
 
     public double getAverageTime() {

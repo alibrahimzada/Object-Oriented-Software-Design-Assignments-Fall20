@@ -14,6 +14,7 @@ public class Instance {
     public Instance(int id, String text) {
         this.id = id;
         this.text = text;
+        this.labelAssignments = new ArrayList<LabelAssignment>();
     }
 
     public void addLabelAssignment(LabelAssignment labelAssignment) {

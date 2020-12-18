@@ -6,116 +6,168 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 public class Instance {
-    private int id;
+
+    // attributes of the Instance class
+    private Integer id;
     private String text;
     private Dataset dataset;
     private ArrayList<LabelAssignment> labelAssignments;
     
-    public Instance(int id, String text) {
+    // constructor of the instance class
+    public Instance(Integer id, String text) {
         this.id = id;
         this.text = text;
         this.labelAssignments = new ArrayList<LabelAssignment>();
     }
 
+    // adds a label assignment object to the list of label assignments
     public void addLabelAssignment(LabelAssignment labelAssignment) {
         this.labelAssignments.add(labelAssignment);
     }
 
-    public int getId() {
+    // returns the id of this instance
+    public Integer getId() {
     	return this.id;
     }
-    
+
+    // returns the text of this instance
     public String getText() {
     	return this.text;
     }
 
-    public ArrayList<LabelAssignment> getLabels(){
+    // returns the label assignments from this instance
+    public ArrayList<LabelAssignment> getLabelAssignments() {
         return this.labelAssignments;
     }
+
+    // sets the dataset field of this instance to the given dataset object
     public void setDataset(Dataset dataset) {
         this.dataset = dataset;
     }
     
+    // returns the dataset of this instance
     public Dataset getDataset() {
         return this.dataset;
     }
     
-    public int getTotalAssignments() {
+    // returns the total number of label assignments from this instance
+    public Integer getTotalLabelAssignments() {
         return this.labelAssignments.size();
     }
 
-    public int getUniqueAssignments() {
+    // returns the total number of unique label assignments from this instance
+    public Integer getUniqueLabelAssignments() {
         ArrayList<String> labelNames = new ArrayList<String>();
-        for (LabelAssignment la : this.labelAssignments) {
-            for (Label label : la.getLabels()){
+
+        // loop over all label assignments
+        for (LabelAssignment labelAssignment : this.labelAssignments) {
+            for (Label label : labelAssignment.getAssignedLabels()) {
+
+                // check if label name is already in the list
                 if (!labelNames.contains(label.getText())) {
                     labelNames.add(label.getText());
                 }
             }
         }
+
+        // return the length of the list
         return labelNames.size();
     }
 
-    public int getUniqueUsers() {
+    // returns the total number of unique users involved in assigning labels to this instance
+    public Integer getUniqueUsers() {
         ArrayList<Integer> userIds = new ArrayList<Integer>();
-        for (LabelAssignment la : this.labelAssignments) {
-            if (!userIds.contains(la.getUser().getId())) {
-                userIds.add(la.getUser().getId());
+
+        // loop over all label assignments
+        for (LabelAssignment labelAssignment : this.labelAssignments) {
+
+            // check if the user is already added to the list
+            if (!userIds.contains(labelAssignment.getUser().getId())) {
+                userIds.add(labelAssignment.getUser().getId());
             }
         }
+
+        // return the length of the list
         return userIds.size();
     }
 
+    // returns the most frequent label from label assignments
     public String getFrequentLabel() {
-        Map<String, Integer> labelFrequencies = new HashMap<String, Integer>();
-        ArrayList<String> labelNames = new ArrayList<String>();
+        Map<String, Integer> labelFreq = new LinkedHashMap<String, Integer>();
+        int totalCount = 0;
 
-        //Parse the labels
-        for(LabelAssignment la : this.labelAssignments){
-            for (Label label : la.getLabels()){
-                labelNames.add(label.getText());
+        // calculate frequency of each label
+        for (LabelAssignment labelAssignment : this.labelAssignments) {
+            for (Label label : labelAssignment.getAssignedLabels()) {
+                if (labelFreq.containsKey(label.getText())) {
+                    int currentCount = (int) labelFreq.get(label.getText());
+                    labelFreq.put(label.getText(), currentCount + 1);
+                } else {
+                    labelFreq.put(label.getText(), 1);
+                }
+                totalCount++;
             }
         }
-        //Check for frequencies
-        for (String i : labelNames) {
-            Integer j = labelFrequencies.get(i);
-            labelFrequencies.put(i, (j == null) ? 1 : j + 1);
+
+        // find the max key-value pair
+        Map.Entry<String, Integer> maxEntry = null;
+        for (Map.Entry<String, Integer> entry : labelFreq.entrySet()) {
+            if (maxEntry == null || entry.getValue().compareTo(maxEntry.getValue()) > 0) {
+                maxEntry = entry;
+            }
         }
 
-
-        //Sorting the HashMap to get the most frequent
-        ArrayList<Map.Entry<String, Integer>> list = new ArrayList<>(labelFrequencies.entrySet());
-        list.sort(Map.Entry.comparingByValue());
-
-        Map<String, Integer> sortedFrequencies = new LinkedHashMap<>();
-        for (Map.Entry<String, Integer> entry : list) {
-            sortedFrequencies.put(entry.getKey(), entry.getValue());
-        }
-
-        return sortedFrequencies.entrySet().iterator().next().getKey();
+        // return the frequent label name and percentage
+        return String.format("%s - %.2f", maxEntry.getKey(), maxEntry.getValue() * 100.0 / totalCount) + "%";
     }
 
-    public double getEntropy() {
-        double entropy = 0;
-        Map<String, Integer> labels = new HashMap<String, Integer>();
-        ArrayList<String> labelNames = new ArrayList<>();
+    // returns the final class label distribution
+    public Map<String, Object> getClassLabelDistribution() {
+        Map<String, Object> labelFreq = new LinkedHashMap<String, Object>();
+        int totalCount = 0;
 
-        //Parse the labels
-        for (LabelAssignment la : this.labelAssignments) {
-            for (Label label : la.getLabels()) {
-                labelNames.add(label.getText());
+        // calculate frequency of each label
+        for (LabelAssignment labelAssignment : this.labelAssignments) {
+            for (Label label : labelAssignment.getAssignedLabels()) {
+                if (labelFreq.containsKey(label.getText())) {
+                    double currentCount = (double) labelFreq.get(label.getText());
+                    labelFreq.put(label.getText(), currentCount + 1);
+                } else {
+                    labelFreq.put(label.getText(), 1.0);
+                }
+                totalCount++;
             }
         }
-        //Check for frequencies
-        for (String i : labelNames) {
-            Integer j = labels.get(i);
-            labels.put(i, (j == null) ? 1 : j + 1);
+
+        // normalize and calculate percentages
+        for (Map.Entry<String, Object> entry : labelFreq.entrySet()) {
+            labelFreq.put(entry.getKey(), String.format("%.2f", (double) entry.getValue() * 100 / totalCount) + "%");
         }
 
-        double i = 0;
-        for (Map.Entry<String, Integer> entry : labels.entrySet()) {
-            i = entry.getValue();
-            entropy += (-i / 10 * (Math.log(i) / Math.log(2)));
+        return labelFreq;
+    }
+
+    // returns the entropy of this instance
+    public Double getEntropy() {
+        Map<String, Integer> labelFreq = new HashMap<String, Integer>();
+
+        // parse the all of the assigned labels and calculate their frequencies
+        for (LabelAssignment labelAssignment : this.labelAssignments) {
+            for (Label label : labelAssignment.getAssignedLabels()) {
+                if (labelFreq.containsKey(label.getText())) {
+                    int currentCount = labelFreq.get(label.getText());
+                    labelFreq.put(label.getText(), currentCount + 1);
+                } else {
+                    labelFreq.put(label.getText(), 1);
+                }
+            }
+        }
+
+        // calculate entropy
+        double entropy = 0;
+        for (Map.Entry<String, Integer> entry : labelFreq.entrySet()) {
+            double normalizedValue = entry.getValue() / labelFreq.size();
+            entropy += -normalizedValue * (Math.log(normalizedValue) / Math.log(2));
         }
 
         return entropy;

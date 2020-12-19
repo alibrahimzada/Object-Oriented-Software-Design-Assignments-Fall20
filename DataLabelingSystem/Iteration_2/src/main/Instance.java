@@ -154,7 +154,7 @@ public class Instance {
     }
 
     // returns the entropy of this instance
-    public Double getEntropy() {
+    public String getEntropy() {
         Map<String, Integer> labelFreq = new HashMap<String, Integer>();
 
         // parse the all of the assigned labels and calculate their frequencies
@@ -177,8 +177,8 @@ public class Instance {
         }
         
         if (Double.isNaN(entropy)) {
-            return 0.0;
+            return "NaN";
         }
-        return entropy;
+        return String.format("%.3f", entropy);
     }
 }

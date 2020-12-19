@@ -108,9 +108,8 @@ public class Instance {
                 totalCount++;
             }
         }
-
         // find the max key-value pair
-        Map.Entry<String, Integer> maxEntry = null;
+        Map.Entry<String, Integer> maxEntry = Map.entry("X", 0);   // default value
         for (Map.Entry<String, Integer> entry : labelFreq.entrySet()) {
             if (maxEntry == null || entry.getValue().compareTo(maxEntry.getValue()) > 0) {
                 maxEntry = entry;
@@ -128,12 +127,19 @@ public class Instance {
 
         // calculate frequency of each label
         for (LabelAssignment labelAssignment : this.labelAssignments) {
+            // first put 0 to all labels
+            if (totalCount == 0) {
+                for (Label label : labelAssignment.getLabels()) {
+                    labelFreq.put(label.getText(), 0);
+                }    
+            }
+
             for (Label label : labelAssignment.getAssignedLabels()) {
                 if (labelFreq.containsKey(label.getText())) {
-                    double currentCount = (double) labelFreq.get(label.getText());
+                    int currentCount = (int) labelFreq.get(label.getText());
                     labelFreq.put(label.getText(), currentCount + 1);
                 } else {
-                    labelFreq.put(label.getText(), 1.0);
+                    labelFreq.put(label.getText(), 1);
                 }
                 totalCount++;
             }
@@ -141,7 +147,7 @@ public class Instance {
 
         // normalize and calculate percentages
         for (Map.Entry<String, Object> entry : labelFreq.entrySet()) {
-            labelFreq.put(entry.getKey(), String.format("%.2f", (double) entry.getValue() * 100 / totalCount) + "%");
+            labelFreq.put(entry.getKey(), String.format("%.2f", (int) entry.getValue() * 100.0 / totalCount) + "%");
         }
 
         return labelFreq;
@@ -169,7 +175,10 @@ public class Instance {
             double normalizedValue = entry.getValue() / labelFreq.size();
             entropy += -normalizedValue * (Math.log(normalizedValue) / Math.log(2));
         }
-
+        
+        if (Double.isNaN(entropy)) {
+            return 0.0;
+        }
         return entropy;
     }
 }

@@ -1,10 +1,13 @@
 package main;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.json.simple.JSONArray;
+
 public class LabelAssignment {
-    private double timeSpent;
+    private Double timeSpent;
     private Date date;
     private Instance instance;
     private User user;
@@ -19,27 +22,39 @@ public class LabelAssignment {
         this.labelingMechanism = labelingMechanism;
     }
 
-    public void assignLabels(int maxLabel) {
+    public void assignLabels(Integer maxLabel) {
         /*
             Uses the object labelingMechanism passed it to invoke its method labelInstance
             while passing to the method the instance, labels, and the max number of labels
             an instance might have.
         */
-        long start = System.currentTimeMillis();
+        long start = System.nanoTime();
         this.assignedLabels = this.labelingMechanism.labelInstance(this.instance, this.labels, maxLabel);
         this.user.addLabelAssignment(this);
         this.instance.addLabelAssignment(this);
         this.date = new Date();
-        long end = System.currentTimeMillis();
-        this.timeSpent = (end - start) / 1000D;
+        long end = System.nanoTime();
+        this.timeSpent = (end - start) / 1000000D;
     }
 
     public double getTimeSpent() {
         return this.timeSpent;
     }
 
+    public void setTimeSpent(Double timeSpent) {
+        this.timeSpent = timeSpent;
+    }
+
     public Date getDate() {
         return this.date;
+    }
+
+    public void setDate(String dateString) {
+        try {
+            this.date = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy").parse(dateString);
+        } catch (Exception ex) {
+            System.out.println("could not parse date from dateString!");
+        }
     }
 
     public Instance getInstance() {
@@ -52,6 +67,18 @@ public class LabelAssignment {
 
     public ArrayList<Label> getAssignedLabels() {
         return this.assignedLabels;
+    }
+
+    public void setAssignedLabels(JSONArray assignedLabelIds) {
+        ArrayList<Label> assignedLabels = new ArrayList<Label>();
+        for (int i = 0; i < assignedLabelIds.size(); i++) {
+            for (Label label : this.labels) {
+                if (label.getId() == ((Long) assignedLabelIds.get(i)).intValue()) {
+                    assignedLabels.add(label);
+                }
+            }
+        }
+        this.assignedLabels = assignedLabels;
     }
 
     public ArrayList<Label> getLabels() {

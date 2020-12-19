@@ -72,6 +72,10 @@ public class DataLabelingSystem {
         this.dataManager.addDatasets(datasets);
     }
 
+    public void loadLabelAssignments() {
+        this.dataManager.addLabelAssignments();
+    }
+
     public void assignLabels() {
         int currentDatasetId = ((Long) this.configurations.get("currentDatasetId")).intValue();
         double consistencyCheckProbability = ((Double) this.configurations.get("consistencyCheckProbability"));
@@ -83,7 +87,7 @@ public class DataLabelingSystem {
                 Random random = new Random();
                 int randomNumber = random.nextInt(100) + 1;
 
-                if (randomNumber <= consistencyCheckProbability && user.getLabelAssignments().size() > 0) {
+                if (randomNumber <= consistencyCheckProbability*100 && user.getLabelAssignments().size() > 0) {
                     instance = user.getRandomInstance();
                 }
 
@@ -92,14 +96,14 @@ public class DataLabelingSystem {
                 this.dataManager.addLabelAssignment(labelAssignment);
 
                 try {
-                    this.dataManager.updateLabelAssignments();
-                    this.dataManager.updateReport();                        
+                    this.dataManager.getDataUpdater().updateLabelAssignments(dataset);
+                    this.dataManager.getDataUpdater().updateReport(dataset);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     System.out.println("could not update the files due to an error");
                 }
             }
-        }        
+        }
     }
 
     public static void main(String[] args) {
@@ -112,6 +116,8 @@ public class DataLabelingSystem {
         system.loadUsers();
         
         system.loadDatasets();
+
+        system.loadLabelAssignments();
 
         system.assignLabels(); // assigning labels to the instances of the dataset and adding the labelAssignments info to the arrayList labelAssignments
     }

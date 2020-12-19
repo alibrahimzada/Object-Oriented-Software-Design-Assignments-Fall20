@@ -2,6 +2,8 @@ package main;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+
 import org.json.simple.JSONArray;
 
 public class Dataset {
@@ -73,6 +75,16 @@ public class Dataset {
         return this.instances;
     }
 
+    public Instance getInstance(Integer instanceId) {
+        Instance instance = null;
+        for (Instance currentInstance : this.instances) {
+            if (currentInstance.getId() == instanceId) {
+                instance = currentInstance;
+            }
+        }
+        return instance;
+    }
+
     public ArrayList<Label> getLabels() {
         return this.labels;
     }
@@ -83,33 +95,65 @@ public class Dataset {
 
     public String getCompleteness() {
         //C- Dataset Performance Metrics: 1
-        int instance_labeled_count = 0;
-        for (Instance instance : instances){
-            if (instance.getUniqueAssignments() >= 1) 
-                instance_labeled_count++;
+        int instanceLabeledCount = 0;
+        for (Instance instance : this.instances) {
+            if (instance.getTotalLabelAssignments() >= 1) {
+                instanceLabeledCount++;
+            }
         }
-        return String.format("%.0f", instance_labeled_count/instances.size()*100)+ "%";
+        return String.format("%.2f", instanceLabeledCount / instances.size() * 100.0)+ "%";
     }
 
-    public HashMap<String,Double> getDistribution() {
+    public HashMap<String, Double> getDistribution(ArrayList<LabelAssignment> labelAssignments) {
         //C- Dataset Performance Metrics: 2
-        HashMap<String,Double> labelFreqs = new HashMap<String,Double>();
-        for (Instance instance : instances){
-            labelFreqs.merge(instance.getFrequentLabel(), 1.0, Double::sum);
+
+        // first initialize counts to 0
+        HashMap<String, Double> labelFreqs = new HashMap<String, Double>();
+        for (Label label : this.labels) {
+            labelFreqs.put(label.getText(), 0.0);
         }
-        for (String key: labelFreqs.keySet()){
-            labelFreqs.put(key, labelFreqs.get(key)/instances.size() * 100);
+
+        // count labels in label assignments
+        for (LabelAssignment labelAssignment : labelAssignments) {
+            for (Label label : labelAssignment.getAssignedLabels()) {
+                double currentCount = labelFreqs.get(label.getText());
+                labelFreqs.put(label.getText(), currentCount + 1);
+            }
+        }
+
+        // normalize
+        for (Map.Entry<String, Double> entry : labelFreqs.entrySet()) {
+            labelFreqs.put(entry.getKey(), (entry.getValue() * 100.0) / labelAssignments.size());
         }
         return labelFreqs;
     }
 
-    public HashMap<String,Integer> getUniqueInstances() {
+    public HashMap<String, Integer> getUniqueInstances(ArrayList<LabelAssignment> labelAssignments) {
         //C- Dataset Performance Metrics: 3
-        HashMap<String,Integer> labelFreqsUniqueInstances = new HashMap<String,Integer>();
-        for (Instance instance : instances){
-            labelFreqsUniqueInstances.merge(instance.getFrequentLabel(), 1, Integer::sum);
+
+        // first intialize counts to empty list
+        HashMap<String, ArrayList<String>> uniqueInstances = new HashMap<String, ArrayList<String>>();
+        for (Label label : this.labels) {
+            uniqueInstances.put(label.getText(), new ArrayList<String>());
         }
-        return labelFreqsUniqueInstances;
+
+        // add the unique instances to a list
+        for (LabelAssignment labelAssignment : labelAssignments) {
+            for (Label label : labelAssignment.getAssignedLabels()) {
+                String instanceText = labelAssignment.getInstance().getText();
+                if (!uniqueInstances.get(label.getText()).contains(instanceText)) {
+                    uniqueInstances.get(label.getText()).add(instanceText);
+                }
+    
+            }
+        }
+
+        // change the list to size of list
+        HashMap<String, Integer> uniqueInstancesFreq = new HashMap<String, Integer>();
+        for (Map.Entry<String, ArrayList<String>> entry : uniqueInstances.entrySet()) {
+            uniqueInstancesFreq.put(entry.getKey(), entry.getValue().size());
+        }
+        return uniqueInstancesFreq;
     }
 
     public int getTotalAssignedUsers() {
@@ -117,23 +161,29 @@ public class Dataset {
         return this.assignedUsers.size();
     }
 
-    public HashMap<String,Double> getUserCompletenessPercentange() {
+    public HashMap<String, String> getUserCompletenessPercentange() {
         //C- Dataset Performance Metrics: 5
-        HashMap<String,Double> userCompletenessPercentage = new HashMap<String,Double>();
-        for (User user : assignedUsers){
-            userCompletenessPercentage.put(user.getName(), (double)user.getUniqueLabelings());
+        HashMap<String, Double> userCompleteness = new HashMap<String, Double>();
+        for (User user : assignedUsers) {
+            userCompleteness.put(user.getName(), (double) user.getTotalUniqueLabelings());
         }
-        for (String key: userCompletenessPercentage.keySet()){
-            userCompletenessPercentage.put(key, userCompletenessPercentage.get(key)/instances.size() * 100);
+
+        for (String key: userCompleteness.keySet()){
+            userCompleteness.put(key, userCompleteness.get(key) * 100.0 / this.instances.size());
+        }
+
+        HashMap<String, String> userCompletenessPercentage = new HashMap<String, String>();
+        for (Map.Entry<String, Double> entry : userCompleteness.entrySet()) {
+            userCompletenessPercentage.put(entry.getKey(), entry.getValue() + "%");
         }
         return userCompletenessPercentage;
     }
 
-    public HashMap<String,Double> getUserConsistencyPercentage() {
+    public HashMap<String, String> getUserConsistencyPercentage() {
         //C- Dataset Performance Metrics: 6
-        HashMap<String,Double> userConsistencyPercentage = new HashMap<String,Double>();
+        HashMap<String, String> userConsistencyPercentage = new HashMap<String, String>();
         for (User user : assignedUsers)
-           userConsistencyPercentage.put(user.getName(), user.getConsistencyPercentage());
+           userConsistencyPercentage.put(user.getName(), user.getConsistencyPercentage() + "%");
 
         return userConsistencyPercentage;
     }

@@ -1,5 +1,6 @@
 package main;
 
+import java.lang.reflect.RecordComponent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -7,14 +8,16 @@ import java.util.Map;
 import org.json.simple.JSONArray;
 
 public class Dataset {
-    private int id;
+    // attributes of the Dataset class
+    private Integer id;
     private String name;
-    private int maxLabel;
+    private Integer maxLabel;
     private ArrayList<Instance> instances;
     private ArrayList<Label> labels;
     private ArrayList<User> assignedUsers;
 
-    public Dataset(int id, String name, int maxLabel) {
+    // constructor of the Dataset class
+    public Dataset(Integer id, String name, Integer maxLabel) {
         this.id = id;
         this.name = name;
         this.maxLabel = maxLabel;
@@ -23,12 +26,8 @@ public class Dataset {
         this.assignedUsers = new ArrayList<User>();
     }
 
+    // creates instance objects and add them to the corresponding data structures
     public void addInstances(JSONArray instances) {
-        /*
-        Takes a JsonArray containing Instances of the dataset and hashes it. For each dataset,
-        it gets the info of it and creates with with an object of the Instance class. Then, stores
-        the object in the arrayList instances. 
-        */
         for (int i = 0; i < instances.size(); i++) {
             HashMap<String, Object> currentInstance = (HashMap<String, Object>) instances.get(i);
             long instanceId = (long) currentInstance.get("id");
@@ -39,12 +38,8 @@ public class Dataset {
         }
     }
 
+    // creates label objects and add them to the corresponding data structures
     public void addLabels(JSONArray labels) {
-        /*
-        Takes a JsonArray containing labels of the dataset and hashes it. For each label,
-        it gets the info of it and creates with with an object of the Label class. Then, stores
-        the object in the arrayList labels. 
-        */
         for (int i = 0; i < labels.size(); i++) {
             HashMap<String, Object> currentLabel = (HashMap<String, Object>) labels.get(i);
             long labelId = (long) currentLabel.get("label id");
@@ -55,26 +50,32 @@ public class Dataset {
         }
     }
 
+    // add the given user to the assigned users list
     public void addAssignedUser(User user) {
         this.assignedUsers.add(user);
     }
 
-    public int getId() {
+    // returns the id of this dataset
+    public Integer getId() {
         return this.id;
     }
 
+    // returns the name of this dataset
     public String getName() {
         return this.name;
     }
 
-    public int getMaxLabel() {
+    // returns the max label of this dataset
+    public Integer getMaxLabel() {
         return this.maxLabel;
     }
 
+    // returns the instance list of this dataset
     public ArrayList<Instance> getInstances() {
         return this.instances;
     }
 
+    // returns an Instance object given the instance id
     public Instance getInstance(Integer instanceId) {
         Instance instance = null;
         for (Instance currentInstance : this.instances) {
@@ -85,28 +86,29 @@ public class Dataset {
         return instance;
     }
 
+    // returns the label list list of this dataset
     public ArrayList<Label> getLabels() {
         return this.labels;
     }
 
+    // returns the assigned user list of this dataset
     public ArrayList<User> getAssignedUsers() {
         return this.assignedUsers;
     }
 
+    // returns the completeness percentage of this dataset
     public String getCompleteness() {
-        //C- Dataset Performance Metrics: 1
         int instanceLabeledCount = 0;
         for (Instance instance : this.instances) {
             if (instance.getTotalLabelAssignments() >= 1) {
                 instanceLabeledCount++;
             }
         }
-        return String.format("%.2f", instanceLabeledCount / instances.size() * 100.0)+ "%";
+        return String.format("%.2f", instanceLabeledCount * 100.0 / instances.size())+ "%";
     }
 
+    // returns the final distribution of labels in this dataset
     public HashMap<String, Double> getDistribution(ArrayList<LabelAssignment> labelAssignments) {
-        //C- Dataset Performance Metrics: 2
-
         // first initialize counts to 0
         HashMap<String, Double> labelFreqs = new HashMap<String, Double>();
         for (Label label : this.labels) {
@@ -128,9 +130,8 @@ public class Dataset {
         return labelFreqs;
     }
 
+    // returns the unique instances labeled from this dataset
     public HashMap<String, Integer> getUniqueInstances(ArrayList<LabelAssignment> labelAssignments) {
-        //C- Dataset Performance Metrics: 3
-
         // first intialize counts to empty list
         HashMap<String, ArrayList<String>> uniqueInstances = new HashMap<String, ArrayList<String>>();
         for (Label label : this.labels) {
@@ -156,35 +157,99 @@ public class Dataset {
         return uniqueInstancesFreq;
     }
 
+    // returns the total number of assigned users to this dataset
     public int getTotalAssignedUsers() {
-         //C- Dataset Performance Metrics: 4
         return this.assignedUsers.size();
     }
 
+    // returns the completeness percentage of each user from this dataset
     public HashMap<String, String> getUserCompletenessPercentange() {
-        //C- Dataset Performance Metrics: 5
+        int totalLabelings = 0;
+        // first find out the total number of labelings done by assigned users in this dataset
         HashMap<String, Double> userCompleteness = new HashMap<String, Double>();
-        for (User user : assignedUsers) {
-            userCompleteness.put(user.getName(), (double) user.getTotalUniqueLabelings());
+        for (User user : this.assignedUsers) {
+            for (LabelAssignment labelAssignment : user.getLabelAssignments()) {
+                if (labelAssignment.getInstance().getDataset() == this) {
+                    Double currentCount = userCompleteness.get(user.getName());
+                    userCompleteness.put(user.getName(), (currentCount == null) ? 1.0 : currentCount + 1);
+                    totalLabelings++;
+                }
+            }
         }
 
-        for (String key: userCompleteness.keySet()){
-            userCompleteness.put(key, userCompleteness.get(key) * 100.0 / this.instances.size());
+        // then normalize the total counts
+        for (String key: userCompleteness.keySet()) {
+            userCompleteness.put(key, userCompleteness.get(key) / totalLabelings * 100.0);
         }
 
+        // convert the normalized scores into percentage string
         HashMap<String, String> userCompletenessPercentage = new HashMap<String, String>();
         for (Map.Entry<String, Double> entry : userCompleteness.entrySet()) {
-            userCompletenessPercentage.put(entry.getKey(), entry.getValue() + "%");
+            userCompletenessPercentage.put(entry.getKey(), String.format("%.2f", entry.getValue()) + "%");
         }
+
         return userCompletenessPercentage;
     }
 
-    public HashMap<String, String> getUserConsistencyPercentage() {
-        //C- Dataset Performance Metrics: 6
-        HashMap<String, String> userConsistencyPercentage = new HashMap<String, String>();
-        for (User user : assignedUsers)
-           userConsistencyPercentage.put(user.getName(), user.getConsistencyPercentage() + "%");
+    // returns the consistency percentage of each user from this dataset
+    public HashMap<String, Object> getUserConsistencyPercentage() {
+        HashMap<String, Object> labelingsFreq = new HashMap<String, Object>();
 
-        return userConsistencyPercentage;
+        // first start by counting the number of times a unique instance was labeled assigned users of this dataset
+        for (User user : this.assignedUsers) {
+            for (LabelAssignment labelAssignment : user.getLabelAssignments()) {
+                if (labelAssignment.getInstance().getDataset() == this) {
+                    HashMap<String, Object> userLabelingsFreq = new HashMap<String, Object>();
+                    String currentInstanceText = labelAssignment.getInstance().getText();
+                    if (userLabelingsFreq.containsKey(currentInstanceText)) {
+                        HashMap<String, Object> value = (HashMap) userLabelingsFreq.get(currentInstanceText);
+                        int currentCount = (int) value.get("currentCount");
+                        int totalReccurent = (int) value.get("totalRecurrent");
+                        value.put("currentCount", currentCount + 1);
+                        value.put("totalRecurrent", totalReccurent + 1);
+                        labelingsFreq.put(currentInstanceText, value);
+                    } else {
+                        HashMap<String, Object> value = new HashMap<String, Object>() {{
+                            put("currentCount", 1);
+                            put("totalRecurrent", 0);
+                            put("object", labelAssignment);
+                        }};
+                        userLabelingsFreq.put(currentInstanceText, value);
+                    }
+                    labelingsFreq.put("user" + user.getId(), userLabelingsFreq);
+                }
+            }
+        }
+
+        // count all of the reccurrent instances which were labeled the same by assigned users in this dataset
+        HashMap<String, Object> recurrentLabelings = new HashMap<String, Object>();
+        for (User user : this.assignedUsers) {
+            for (LabelAssignment labelAssignment : user.getLabelAssignments()) {
+                if (labelAssignment.getInstance().getDataset() == this) {
+                    String currentInstanceText = labelAssignment.getInstance().getText();
+                    HashMap<String, Object> value = (HashMap) ((HashMap) labelingsFreq.get("user" + user.getId())).get(currentInstanceText);
+                    if ((int) value.get("currentCount") > 1 && ((LabelAssignment) value.get("object")).getAssignedLabels() == labelAssignment.getAssignedLabels()) {
+                        Double currentCount = (Double) recurrentLabelings.get("user" + user.getId());
+                        recurrentLabelings.put("user" + user.getId(), (currentCount == null) ? 1.0 : currentCount + 1);
+                    }    
+                }
+            }
+
+            int totalRecurrents = 0;
+            HashMap<String, Object> userLabelingFreq = (HashMap) labelingsFreq.get("user" + user.getId());
+            for (Map.Entry<String, Object> entry : userLabelingFreq.entrySet()) {
+                totalRecurrents += (int) ((HashMap) entry.getValue()).get("totalRecurrent");
+            }
+
+            if (recurrentLabelings.containsKey("user" + user.getId())) {
+                double sameLabelings = (double) recurrentLabelings.get("user" + user.getId());
+                if (totalRecurrents == 0) {
+                    recurrentLabelings.put("user" + user.getId(), "0.00%");
+                }
+                recurrentLabelings.put("user" + user.getId(), String.format("%.2f", sameLabelings * 100 / totalRecurrents) + "%");
+            }
+        }
+
+        return recurrentLabelings;
     }
 }

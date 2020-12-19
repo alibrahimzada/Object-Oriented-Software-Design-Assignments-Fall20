@@ -215,7 +215,7 @@ public class DataUpdater {
         datasetMetrics.put("unique instances count", currentDataset.getUniqueInstances(this.dataManager.getLabelAssignments()));
         datasetMetrics.put("total assigned users", currentDataset.getTotalAssignedUsers());
         datasetMetrics.put("assigned users completeness %", currentDataset.getUserCompletenessPercentange());
-        datasetMetrics.put("assigned usres consistency %", currentDataset.getUserConsistencyPercentage());
+        datasetMetrics.put("assigned users consistency %", currentDataset.getUserConsistencyPercentage());
 
         String json = gson.toJson(linkedHM);
         PrintWriter pw = new PrintWriter(String.format("%s/report.json", reportDirectory));

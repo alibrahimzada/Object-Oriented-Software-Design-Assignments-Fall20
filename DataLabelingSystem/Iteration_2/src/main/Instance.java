@@ -117,7 +117,11 @@ public class Instance {
         }
 
         // return the frequent label name and percentage
-        return String.format("%s - %.2f", maxEntry.getKey(), maxEntry.getValue() * 100.0 / totalCount) + "%";
+        double frequency = maxEntry.getValue() * 100.0 / totalCount;
+        if (Double.isNaN(frequency)) {
+            return String.format("%s - %.2f", maxEntry.getKey(), frequency);
+        }
+        return String.format("%s - %.2f", maxEntry.getKey(), frequency) + "%";
     }
 
     // returns the final class label distribution

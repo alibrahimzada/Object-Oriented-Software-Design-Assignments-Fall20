@@ -144,7 +144,7 @@ public class User {
         }
 
         if (totalReccurent == 0) {
-            return "100.00%";
+            return "0.00%";
         }
         return String.format("%.2f", (sameReccurrents / totalReccurent) * 100.0) + "%";
     }

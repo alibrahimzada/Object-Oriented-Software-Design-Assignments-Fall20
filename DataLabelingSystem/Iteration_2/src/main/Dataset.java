@@ -157,7 +157,7 @@ public class Dataset {
     }
 
     // returns the total number of assigned users to this dataset
-    public int getTotalAssignedUsers() {
+    public Integer getTotalAssignedUsers() {
         return this.assignedUsers.size();
     }
 
@@ -232,6 +232,7 @@ public class Dataset {
                 }
             }
 
+            // add the consistency percentage to the hashmap
             if (totalReccurent == 0) {
                 userConsistencyPercentages.put("user" + user.getId(), "0.00%");
                 continue;

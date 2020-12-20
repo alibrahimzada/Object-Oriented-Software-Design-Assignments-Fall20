@@ -1,6 +1,5 @@
 package main;
 
-import java.lang.reflect.RecordComponent;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -192,64 +191,54 @@ public class Dataset {
     }
 
     // returns the consistency percentage of each user from this dataset
-    public HashMap<String, Object> getUserConsistencyPercentage() {
-        HashMap<String, Object> labelingsFreq = new HashMap<String, Object>();
+    public HashMap<String, String> getUserConsistencyPercentage() {
+        HashMap<String, String> userConsistencyPercentages = new HashMap<String, String>();
 
-        // first start by counting the number of times a unique instance was labeled assigned users of this dataset
         for (User user : this.assignedUsers) {
+            HashMap<String, Object> labelingsFreq = new HashMap<String, Object>();
+            int totalReccurent = 0;
+
+            // first start by counting the number of times a unique instance was labeled by this user
             for (LabelAssignment labelAssignment : user.getLabelAssignments()) {
-                if (labelAssignment.getInstance().getDataset() == this) {
-                    HashMap<String, Object> userLabelingsFreq = new HashMap<String, Object>();
-                    String currentInstanceText = labelAssignment.getInstance().getText();
-                    if (userLabelingsFreq.containsKey(currentInstanceText)) {
-                        HashMap<String, Object> value = (HashMap) userLabelingsFreq.get(currentInstanceText);
-                        int currentCount = (int) value.get("currentCount");
-                        int totalReccurent = (int) value.get("totalRecurrent");
-                        value.put("currentCount", currentCount + 1);
-                        value.put("totalRecurrent", totalReccurent + 1);
-                        labelingsFreq.put(currentInstanceText, value);
-                    } else {
-                        HashMap<String, Object> value = new HashMap<String, Object>() {{
-                            put("currentCount", 1);
-                            put("totalRecurrent", 0);
-                            put("object", labelAssignment);
-                        }};
-                        userLabelingsFreq.put(currentInstanceText, value);
-                    }
-                    labelingsFreq.put("user" + user.getId(), userLabelingsFreq);
+                if (labelAssignment.getInstance().getDataset() != this) {
+                    continue;
+                }
+                String currentInstanceText = labelAssignment.getInstance().getText();
+                if (labelingsFreq.containsKey(currentInstanceText)) {
+                    HashMap<String, Object> value = (HashMap) labelingsFreq.get(currentInstanceText);
+                    int currentCount = (int) value.get("currentCount");
+                    value.put("currentCount", currentCount + 1);
+                    labelingsFreq.put(currentInstanceText, value);
+                    totalReccurent++;
+                } else {
+                    HashMap<String, Object> value = new HashMap<String, Object>() {{
+                        put("currentCount", 1);
+                        put("object", labelAssignment);
+                    }};
+                    labelingsFreq.put(currentInstanceText , value);
                 }
             }
+
+            // count all of the reccurrent instances which were labeled the same 
+            int sameReccurrents = 0;
+            for (LabelAssignment labelAssignment : user.getLabelAssignments()) {
+                if (labelAssignment.getInstance().getDataset() != this) {
+                    continue;
+                }
+                String currentInstanceText = labelAssignment.getInstance().getText();
+                HashMap<String, Object> value = (HashMap) labelingsFreq.get(currentInstanceText);
+                if ((int) value.get("currentCount") > 1 && ((LabelAssignment) value.get("object")).getAssignedLabels() == labelAssignment.getAssignedLabels()) {
+                    sameReccurrents++;
+                }
+            }
+
+            if (totalReccurent == 0) {
+                userConsistencyPercentages.put("user" + user.getId(), "0.00%");
+                continue;
+            }
+            userConsistencyPercentages.put("user" + user.getId(), (sameReccurrents * 100.0 / totalReccurent) + "%");
         }
 
-        // count all of the reccurrent instances which were labeled the same by assigned users in this dataset
-        HashMap<String, Object> recurrentLabelings = new HashMap<String, Object>();
-        for (User user : this.assignedUsers) {
-            for (LabelAssignment labelAssignment : user.getLabelAssignments()) {
-                if (labelAssignment.getInstance().getDataset() == this) {
-                    String currentInstanceText = labelAssignment.getInstance().getText();
-                    HashMap<String, Object> value = (HashMap) ((HashMap) labelingsFreq.get("user" + user.getId())).get(currentInstanceText);
-                    if ((int) value.get("currentCount") > 1 && ((LabelAssignment) value.get("object")).getAssignedLabels() == labelAssignment.getAssignedLabels()) {
-                        Double currentCount = (Double) recurrentLabelings.get("user" + user.getId());
-                        recurrentLabelings.put("user" + user.getId(), (currentCount == null) ? 1.0 : currentCount + 1);
-                    }    
-                }
-            }
-
-            int totalRecurrents = 0;
-            HashMap<String, Object> userLabelingFreq = (HashMap) labelingsFreq.get("user" + user.getId());
-            for (Map.Entry<String, Object> entry : userLabelingFreq.entrySet()) {
-                totalRecurrents += (int) ((HashMap) entry.getValue()).get("totalRecurrent");
-            }
-
-            if (recurrentLabelings.containsKey("user" + user.getId())) {
-                double sameLabelings = (double) recurrentLabelings.get("user" + user.getId());
-                if (totalRecurrents == 0) {
-                    recurrentLabelings.put("user" + user.getId(), "0.00%");
-                }
-                recurrentLabelings.put("user" + user.getId(), String.format("%.2f", sameLabelings * 100 / totalRecurrents) + "%");
-            }
-        }
-
-        return recurrentLabelings;
+        return userConsistencyPercentages;
     }
 }

@@ -8,13 +8,13 @@ import java.util.LinkedHashMap;
 public class Instance {
 
     // attributes of the Instance class
-    private Integer id;
+    private int id;
     private String text;
     private Dataset dataset;
     private ArrayList<LabelAssignment> labelAssignments;
     
     // constructor of the instance class
-    public Instance(Integer id, String text) {
+    public Instance(int id, String text) {
         this.id = id;
         this.text = text;
         this.labelAssignments = new ArrayList<LabelAssignment>();
@@ -26,7 +26,7 @@ public class Instance {
     }
 
     // returns the id of this instance
-    public Integer getId() {
+    public int getId() {
     	return this.id;
     }
 
@@ -51,12 +51,12 @@ public class Instance {
     }
     
     // returns the total number of label assignments from this instance
-    public Integer getTotalLabelAssignments() {
+    public int getTotalLabelAssignments() {
         return this.labelAssignments.size();
     }
 
     // returns the total number of unique label assignments from this instance
-    public Integer getUniqueLabelAssignments() {
+    public int getUniqueLabelAssignments() {
         ArrayList<String> labelNames = new ArrayList<String>();
 
         // loop over all label assignments
@@ -75,7 +75,7 @@ public class Instance {
     }
 
     // returns the total number of unique users involved in assigning labels to this instance
-    public Integer getUniqueUsers() {
+    public int getUniqueUsers() {
         ArrayList<Integer> userIds = new ArrayList<Integer>();
 
         // loop over all label assignments
@@ -158,7 +158,7 @@ public class Instance {
     }
 
     // returns the entropy of this instance
-    public Double getEntropy() {
+    public double getEntropy() {
         Map<String, Double> labelFreq = new HashMap<String, Double>();
 
         // parse the all of the assigned labels and calculate their frequencies

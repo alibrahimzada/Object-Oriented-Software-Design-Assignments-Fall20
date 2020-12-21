@@ -7,14 +7,14 @@ import java.util.Random;
 public class User {
 
     // attributes of User class
-    private Integer id;
+    private int id;
     private String name;
     private String type;
     private ArrayList<Dataset> assignedDatasets;
     private ArrayList<LabelAssignment> labelAssignments;
 
     // constructor of User class
-    public User(Integer id, String name, String type) {
+    public User(int id, String name, String type) {
         this.id = id;
         this.name = name;
         this.type = type;
@@ -50,7 +50,7 @@ public class User {
     }
 
     // returns id of this user
-    public Integer getId() {
+    public int getId() {
         return this.id;
     }
 
@@ -65,7 +65,7 @@ public class User {
     }
 
     // returns total number of datasets assigned to this user
-    public Integer getTotalDatasets() {
+    public int getTotalDatasets() {
         return this.assignedDatasets.size();
     }
 
@@ -89,12 +89,12 @@ public class User {
     }
 
     // returns total number of labelings done by this user so far
-    public Integer getTotalLabelings() {
+    public int getTotalLabelings() {
         return this.labelAssignments.size();
     }
 
     // returns total number of unique labelings done by this user so far
-    public Integer getTotalUniqueLabelings() {
+    public int getTotalUniqueLabelings() {
         ArrayList<String> instances = new ArrayList<String>();
 
         // loop over each label assignment from this user
@@ -150,7 +150,7 @@ public class User {
     }
 
     // returns the average time spent by this user labeling all its instances
-    public Double getAverageTime() {
+    public double getAverageTime() {
         // this variable will be accumulated with the time spent for all label assignments
         double totalTimeSpent = 0;
 
@@ -167,7 +167,7 @@ public class User {
     }
 
     // returns the standard deviation of time spent by this user labeling all its instances
-    public Double getStdDevTime() {
+    public double getStdDevTime() {
         // this variable will be accumulated with the squared difference of time spent and average time
         double squaredDifference = 0;
         double averageTime = this.getAverageTime();

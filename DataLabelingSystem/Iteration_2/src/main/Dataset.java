@@ -8,15 +8,15 @@ import org.json.simple.JSONArray;
 
 public class Dataset {
     // attributes of the Dataset class
-    private Integer id;
+    private int id;
     private String name;
-    private Integer maxLabel;
+    private int maxLabel;
     private ArrayList<Instance> instances;
     private ArrayList<Label> labels;
     private ArrayList<User> assignedUsers;
 
     // constructor of the Dataset class
-    public Dataset(Integer id, String name, Integer maxLabel) {
+    public Dataset(int id, String name, int maxLabel) {
         this.id = id;
         this.name = name;
         this.maxLabel = maxLabel;
@@ -55,7 +55,7 @@ public class Dataset {
     }
 
     // returns the id of this dataset
-    public Integer getId() {
+    public int getId() {
         return this.id;
     }
 
@@ -65,7 +65,7 @@ public class Dataset {
     }
 
     // returns the max label of this dataset
-    public Integer getMaxLabel() {
+    public int getMaxLabel() {
         return this.maxLabel;
     }
 
@@ -75,7 +75,7 @@ public class Dataset {
     }
 
     // returns an Instance object given the instance id
-    public Instance getInstance(Integer instanceId) {
+    public Instance getInstance(int instanceId) {
         Instance instance = null;
         for (Instance currentInstance : this.instances) {
             if (currentInstance.getId() == instanceId) {
@@ -157,7 +157,7 @@ public class Dataset {
     }
 
     // returns the total number of assigned users to this dataset
-    public Integer getTotalAssignedUsers() {
+    public int getTotalAssignedUsers() {
         return this.assignedUsers.size();
     }
 

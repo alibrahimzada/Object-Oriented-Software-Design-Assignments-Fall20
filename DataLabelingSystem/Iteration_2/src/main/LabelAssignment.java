@@ -7,7 +7,7 @@ import java.util.Date;
 import org.json.simple.JSONArray;
 
 public class LabelAssignment {
-    private Double timeSpent;
+    private double timeSpent;
     private Date date;
     private Instance instance;
     private User user;
@@ -22,7 +22,7 @@ public class LabelAssignment {
         this.labelingMechanism = labelingMechanism;
     }
 
-    public void assignLabels(Integer maxLabel) {
+    public void assignLabels(int maxLabel) {
         /*
             Uses the object labelingMechanism passed it to invoke its method labelInstance
             while passing to the method the instance, labels, and the max number of labels
@@ -37,7 +37,7 @@ public class LabelAssignment {
         this.timeSpent = (end - start) / 1000000D;
     }
 
-    public Double getTimeSpent() {
+    public double getTimeSpent() {
         return this.timeSpent;
     }
 

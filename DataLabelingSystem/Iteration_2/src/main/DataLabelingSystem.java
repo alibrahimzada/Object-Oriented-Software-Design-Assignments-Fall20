@@ -69,11 +69,12 @@ public class DataLabelingSystem {
 
     public void loadDatasets() {
         JSONArray datasets = (JSONArray) this.configurations.get("datasets");
-        this.dataManager.addDatasets(datasets);
+		this.dataManager.addDatasets(datasets);
     }
 
     public void loadLabelAssignments() {
-        this.dataManager.addLabelAssignments();
+		this.dataManager.addLabelAssignments();
+		this.systemLog.getLogger().info("successfully loaded the previous label assignments");
     }
 
     public void assignLabels() {
@@ -93,14 +94,17 @@ public class DataLabelingSystem {
 
                 LabelAssignment labelAssignment = new LabelAssignment(user, instance, dataset.getLabels(), new RandomLabelingMechanism());
                 labelAssignment.assignLabels(dataset.getMaxLabel());
-                this.dataManager.addLabelAssignment(labelAssignment);
+				this.dataManager.addLabelAssignment(labelAssignment);
+				this.systemLog.getLogger().info(String.format("an instance with id=%d from dataset with id=%d has been labeled by a user with id=%d", instance.getId(), instance.getDataset().getId(), user.getId()));
 
                 try {
-                    this.dataManager.getDataUpdater().updateLabelAssignments(dataset);
-                    this.dataManager.getDataUpdater().updateReport(dataset);
+					this.dataManager.getDataUpdater().updateLabelAssignments(dataset);
+					this.systemLog.getLogger().info("successfully updated the label assignments file");
+					this.dataManager.getDataUpdater().updateReport(dataset);
+					this.systemLog.getLogger().info("successfully updated the report");
                 } catch (Exception ex) {
                     ex.printStackTrace();
-                    System.out.println("could not update the files due to an error");
+					this.systemLog.getLogger().info("could not update the files due to an error");
                 }
             }
         }

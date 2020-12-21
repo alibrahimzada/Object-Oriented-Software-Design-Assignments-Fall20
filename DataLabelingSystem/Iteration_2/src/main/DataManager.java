@@ -2,7 +2,6 @@ package main;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FilenameFilter;
@@ -38,7 +37,7 @@ public class DataManager {
         return this.users;
     }
 
-    public User getUser(Integer userId) {
+    public User getUser(int userId) {
         User user = null;
         for (int i = 0; i < this.users.size(); i++) {
             if (this.users.get(i).getId() == userId) {
@@ -56,7 +55,7 @@ public class DataManager {
         return this.datasets;
     }
 
-    public Dataset getDataset(Integer datasetId) {
+    public Dataset getDataset(int datasetId) {
         Dataset dataset = null;
         for (int i = 0; i < this.datasets.size(); i++) {
             if (this.datasets.get(i).getId() == datasetId) {
@@ -159,22 +158,26 @@ public class DataManager {
         if (labeledDataDirectory.exists()) {
             File[] labelAssignmentFiles = this.getLabelAssignmentFiles(labeledDataDirectory);
             for (File file : labelAssignmentFiles) {
-                String fileName = file.getName();
+				String fileName = file.getName();
                 try {
                     Object obj = new JSONParser().parse(new FileReader(labeledDataDirectoryName + "/" + fileName));
                     JSONObject jsonObject = (JSONObject) obj;
-                    HashMap<String, Object> datasetJSON = (HashMap) jsonObject;
-                    Dataset dataset = this.getDataset(((Long) datasetJSON.get("dataset id")).intValue());
+					HashMap<String, Object> datasetJSON = (HashMap) jsonObject;
+					int currentDatasetId = ((Long) this.dataLabelingSystem.getConfigurations().get("currentDatasetId")).intValue();
+					Dataset dataset = this.getDataset(currentDatasetId);
+					if (dataset.getId() != Integer.parseInt(fileName.substring(7, 8))) {
+						continue;
+					}
 
                     // from here, we create a LabelAssignment object for each labelAssignment in report and add it to data structures
-                    ArrayList<HashMap<String, Object>> labelAssignmentList = (ArrayList) datasetJSON.get("class label assignments");
+					ArrayList<HashMap<String, Object>> labelAssignmentList = (ArrayList) datasetJSON.get("class label assignments");
                     for (HashMap<String, Object> labelAssignmentDetails : labelAssignmentList) {
                         int instanceId = ((Long) labelAssignmentDetails.get("instance id")).intValue();
                         JSONArray assignedLabelIds = (JSONArray) labelAssignmentDetails.get("class label ids");
                         int userId = ((Long) labelAssignmentDetails.get("user id")).intValue();
                         String dateTime = (String) labelAssignmentDetails.get("datetime");
                         double timeSpent = (Double) labelAssignmentDetails.get("time spent");
-                        User userObject = this.getUser(userId);
+						User userObject = this.getUser(userId);
                         Instance instanceObject = dataset.getInstance(instanceId);
                         LabelAssignment labelAssignment = new LabelAssignment(userObject, instanceObject, dataset.getLabels(), new RandomLabelingMechanism());
                         labelAssignment.setAssignedLabels(assignedLabelIds);

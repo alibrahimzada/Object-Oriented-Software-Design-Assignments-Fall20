@@ -92,7 +92,7 @@ public class Instance {
     }
 
     // returns the most frequent label from label assignments
-    public String getFrequentLabel() {
+    public String getFrequentLabelPercentage() {
         Map<String, Integer> labelFreq = new LinkedHashMap<String, Integer>();
         int totalCount = 0;
 
@@ -121,7 +121,7 @@ public class Instance {
         if (Double.isNaN(frequency)) {
             return String.format("%s - %.2f", maxEntry.getKey(), frequency);
         }
-        return String.format("%s - %.2f", maxEntry.getKey(), frequency) + "%";
+        return String.format("%s- %.2f", maxEntry.getKey(), frequency) + "%";
     }
 
     // returns the final class label distribution
@@ -158,31 +158,29 @@ public class Instance {
     }
 
     // returns the entropy of this instance
-    public String getEntropy() {
-        Map<String, Integer> labelFreq = new HashMap<String, Integer>();
+    public Double getEntropy() {
+        Map<String, Double> labelFreq = new HashMap<String, Double>();
 
         // parse the all of the assigned labels and calculate their frequencies
         for (LabelAssignment labelAssignment : this.labelAssignments) {
             for (Label label : labelAssignment.getAssignedLabels()) {
                 if (labelFreq.containsKey(label.getText())) {
-                    int currentCount = labelFreq.get(label.getText());
+                    double currentCount = labelFreq.get(label.getText());
                     labelFreq.put(label.getText(), currentCount + 1);
                 } else {
-                    labelFreq.put(label.getText(), 1);
+                    labelFreq.put(label.getText(), 1.0);
                 }
             }
-        }
+		}
 
         // calculate entropy
         double entropy = 0;
-        for (Map.Entry<String, Integer> entry : labelFreq.entrySet()) {
-            double normalizedValue = entry.getValue() / labelFreq.size();
-            entropy += -normalizedValue * (Math.log(normalizedValue) / Math.log(2));
+        for (Map.Entry<String, Double> entry : labelFreq.entrySet()) {
+			double totalLabelings = labelFreq.values().stream().mapToDouble(Double::valueOf).sum();
+            double normalizedValue = entry.getValue() / totalLabelings;
+			entropy += -normalizedValue * (int) (Math.log(normalizedValue) / Math.log(2.0) + 1e-10);
         }
         
-        if (Double.isNaN(entropy)) {
-            return "NaN";
-        }
-        return String.format("%.3f", entropy);
+        return entropy;
     }
 }

@@ -37,7 +37,7 @@ public class LabelAssignment {
         this.timeSpent = (end - start) / 1000000D;
     }
 
-    public double getTimeSpent() {
+    public Double getTimeSpent() {
         return this.timeSpent;
     }
 
@@ -69,11 +69,11 @@ public class LabelAssignment {
         return this.assignedLabels;
     }
 
-    public void setAssignedLabels(JSONArray assignedLabelIds) {
+    public void setAssignedLabels(JSONArray assignedLabelsIds) {
         ArrayList<Label> assignedLabels = new ArrayList<Label>();
-        for (int i = 0; i < assignedLabelIds.size(); i++) {
+        for (int i = 0; i < assignedLabelsIds.size(); i++) {
             for (Label label : this.labels) {
-                if (label.getId() == ((Long) assignedLabelIds.get(i)).intValue()) {
+                if (label.getId() == ((Long) assignedLabelsIds.get(i)).intValue()) {
                     assignedLabels.add(label);
                 }
             }

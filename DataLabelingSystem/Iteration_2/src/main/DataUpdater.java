@@ -203,7 +203,7 @@ public class DataUpdater {
             instanceMetrics.put("total label assignments", instance.getTotalLabelAssignments());
             instanceMetrics.put("total unique label assignments", instance.getUniqueLabelAssignments());
             instanceMetrics.put("total unique users", instance.getUniqueUsers());
-            instanceMetrics.put("most frequent label", instance.getFrequentLabel());
+            instanceMetrics.put("most frequent label", instance.getFrequentLabelPercentage());
             instanceMetrics.put("class labels and %", instance.getClassLabelDistribution());
             instanceMetrics.put("entropy", instance.getEntropy());
         }

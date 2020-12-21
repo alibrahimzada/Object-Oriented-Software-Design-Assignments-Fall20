@@ -1,16 +1,16 @@
 package main;
 
 public class Label {
-    private int id;
+    private Integer id;
     private String text;
     private Dataset dataset;
   
-    public Label(int id, String text) {
+    public Label(Integer id, String text) {
         this.id = id;
         this.text = text;
     }
 
-    public int getId() {
+    public Integer getId() {
         return this.id;
     }
 

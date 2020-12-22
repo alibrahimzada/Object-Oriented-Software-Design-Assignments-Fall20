@@ -2,6 +2,8 @@ package main;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FilenameFilter;
@@ -13,9 +15,9 @@ import org.json.simple.parser.JSONParser;
 public class DataManager {
     private DataLabelingSystem dataLabelingSystem;
     private DataUpdater dataUpdater;
-    private ArrayList<User> users;
-    private ArrayList<LabelAssignment> labelAssignments;
-    private ArrayList<Dataset> datasets;
+    private List<User> users;
+    private List<LabelAssignment> labelAssignments;
+    private List<Dataset> datasets;
     
     public DataManager(DataLabelingSystem dataLabelingSystem) {
         this.dataLabelingSystem = dataLabelingSystem;
@@ -33,7 +35,7 @@ public class DataManager {
         return this.dataUpdater;
     }
 
-    public ArrayList<User> getUsers() {
+    public List<User> getUsers() {
         return this.users;
     }
 
@@ -47,11 +49,11 @@ public class DataManager {
         return user;
     }
 
-    public ArrayList<LabelAssignment> getLabelAssignments() {
+    public List<LabelAssignment> getLabelAssignments() {
         return this.labelAssignments;
     }
 
-    public ArrayList<Dataset> getDatasets() {
+    public List<Dataset> getDatasets() {
         return this.datasets;
     }
 
@@ -76,7 +78,7 @@ public class DataManager {
             if the user isAvailable. 
         */
         for (int i = 0; i < users.size(); i++) {
-            HashMap<String, Object> currentUser = (HashMap) users.get(i);
+            Map<String, Object> currentUser = (HashMap<String, Object>) users.get(i);
             long userId = (long) currentUser.get("userId");
             String userName = (String) currentUser.get("userName");
             String userType = (String) currentUser.get("userType");
@@ -89,13 +91,13 @@ public class DataManager {
         }
     }
 
-    private HashMap<String, Object> parseDatasetFile(HashMap<String, Object> currentDataset) {
-        HashMap<String, Object> dataset = new HashMap<String, Object>();
+    private Map<String, Object> parseDatasetFile(Map<String, Object> currentDataset) {
+        Map<String, Object> dataset = new HashMap<String, Object>();
         try {
             String datasetFilePath = (String) currentDataset.get("filePath");
             Object obj = new JSONParser().parse(new FileReader(datasetFilePath));
             JSONObject jsonObject = (JSONObject) obj;
-            dataset = (HashMap) jsonObject;
+            dataset = (HashMap<String, Object>) jsonObject;
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -122,8 +124,8 @@ public class DataManager {
             as a hashmap, then passes it to the method add datasets. 
         */
         for (int i = 0; i < datasets.size(); i++) {
-            HashMap<String, Object> currentDataset = (HashMap) datasets.get(i);
-            HashMap<String, Object> dataset = this.parseDatasetFile(currentDataset);
+            Map<String, Object> currentDataset = (HashMap<String, Object>) datasets.get(i);
+            Map<String, Object> dataset = this.parseDatasetFile(currentDataset);
 
             long datasetId = (long) dataset.get("dataset id");
             String datasetName = (String) dataset.get("dataset name");

@@ -2,10 +2,12 @@ package main;
 
 import tests.TestSuiteRunner;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;
+
 import java.io.FileReader;
 
 import org.json.simple.JSONArray;
@@ -15,7 +17,7 @@ import org.json.simple.parser.JSONParser;
 public class DataLabelingSystem {
 	// attributes of the DataLabelingSystem class
     private Log systemLog;
-    private HashMap<String, Object> configurations;
+    private Map<String, Object> configurations;
     private DataManager dataManager;
 
 	// constructor of the DataLabelingSystem class
@@ -51,7 +53,7 @@ public class DataLabelingSystem {
         try {
             Object obj = new JSONParser().parse(new FileReader("config.json"));
             JSONObject jsonObject = (JSONObject) obj;
-            this.configurations = (HashMap) jsonObject;
+            this.configurations = (HashMap<String, Object>) jsonObject;
         } catch (Exception ex) {
             ex.printStackTrace();
             System.exit(1);
@@ -60,7 +62,7 @@ public class DataLabelingSystem {
     }
 
 	// this method returns the configurations hashmap
-    public HashMap<String, Object> getConfigurations() {
+    public Map<String, Object> getConfigurations() {
         return this.configurations;
     }
 
@@ -88,7 +90,7 @@ public class DataLabelingSystem {
         int currentDatasetId = ((Long) this.configurations.get("currentDatasetId")).intValue();
         double consistencyCheckProbability = ((Double) this.configurations.get("consistencyCheckProbability"));
         Dataset dataset = this.dataManager.getDataset(currentDatasetId);
-        ArrayList<User> assignedUsers = dataset.getAssignedUsers();
+        List<User> assignedUsers = dataset.getAssignedUsers();
 		
 		// for each user assigned to current dataset
         for (User user : assignedUsers) {
@@ -96,7 +98,7 @@ public class DataLabelingSystem {
             for (Instance instance : dataset.getInstances()) {
 
 				// this condition is to make sure a user do not label instances more than once
-				if (user.getUniqueInstances().contains(instance)) {
+				if (user.getUniqueInstances(dataset).contains(instance)) {
 					continue;
 				}
 

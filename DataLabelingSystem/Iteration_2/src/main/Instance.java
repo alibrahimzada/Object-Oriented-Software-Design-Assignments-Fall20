@@ -3,6 +3,7 @@ package main;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 public class Instance {
 
@@ -10,7 +11,7 @@ public class Instance {
     private int id;
     private String text;
     private Dataset dataset;
-    private ArrayList<LabelAssignment> labelAssignments;
+    private List<LabelAssignment> labelAssignments;
     
     // constructor of the instance class
     public Instance(int id, String text) {
@@ -35,7 +36,7 @@ public class Instance {
     }
 
     // returns the label assignments from this instance
-    public ArrayList<LabelAssignment> getLabelAssignments() {
+    public List<LabelAssignment> getLabelAssignments() {
         return this.labelAssignments;
     }
 
@@ -75,7 +76,7 @@ public class Instance {
 
     // returns the total number of unique users involved in assigning labels to this instance
     public int getUniqueUsers() {
-        ArrayList<Integer> userIds = new ArrayList<Integer>();
+        List<Integer> userIds = new ArrayList<Integer>();
 
         // loop over all label assignments
         for (LabelAssignment labelAssignment : this.labelAssignments) {

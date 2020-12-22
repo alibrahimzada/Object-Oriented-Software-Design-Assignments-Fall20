@@ -3,6 +3,7 @@ package main;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.json.simple.JSONArray;
 
@@ -11,11 +12,11 @@ public class LabelAssignment {
     private Date date;
     private Instance instance;
     private User user;
-    private ArrayList<Label> labels;
-    private ArrayList<Label> assignedLabels;
+    private List<Label> labels;
+    private List<Label> assignedLabels;
     private LabelingMechanism labelingMechanism;
 
-    public LabelAssignment(User user, Instance instance, ArrayList<Label> labels, LabelingMechanism labelingMechanism) {
+    public LabelAssignment(User user, Instance instance, List<Label> labels, LabelingMechanism labelingMechanism) {
         this.user = user;
         this.instance = instance;
         this.labels = labels;
@@ -65,12 +66,12 @@ public class LabelAssignment {
         return this.user;
     }
 
-    public ArrayList<Label> getAssignedLabels() {
+    public List<Label> getAssignedLabels() {
         return this.assignedLabels;
     }
 
     public void setAssignedLabels(JSONArray assignedLabelsIds) {
-        ArrayList<Label> assignedLabels = new ArrayList<Label>();
+        List<Label> assignedLabels = new ArrayList<Label>();
         for (int i = 0; i < assignedLabelsIds.size(); i++) {
             for (Label label : this.labels) {
                 if (label.getId() == ((Long) assignedLabelsIds.get(i)).intValue()) {
@@ -81,7 +82,7 @@ public class LabelAssignment {
         this.assignedLabels = assignedLabels;
     }
 
-    public ArrayList<Label> getLabels() {
+    public List<Label> getLabels() {
         return this.labels;
     }
 

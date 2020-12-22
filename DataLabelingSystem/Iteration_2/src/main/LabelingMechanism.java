@@ -1,9 +1,9 @@
 package main;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public abstract class LabelingMechanism {
-    protected ArrayList<Label> assignedLabels;
+    protected List<Label> assignedLabels;
 
-    public abstract ArrayList<Label> labelInstance(Instance instance, ArrayList<Label> labels, int maxLabel);
+    public abstract List<Label> labelInstance(Instance instance, List<Label> labels, int maxLabel);
 }

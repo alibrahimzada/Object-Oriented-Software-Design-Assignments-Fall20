@@ -2,6 +2,8 @@ package tests;
 
 import main.*;
 import java.util.ArrayList;
+import java.util.List;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.junit.Test;
@@ -34,8 +36,8 @@ public class DatasetTests {
     public void addInstanceTest(){
         JSONArray jsonArray = createJsonArray("instance");
         this.dataset.addInstances(jsonArray);
-        ArrayList<Instance> acutal_instances = this.dataset.getInstances();
-        ArrayList<Instance> expected_instances = new ArrayList<Instance>();
+        List<Instance> acutal_instances = this.dataset.getInstances();
+        List<Instance> expected_instances = new ArrayList<Instance>();
         expected_instances.add(new Instance(1, "This is instance 1"));
         expected_instances.add(new Instance(2, "This is instance 2"));
         for (int i = 0; i < expected_instances.size(); i++) {
@@ -49,8 +51,8 @@ public class DatasetTests {
         JSONArray jsonArray = createJsonArray("label");
         Dataset dataset1 = new Dataset(1, "dataset1", 1);
         dataset1.addLabels(jsonArray);
-        ArrayList<Label> acutal_labels = dataset1.getLabels();
-        ArrayList<Label> expected_labels = new ArrayList<Label>();
+        List<Label> acutal_labels = dataset1.getLabels();
+        List<Label> expected_labels = new ArrayList<Label>();
         expected_labels.add(new Label(1, "This is label 1"));
         expected_labels.add(new Label(2, "This is label 2"));
         for (int i = 0; i < expected_labels.size(); i++) {

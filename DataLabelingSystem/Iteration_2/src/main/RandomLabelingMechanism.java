@@ -1,6 +1,7 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class RandomLabelingMechanism extends LabelingMechanism {
@@ -9,7 +10,7 @@ public class RandomLabelingMechanism extends LabelingMechanism {
         this.assignedLabels = new ArrayList<Label>();
     }
 
-    public ArrayList<Label> labelInstance(Instance instance, ArrayList<Label> labels, int maxLabel) {
+    public List<Label> labelInstance(Instance instance, List<Label> labels, int maxLabel) {
         /*
             Randomly assigns labels(one or more-depends on maxLabel) to an instance.
         */
@@ -30,7 +31,7 @@ public class RandomLabelingMechanism extends LabelingMechanism {
         return this.assignedLabels;
     }
 
-    public Label getRandomElement(ArrayList<Label> labels) {
+    public Label getRandomElement(List<Label> labels) {
         /*
           Given an arrayList of labels, returns one of the labels randomly.  
         */

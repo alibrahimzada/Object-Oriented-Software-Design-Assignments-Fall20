@@ -50,12 +50,12 @@ public class User {
 	}
 	
 	// returns a list of unique instances labeled by this user
-	public ArrayList<Instance> getUniqueInstances() {
+	public ArrayList<Instance> getUniqueInstances(Dataset dataset) {
 		ArrayList<Instance> instances = new ArrayList<Instance>();
 
         // loop over each label assignment from this user
         for (LabelAssignment labelAssignment : this.labelAssignments) {
-            if (!instances.contains(labelAssignment.getInstance())) {
+            if (!instances.contains(labelAssignment.getInstance()) && labelAssignment.getInstance().getDataset() == dataset) {
                 instances.add(labelAssignment.getInstance());
             }
         }
@@ -86,17 +86,7 @@ public class User {
 
     // returns completeness percentage of this user from a given dataset
     public String getCompletenessPercentage(Dataset dataset) {
-        ArrayList<String> uniqueInstances = new ArrayList<String>();
-
-        // loop over all label assignments done by this user
-        for (LabelAssignment labelAssignment : this.labelAssignments) {
-            String currentInstanceText = labelAssignment.getInstance().getText();
-
-            // check if the instance is from the given dataset, and its not already in the list
-            if (!uniqueInstances.contains(currentInstanceText) && labelAssignment.getInstance().getDataset() == dataset) {
-                uniqueInstances.add(currentInstanceText);
-            }
-        }
+        ArrayList<Instance> uniqueInstances = this.getUniqueInstances(dataset);
 
         // calculate the completeness percentage of this user from the given dataset
         double completenessPercentage = (uniqueInstances.size() * 100.0) / dataset.getInstances().size();
@@ -110,19 +100,15 @@ public class User {
 
     // returns total number of unique labelings done by this user so far
     public int getTotalUniqueLabelings() {
-        ArrayList<String> instances = new ArrayList<String>();
+		int totalUniqueLabelings = 0;
 
-        // loop over each label assignment from this user
-        for (LabelAssignment labelAssignment : this.labelAssignments) {
-            String currentInstanceText = labelAssignment.getInstance().getText();
-            // add it to the list if its not already in the list
-            if (!instances.contains(currentInstanceText)) {
-                instances.add(currentInstanceText);
-            }
-        }
+		// loop over each assigned dataset
+		for (Dataset dataset : this.assignedDatasets) {
+			totalUniqueLabelings += this.getUniqueInstances(dataset).size();
+		}
 
         // return the length of the list
-        return instances.size();
+        return totalUniqueLabelings;
     }
 
     // returns the consistency percentage of this user from all its labelings so far

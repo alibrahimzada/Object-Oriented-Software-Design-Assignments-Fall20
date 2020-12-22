@@ -90,7 +90,6 @@ public class User {
     // returns completeness percentage of this user from a given dataset
     public Map<String, Double> getCompletenessPercentage() {
 		Map<String, Double> datasetCompletenessPercentage = new LinkedHashMap<String, Double>();
-
 		for (Dataset dataset : this.assignedDatasets) {
 			double completeness = (this.getUniqueInstances(dataset).size() * 100.0) / dataset.getInstances().size();
 			datasetCompletenessPercentage.put("dataset" + dataset.getId(), completeness);

@@ -69,7 +69,6 @@ public class Instance {
                 }
             }
         }
-
         // return the length of the list
         return labelNames.size();
     }

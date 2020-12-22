@@ -11,6 +11,7 @@ import org.junit.runners.Suite;
     UserTests.class,
     DatasetTests.class,
     RandomLabelingMechanismTests.class,
+    InstanceTests.class,
 })
 
 

@@ -134,7 +134,7 @@ public class DataLabelingSystem {
     }
 
     public static void main(String[] args) {
-        // if (!new TestSuiteRunner().runTests()) return; // run all unit tests, return if any not passed.
+        if (!new TestSuiteRunner().runTests()) return; // run all unit tests, return if any not passed.
 
         DataLabelingSystem system = new DataLabelingSystem(); //creating a DataLabelingSystem object
         

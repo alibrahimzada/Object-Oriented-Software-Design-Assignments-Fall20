@@ -115,6 +115,9 @@ public class Dataset {
             labelFreqs.put(label.getText(), 0.0);
         }
 
+        for (LabelAssignment labelAssignment : labelAssignments) {
+            System.out.println(labelAssignment.getAssignedLabels().size());
+        }
         // count labels in label assignments
         for (LabelAssignment labelAssignment : labelAssignments) {
             for (Label label : labelAssignment.getAssignedLabels()) {
@@ -130,7 +133,7 @@ public class Dataset {
         return labelFreqs;
     }
 
-    // returns the unique instances labeled from this dataset
+    // returns the number of unique instances labeled for each class label(for this dataset)
     public Map<String, Integer> getUniqueInstances(List<LabelAssignment> labelAssignments) {
         // first intialize counts to empty list
         Map<String, ArrayList<String>> uniqueInstances = new HashMap<String, ArrayList<String>>();

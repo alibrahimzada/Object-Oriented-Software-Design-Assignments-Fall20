@@ -13,16 +13,19 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 public class DataLabelingSystem {
-    private Log systemLog; // Declaration of an object of type Log 
+	// attributes of the DataLabelingSystem class
+    private Log systemLog;
     private HashMap<String, Object> configurations;
     private DataManager dataManager;
 
+	// constructor of the DataLabelingSystem class
     public DataLabelingSystem() {
         this.createSystemLog(); // calling this method upon the creation of a new object
         this.configurations = new HashMap<String, Object>();
         this.dataManager = new DataManager(this);
     }
 
+	// this method creates a Log instance for the current simulation
     private void createSystemLog() {
         /*
             Initializes the object "systemLog" of type Log, gets the logger, 
@@ -38,15 +41,13 @@ public class DataLabelingSystem {
         this.systemLog.getLogger().info("successfully created logger for this simulation");
     }
 
+	// this method returns the Log instance
     public Log getSystemLog() {
         return this.systemLog;
     }
 
+	// this method parses the config.json file and stores its content in specific attributes
     public void parseConfigurations() {
-        /*
-            Parses the config.json file, converts the json object into 
-            a hashmap, then assigns it to the attribute configurations. 
-        */
         try {
             Object obj = new JSONParser().parse(new FileReader("config.json"));
             JSONObject jsonObject = (JSONObject) obj;
@@ -58,46 +59,66 @@ public class DataLabelingSystem {
         this.systemLog.getLogger().info("successfully parsed software configurations");
     }
 
+	// this method returns the configurations hashmap
     public HashMap<String, Object> getConfigurations() {
         return this.configurations;
     }
 
+	// this method parses the user data from configurations and ask data manager to create them
     public void loadUsers() {
         JSONArray users = (JSONArray) this.configurations.get("users"); // getting the users info from the configurations
         this.dataManager.addUsers(users); //passing the userCount and users' info to addUsers to populate the attributes users
     }
 
+	// this method parses the dataset data from configurations and ask data manager to create them
     public void loadDatasets() {
         JSONArray datasets = (JSONArray) this.configurations.get("datasets");
 		this.dataManager.addDatasets(datasets);
     }
 
+	// this method asks data manager to load previous label assignments from previous simulations
     public void loadLabelAssignments() {
 		this.dataManager.addLabelAssignments();
 		this.systemLog.getLogger().info("successfully loaded the previous label assignments");
     }
 
+	// this method assign labels to the instances of the current dataset
     public void assignLabels() {
+		// retrieve the current dataset object and consistency check probability
         int currentDatasetId = ((Long) this.configurations.get("currentDatasetId")).intValue();
         double consistencyCheckProbability = ((Double) this.configurations.get("consistencyCheckProbability"));
         Dataset dataset = this.dataManager.getDataset(currentDatasetId);
         ArrayList<User> assignedUsers = dataset.getAssignedUsers();
-        
+		
+		// for each user assigned to current dataset
         for (User user : assignedUsers) {
+			// for each instance available inside current dataset
             for (Instance instance : dataset.getInstances()) {
+
+				// this condition is to make sure a user do not label instances more than once
+				if (user.getUniqueInstances().contains(instance)) {
+					continue;
+				}
+
+				// generate a random number [1, 100]
                 Random random = new Random();
                 int randomNumber = random.nextInt(100) + 1;
-
+				
+				// if the random number is smaller than consistency check probability * 100
+				// and there is at least 1 label assignment done by this user, then show an
+				// instance which was already labeled by this user, else show a new instance
                 if (randomNumber <= consistencyCheckProbability*100 && user.getLabelAssignments().size() > 0) {
                     instance = user.getRandomInstance();
                 }
 
+				// assign label(s) to the instance and add it to the corresponding data structures
                 LabelAssignment labelAssignment = new LabelAssignment(user, instance, dataset.getLabels(), new RandomLabelingMechanism());
                 labelAssignment.assignLabels(dataset.getMaxLabel());
 				this.dataManager.addLabelAssignment(labelAssignment);
 				this.systemLog.getLogger().info(String.format("an instance with id=%d from dataset with id=%d has been labeled by a user with id=%d", instance.getId(), instance.getDataset().getId(), user.getId()));
 
                 try {
+					// update the output label assignments JSON as well as the report JSON
 					this.dataManager.getDataUpdater().updateLabelAssignments(dataset);
 					this.systemLog.getLogger().info("successfully updated the label assignments file");
 					this.dataManager.getDataUpdater().updateReport(dataset);
@@ -117,11 +138,11 @@ public class DataLabelingSystem {
         
         system.parseConfigurations(); // parsing the config.json file to populate the attribute configurations 
 
-        system.loadUsers();
+        system.loadUsers(); // create instances of the users available in config.json
         
-        system.loadDatasets();
+        system.loadDatasets(); // create instances of datasets avaialble in config.json
 
-        system.loadLabelAssignments();
+        system.loadLabelAssignments(); // load previous label assignments, create their instances and add them to the data structures
 
         system.assignLabels(); // assigning labels to the instances of the dataset and adding the labelAssignments info to the arrayList labelAssignments
     }

@@ -47,7 +47,22 @@ public class User {
         Random random = new Random();
         int randomIndex = random.nextInt(this.getTotalLabelings());
         return this.labelAssignments.get(randomIndex).getInstance();
-    }
+	}
+	
+	// returns a list of unique instances labeled by this user
+	public ArrayList<Instance> getUniqueInstances() {
+		ArrayList<Instance> instances = new ArrayList<Instance>();
+
+        // loop over each label assignment from this user
+        for (LabelAssignment labelAssignment : this.labelAssignments) {
+            if (!instances.contains(labelAssignment.getInstance())) {
+                instances.add(labelAssignment.getInstance());
+            }
+        }
+
+        // return the list
+        return instances;
+	}
 
     // returns id of this user
     public int getId() {

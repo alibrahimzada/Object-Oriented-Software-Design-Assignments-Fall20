@@ -2,7 +2,6 @@ package main;
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 public class Instance {
@@ -93,40 +92,22 @@ public class Instance {
 
     // returns the most frequent label from label assignments
     public String getFrequentLabelPercentage() {
-        Map<String, Integer> labelFreq = new LinkedHashMap<String, Integer>();
-        int totalCount = 0;
+        Map<String, Double> classLabelDistribution = this.getClassLabelDistribution();
 
-        // calculate frequency of each label
-        for (LabelAssignment labelAssignment : this.labelAssignments) {
-            for (Label label : labelAssignment.getAssignedLabels()) {
-                if (labelFreq.containsKey(label.getText())) {
-                    int currentCount = (int) labelFreq.get(label.getText());
-                    labelFreq.put(label.getText(), currentCount + 1);
-                } else {
-                    labelFreq.put(label.getText(), 1);
-                }
-                totalCount++;
-            }
-        }
         // find the max key-value pair
-        Map.Entry<String, Integer> maxEntry = Map.entry("X", 0);   // default value
-        for (Map.Entry<String, Integer> entry : labelFreq.entrySet()) {
+        Map.Entry<String, Double> maxEntry = Map.entry("X", 0.0);   // default value
+        for (Map.Entry<String, Double> entry : classLabelDistribution.entrySet()) {
             if (maxEntry == null || entry.getValue().compareTo(maxEntry.getValue()) > 0) {
                 maxEntry = entry;
             }
         }
 
-        // return the frequent label name and percentage
-        double frequency = maxEntry.getValue() * 100.0 / totalCount;
-        if (Double.isNaN(frequency)) {
-            return String.format("%s - %.2f", maxEntry.getKey(), frequency);
-        }
-        return String.format("%s- %.2f", maxEntry.getKey(), frequency) + "%";
+        return String.format("%s - %.2f", maxEntry.getKey(), maxEntry.getValue()) + "%";
     }
 
     // returns the final class label distribution
-    public Map<String, Object> getClassLabelDistribution() {
-        Map<String, Object> labelFreq = new LinkedHashMap<String, Object>();
+    public Map<String, Double> getClassLabelDistribution() {
+        Map<String, Double> labelFreq = new LinkedHashMap<String, Double>();
         int totalCount = 0;
 
         // calculate frequency of each label
@@ -134,53 +115,41 @@ public class Instance {
             // first put 0 to all labels
             if (totalCount == 0) {
                 for (Label label : labelAssignment.getLabels()) {
-                    labelFreq.put(label.getText(), 0);
+                    labelFreq.put(label.getText(), 0.0);
                 }    
             }
 
             for (Label label : labelAssignment.getAssignedLabels()) {
-                if (labelFreq.containsKey(label.getText())) {
-                    int currentCount = (int) labelFreq.get(label.getText());
-                    labelFreq.put(label.getText(), currentCount + 1);
-                } else {
-                    labelFreq.put(label.getText(), 1);
-                }
+				double currentCount = (double) labelFreq.get(label.getText());
+				labelFreq.put(label.getText(), currentCount + 1.0);
                 totalCount++;
             }
         }
 
         // normalize and calculate percentages
-        for (Map.Entry<String, Object> entry : labelFreq.entrySet()) {
-            labelFreq.put(entry.getKey(), String.format("%.2f", (int) entry.getValue() * 100.0 / totalCount) + "%");
+        for (Map.Entry<String, Double> entry : labelFreq.entrySet()) {
+            labelFreq.put(entry.getKey(), entry.getValue() * 100 / totalCount);
         }
 
+		// return class label distribution
         return labelFreq;
     }
 
     // returns the entropy of this instance
     public double getEntropy() {
-        Map<String, Double> labelFreq = new HashMap<String, Double>();
-
-        // parse the all of the assigned labels and calculate their frequencies
-        for (LabelAssignment labelAssignment : this.labelAssignments) {
-            for (Label label : labelAssignment.getAssignedLabels()) {
-                if (labelFreq.containsKey(label.getText())) {
-                    double currentCount = labelFreq.get(label.getText());
-                    labelFreq.put(label.getText(), currentCount + 1);
-                } else {
-                    labelFreq.put(label.getText(), 1.0);
-                }
-            }
-		}
+		// retrieve the class label distribution
+        Map<String, Double> classLabelDistribution = this.getClassLabelDistribution();
 
         // calculate entropy
         double entropy = 0;
-        for (Map.Entry<String, Double> entry : labelFreq.entrySet()) {
-			double totalLabelings = labelFreq.values().stream().mapToDouble(Double::valueOf).sum();
-            double normalizedValue = entry.getValue() / totalLabelings;
-			entropy += -normalizedValue * (int) (Math.log(normalizedValue) / Math.log(2.0) + 1e-10);
+        for (Map.Entry<String, Double> entry : classLabelDistribution.entrySet()) {
+			if (entry.getValue() == 0) {
+				continue;
+			}
+			entropy += -(entry.getValue() / 100) * (Math.log(entry.getValue() / 100) / Math.log(classLabelDistribution.size()));
         }
-        
+		
+		// return entropy
         return entropy;
     }
 }

@@ -115,7 +115,8 @@ public class DataLabelingSystem {
 
 				// assign label(s) to the instance and add it to the corresponding data structures
                 LabelAssignment labelAssignment = new LabelAssignment(user, instance, dataset.getLabels(), new RandomLabelingMechanism());
-                labelAssignment.assignLabels(dataset.getMaxLabel());
+				labelAssignment.assignLabels(dataset.getMaxLabel());
+				// labelAssignment.setAssignedLabels(assignedLabelsIds);
 				this.dataManager.addLabelAssignment(labelAssignment);
 				this.systemLog.getLogger().info(String.format("an instance with id=%d from dataset with id=%d has been labeled by a user with id=%d", instance.getId(), instance.getDataset().getId(), user.getId()));
 

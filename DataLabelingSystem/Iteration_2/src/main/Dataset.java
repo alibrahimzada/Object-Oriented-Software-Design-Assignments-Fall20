@@ -2,8 +2,10 @@ package main;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.json.simple.JSONArray;
 
@@ -115,9 +117,6 @@ public class Dataset {
             labelFreqs.put(label.getText(), 0.0);
         }
 
-        for (LabelAssignment labelAssignment : labelAssignments) {
-            System.out.println(labelAssignment.getAssignedLabels().size());
-        }
         // count labels in label assignments
         for (LabelAssignment labelAssignment : labelAssignments) {
             for (Label label : labelAssignment.getAssignedLabels()) {
@@ -178,55 +177,45 @@ public class Dataset {
 
     // returns the consistency percentage of each user from this dataset
     public Map<String, Double> getUserConsistencyPercentage() {
-        Map<String, Double> userConsistencyPercentages = new HashMap<String, Double>();
+		Map<String, Double> userConsistencyPercentages = new HashMap<String, Double>();
 
-        for (User user : this.assignedUsers) {
-            Map<String, Object> labelingsFreq = new HashMap<String, Object>();
-            int totalReccurent = 0;
+		// for each user which was assigned to this dataset
+		for (User user : this.assignedUsers) {
+			Map<Instance, List<List<Label>>> instanceFrequency = new HashMap<Instance, List<List<Label>>>();
+			// for each instance which was labeled by this user
+			for (LabelAssignment labelAssignment : user.getLabelAssignments()) {
+				// get rid of instances which are not from this dataset
+				if (labelAssignment.getInstance().getDataset() != this) {
+					continue;
+				} else if (!instanceFrequency.containsKey(labelAssignment.getInstance())) {
+					instanceFrequency.put(labelAssignment.getInstance(), new ArrayList<>());
+				}
+				instanceFrequency.get(labelAssignment.getInstance()).add(labelAssignment.getAssignedLabels());
+			}
 
-            // first start by counting the number of times a unique instance was labeled by this user
-            for (LabelAssignment labelAssignment : user.getLabelAssignments()) {
-                if (labelAssignment.getInstance().getDataset() != this) {
-                    continue;
-                }
-                String currentInstanceText = labelAssignment.getInstance().getText();
-                if (labelingsFreq.containsKey(currentInstanceText)) {
-                    Map<String, Object> value = (HashMap<String, Object>) labelingsFreq.get(currentInstanceText);
-                    int currentCount = (int) value.get("currentCount");
-                    value.put("currentCount", currentCount + 1);
-                    labelingsFreq.put(currentInstanceText, value);
-                    totalReccurent++;
-                } else {
-					@SuppressWarnings("serial")
-                    Map<String, Object> value = new HashMap<String, Object>() {{
-                        put("currentCount", 1);
-                        put("object", labelAssignment);
-                    }};
-                    labelingsFreq.put(currentInstanceText , value);
-                }
-            }
+			int totalRecurrentLabelings = 0;
+			int totalConsistentRecurrentLabelings = 0;
+	
+			for (Map.Entry<Instance, List<List<Label>>> entry : instanceFrequency.entrySet()) {
+				if (entry.getValue().size() > 1) {
+					Set<List<Label>> uniqueLabels = new HashSet<List<Label>>(entry.getValue());
+					if (uniqueLabels.size() == 1) {
+						totalConsistentRecurrentLabelings++;
+					}
+					totalRecurrentLabelings++;
+				}			
+			}
 
-            // count all of the reccurrent instances which were labeled the same 
-            int sameReccurrents = 0;
-            for (LabelAssignment labelAssignment : user.getLabelAssignments()) {
-                if (labelAssignment.getInstance().getDataset() != this) {
-                    continue;
-                }
-                String currentInstanceText = labelAssignment.getInstance().getText();
-                Map<String, Object> value = (HashMap<String, Object>) labelingsFreq.get(currentInstanceText);
-                if ((int) value.get("currentCount") > 1 && ((LabelAssignment) value.get("object")).getAssignedLabels() == labelAssignment.getAssignedLabels()) {
-                    sameReccurrents++;
-                }
-            }
+			double consistencyPercentage;
+			if (totalRecurrentLabelings == 0) {
+				consistencyPercentage = 0.0;
+			} else {
+				consistencyPercentage = totalConsistentRecurrentLabelings * 100.0 / totalRecurrentLabelings;
+			}
+	
+			userConsistencyPercentages.put("user" + user.getId(), consistencyPercentage);
+		}
 
-            // add the consistency percentage to the hashmap
-            if (totalReccurent == 0) {
-                userConsistencyPercentages.put("user" + user.getId(), 0.0);
-                continue;
-            }
-            userConsistencyPercentages.put("user" + user.getId(), sameReccurrents * 100.0 / totalReccurent);
-        }
-
-        return userConsistencyPercentages;
+		return userConsistencyPercentages;
     }
 }

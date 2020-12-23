@@ -2,10 +2,12 @@ package main;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 public class User {
 
@@ -118,42 +120,32 @@ public class User {
 
     // returns the consistency percentage of this user from all its labelings so far
     public double getConsistencyPercentage() {
-        Map<String, Map<String, Object>> labelingsFreq = new HashMap<String, Map<String, Object>>();
-        int totalReccurent = 0;
+		Map<Instance, List<List<Label>>> instanceFrequency = new HashMap<Instance, List<List<Label>>>();
 
-        // first start by counting the number of times a unique instance was labeled by this user
         for (LabelAssignment labelAssignment : this.labelAssignments) {
-            String currentInstanceText = labelAssignment.getInstance().getText();
-            if (labelingsFreq.containsKey(currentInstanceText)) {
-                Map<String, Object> value = (HashMap<String, Object>) labelingsFreq.get(currentInstanceText);
-                int currentCount = (int) value.get("currentCount");
-                value.put("currentCount", currentCount + 1);
-                labelingsFreq.put(currentInstanceText, value);
-                totalReccurent++;
-            } else {
-				@SuppressWarnings("serial")
-                Map<String, Object> value = new HashMap<String, Object>() {{
-                    put("currentCount", 1);
-                    put("object", labelAssignment);
-                }};
-                labelingsFreq.put(currentInstanceText , value);
+            if (!instanceFrequency.containsKey(labelAssignment.getInstance())) {
+                instanceFrequency.put(labelAssignment.getInstance(), new ArrayList<>());
             }
-        }
+            instanceFrequency.get(labelAssignment.getInstance()).add(labelAssignment.getAssignedLabels());
+		}
 
-        // count all of the reccurrent instances which were labeled the same 
-        int sameReccurrents = 0;
-        for (LabelAssignment labelAssignment : this.labelAssignments) {
-            String currentInstanceText = labelAssignment.getInstance().getText();
-            Map<String, Object> value = (HashMap<String, Object>) labelingsFreq.get(currentInstanceText);
-            if ((int) value.get("currentCount") > 1 && ((LabelAssignment) value.get("object")).getAssignedLabels() == labelAssignment.getAssignedLabels()) {
-                sameReccurrents++;
-            }
-        }
+		int totalRecurrentLabelings = 0;
+		int totalConsistentRecurrentLabelings = 0;
 
-        if (totalReccurent == 0) {
+		for (Map.Entry<Instance, List<List<Label>>> entry : instanceFrequency.entrySet()) {
+			if (entry.getValue().size() > 1) {
+				Set<List<Label>> uniqueLabels = new HashSet<List<Label>>(entry.getValue());
+				if (uniqueLabels.size() == 1) {
+					totalConsistentRecurrentLabelings++;
+				}
+				totalRecurrentLabelings++;
+			}			
+		}
+
+        if (totalRecurrentLabelings == 0) {
             return 0.0;
         }
-        return sameReccurrents / totalReccurent * 100.0;
+		return totalConsistentRecurrentLabelings * 100.0 / totalRecurrentLabelings;
     }
 
     // returns the average time spent by this user labeling all its instances

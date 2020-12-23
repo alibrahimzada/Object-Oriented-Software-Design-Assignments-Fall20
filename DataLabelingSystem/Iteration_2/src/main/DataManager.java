@@ -164,7 +164,7 @@ public class DataManager {
                 try {
                     Object obj = new JSONParser().parse(new FileReader(labeledDataDirectoryName + "/" + fileName));
                     JSONObject jsonObject = (JSONObject) obj;
-					HashMap<String, Object> datasetJSON = (HashMap) jsonObject;
+					Map<String, Object> datasetJSON = (HashMap<String, Object>) jsonObject;
 					int currentDatasetId = ((Long) this.dataLabelingSystem.getConfigurations().get("currentDatasetId")).intValue();
 					Dataset dataset = this.getDataset(currentDatasetId);
 					if (dataset.getId() != Integer.parseInt(fileName.substring(7, 8))) {
@@ -172,7 +172,7 @@ public class DataManager {
 					}
 
                     // from here, we create a LabelAssignment object for each labelAssignment in report and add it to data structures
-					ArrayList<HashMap<String, Object>> labelAssignmentList = (ArrayList) datasetJSON.get("class label assignments");
+					List<HashMap<String, Object>> labelAssignmentList = (ArrayList<HashMap<String, Object>>) datasetJSON.get("class label assignments");
                     for (HashMap<String, Object> labelAssignmentDetails : labelAssignmentList) {
                         int instanceId = ((Long) labelAssignmentDetails.get("instance id")).intValue();
                         JSONArray assignedLabelIds = (JSONArray) labelAssignmentDetails.get("class label ids");

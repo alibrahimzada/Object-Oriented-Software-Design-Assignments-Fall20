@@ -81,10 +81,11 @@ public class DataManager {
             Map<String, Object> currentUser = (HashMap<String, Object>) users.get(i);
             long userId = (long) currentUser.get("userId");
             String userName = (String) currentUser.get("userName");
-            String userType = (String) currentUser.get("userType");
+			String userType = (String) currentUser.get("userType");
+			double consistencyProb = (double) currentUser.get("consistencyCheckProbability");
             long isAvailable = (long) currentUser.get("isAvailable");
             if (isAvailable == 1) {
-                User userObject = new User((int) userId, userName, userType);
+                User userObject = new User((int) userId, userName, userType, consistencyProb);
                 this.users.add(userObject);
                 this.dataLabelingSystem.getSystemLog().getLogger().info(String.format("successfully added user %s with id %d", userName, userId));
             }

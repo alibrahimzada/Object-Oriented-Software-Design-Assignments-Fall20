@@ -14,15 +14,17 @@ public class User {
     // attributes of User class
     private int id;
     private String name;
-    private String type;
+	private String type;
+	private double consistencyProb;
     private List<Dataset> assignedDatasets;
     private List<LabelAssignment> labelAssignments;
 
     // constructor of User class
-    public User(int id, String name, String type) {
+    public User(int id, String name, String type, double consistencyProb) {
         this.id = id;
         this.name = name;
-        this.type = type;
+		this.type = type;
+		this.consistencyProb = consistencyProb;
         this.assignedDatasets = new ArrayList<Dataset>();
         this.labelAssignments = new ArrayList<LabelAssignment>();
     }
@@ -82,7 +84,11 @@ public class User {
     // returns type of this user
     public String getType() {
         return this.type;
-    }
+	}
+	
+	public double getConsistencyProb() {
+		return this.consistencyProb;
+	}
 
     // returns total number of datasets assigned to this user
     public int getTotalDatasets() {

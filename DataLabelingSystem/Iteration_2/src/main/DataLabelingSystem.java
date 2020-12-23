@@ -88,7 +88,6 @@ public class DataLabelingSystem {
     public void assignLabels() {
 		// retrieve the current dataset object and consistency check probability
         int currentDatasetId = ((Long) this.configurations.get("currentDatasetId")).intValue();
-        double consistencyCheckProbability = ((Double) this.configurations.get("consistencyCheckProbability"));
         Dataset dataset = this.dataManager.getDataset(currentDatasetId);
         List<User> assignedUsers = dataset.getAssignedUsers();
 		
@@ -109,7 +108,7 @@ public class DataLabelingSystem {
 				// if the random number is smaller than consistency check probability * 100
 				// and there is at least 1 label assignment done by this user, then show an
 				// instance which was already labeled by this user, else show a new instance
-                if (randomNumber <= consistencyCheckProbability*100 && user.getLabelAssignments().size() > 0) {
+                if (randomNumber <= user.getConsistencyProb()*100 && user.getLabelAssignments().size() > 0) {
                     instance = user.getRandomInstance();
                 }
 

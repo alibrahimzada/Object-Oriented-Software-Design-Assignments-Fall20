@@ -71,7 +71,7 @@ public class DatasetTests {
     @Test
     public void addAssignedUserTest(){
         // testing adding assgined users.  
-        User userTest = new User(1, "name", "type");
+        User userTest = new User(1, "name", "type", 0.1);
         dataset.addAssignedUser(userTest);
         List<User> users = dataset.getAssignedUsers();
         assertTrue(users.contains(userTest));
@@ -82,7 +82,7 @@ public class DatasetTests {
         JSONArray jsonArray = createJsonArray("instance"); // creating a json array with 2 instances.
         dataset.addInstances(jsonArray); 
         //user
-        User userTest = new User(1, "name", "type");
+        User userTest = new User(1, "name", "type", 0.1);
         //labels 
         List<Label> labels = new ArrayList<Label>();
         //labeling mechanism

@@ -59,7 +59,7 @@ public class InstanceTests {
         JSONArray jsonArray1 = datasetTests.createJsonArray("label"); // creating a json array with 2 labels.
         dataset.addLabels(jsonArray1);
         //users 
-        User user1 = new User(1, "name1", "type1", 0.1);
+        User user1 = new User(1, "name1", "type1", "password", 0.1);
         //labeling mechanism
         LabelingMechanism labelingMechanism = new RandomLabelingMechanism();
         // label assignments

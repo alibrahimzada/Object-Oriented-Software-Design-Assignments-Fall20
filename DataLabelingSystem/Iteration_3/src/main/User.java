@@ -15,15 +15,17 @@ public class User {
     private int id;
     private String name;
 	private String type;
+	private String password;
 	private double consistencyProb;
     private List<Dataset> assignedDatasets;
     private List<LabelAssignment> labelAssignments;
 
     // constructor of User class
-    public User(int id, String name, String type, double consistencyProb) {
+    public User(int id, String name, String type, String loginPassword, double consistencyProb) {
         this.id = id;
         this.name = name;
 		this.type = type;
+		this.password = loginPassword;
 		this.consistencyProb = consistencyProb;
         this.assignedDatasets = new ArrayList<Dataset>();
         this.labelAssignments = new ArrayList<LabelAssignment>();
@@ -84,6 +86,11 @@ public class User {
     // returns type of this user
     public String getType() {
         return this.type;
+	}
+
+	// returns password of this user
+	public String getPassword() {
+		return this.password;
 	}
 	
 	public double getConsistencyProb() {

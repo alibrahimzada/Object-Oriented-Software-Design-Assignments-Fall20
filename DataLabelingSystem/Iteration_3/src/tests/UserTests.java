@@ -23,7 +23,7 @@ public class UserTests {
     @Test
     public void userCreationTest(){
         try {
-            user =  new User(1, "name", "type", 0.1);
+            user =  new User(1, "name", "type", "password", 0.1);
           } catch (Exception e) {
             Assert.fail(e.getMessage());
           }

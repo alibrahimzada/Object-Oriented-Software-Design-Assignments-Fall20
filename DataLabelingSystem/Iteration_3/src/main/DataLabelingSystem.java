@@ -1,7 +1,5 @@
 package main;
 
-import tests.TestSuiteRunner;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,13 +14,17 @@ import org.json.simple.parser.JSONParser;
 
 public class DataLabelingSystem {
 	// attributes of the DataLabelingSystem class
-    private Log systemLog;
+	private Log systemLog;
+	private UserInterface userInterface;
     private Map<String, Object> configurations;
-    private DataManager dataManager;
+	private DataManager dataManager;
+	private User currentUser;
+	private Dataset currentDataset;
 
 	// constructor of the DataLabelingSystem class
-    public DataLabelingSystem() {
-        this.createSystemLog(); // calling this method upon the creation of a new object
+    public DataLabelingSystem(UserInterface userInterface) {
+		this.createSystemLog(); // calling this method upon the creation of a new object
+		this.userInterface = userInterface;
         this.configurations = new HashMap<String, Object>();
         this.dataManager = new DataManager(this);
     }
@@ -76,28 +78,37 @@ public class DataLabelingSystem {
     public void loadDatasets() {
         JSONArray datasets = (JSONArray) this.configurations.get("datasets");
 		this.dataManager.addDatasets(datasets);
+		int currentDatasetId = ((Long) this.configurations.get("currentDatasetId")).intValue();
+		this.currentDataset = this.dataManager.getDataset(currentDatasetId);
     }
 
 	// this method asks data manager to load previous label assignments from previous simulations
     public void loadLabelAssignments() {
 		this.dataManager.addLabelAssignments();
 		this.systemLog.getLogger().info("successfully loaded the previous label assignments");
-    }
+	}
+	
+	// this method authorizes user login
+	public boolean authorizeLogin(String userName, String userPassword) {
+		for (User user : this.dataManager.getUsers()) {
+			if (user.getName().equals(userName) && user.getPassword().equals(userPassword)) {
+				this.currentUser = user;
+				this.systemLog.getLogger().info(user.getName() + " has successfully logged in.");
+				return true;
+			}
+		}
+		return false;
+	}
 
 	// this method assign labels to the instances of the current dataset
     public void assignLabels() {
-		// retrieve the current dataset object and consistency check probability
-        int currentDatasetId = ((Long) this.configurations.get("currentDatasetId")).intValue();
-        Dataset dataset = this.dataManager.getDataset(currentDatasetId);
-        List<User> assignedUsers = dataset.getAssignedUsers();
-		
 		// for each user assigned to current dataset
-        for (User user : assignedUsers) {
+        for (User user : this.currentDataset.getAssignedUsers()) {
 			// for each instance available inside current dataset
-            for (Instance instance : dataset.getInstances()) {
+            for (Instance instance : this.currentDataset.getInstances()) {
 
 				// this condition is to make sure a user do not label instances more than once
-				if (user.getUniqueInstances(dataset).contains(instance)) {
+				if (user.getUniqueInstances(this.currentDataset).contains(instance)) {
 					continue;
 				}
 
@@ -113,17 +124,24 @@ public class DataLabelingSystem {
                 }
 
 				// assign label(s) to the instance and add it to the corresponding data structures
-                LabelAssignment labelAssignment = new LabelAssignment(user, instance, dataset.getLabels(), new RandomLabelingMechanism());
-				labelAssignment.assignLabels(dataset.getMaxLabel());
-				// labelAssignment.setAssignedLabels(assignedLabelsIds);
+				LabelAssignment labelAssignment = null;
+				if (user.getType().equals("RandomBot")) {
+					labelAssignment = new LabelAssignment(user, instance, this.currentDataset.getLabels(), new RandomLabelingMechanism());
+				} else if (user.getType().equals("Human")) {
+					String[] userSelections = this.userInterface.getUserSelections(instance);
+					ManualLabelingMechanism manualLabelingMechanism = new ManualLabelingMechanism();
+					manualLabelingMechanism.setUserSelections(userSelections);
+					labelAssignment = new LabelAssignment(user, instance, this.currentDataset.getLabels(), manualLabelingMechanism);
+				}
+				labelAssignment.assignLabels(this.currentDataset.getMaxLabel());
 				this.dataManager.addLabelAssignment(labelAssignment);
 				this.systemLog.getLogger().info(String.format("an instance with id=%d from dataset with id=%d has been labeled by a user with id=%d", instance.getId(), instance.getDataset().getId(), user.getId()));
 
                 try {
 					// update the output label assignments JSON as well as the report JSON
-					this.dataManager.getDataUpdater().updateLabelAssignments(dataset);
+					this.dataManager.getDataUpdater().updateLabelAssignments(this.currentDataset);
 					this.systemLog.getLogger().info("successfully updated the label assignments file");
-					this.dataManager.getDataUpdater().updateReport(dataset);
+					this.dataManager.getDataUpdater().updateReport(this.currentDataset);
 					this.systemLog.getLogger().info("successfully updated the report");
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -131,21 +149,5 @@ public class DataLabelingSystem {
                 }
             }
         }
-    }
-
-    public static void main(String[] args) {
-        if (!new TestSuiteRunner().runTests()) return; // run all unit tests, return if any not passed.
-
-        DataLabelingSystem system = new DataLabelingSystem(); //creating a DataLabelingSystem object
-        
-        system.parseConfigurations(); // parsing the config.json file to populate the attribute configurations 
-
-        system.loadUsers(); // create instances of the users available in config.json
-        
-        system.loadDatasets(); // create instances of datasets avaialble in config.json
-
-        system.loadLabelAssignments(); // load previous label assignments, create their instances and add them to the data structures
-
-        system.assignLabels(); // assigning labels to the instances of the dataset and adding the labelAssignments info to the arrayList labelAssignments
     }
 }

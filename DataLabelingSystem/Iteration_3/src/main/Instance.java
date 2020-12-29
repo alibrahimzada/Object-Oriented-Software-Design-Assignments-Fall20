@@ -1,6 +1,7 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -10,7 +11,8 @@ public class Instance {
     // attributes of the Instance class
     private int id;
     private String text;
-    private Dataset dataset;
+	private Dataset dataset;
+	private Label finalLabel;
     private List<LabelAssignment> labelAssignments;
     
     // constructor of the instance class
@@ -151,5 +153,21 @@ public class Instance {
 		
 		// return entropy
         return entropy;
-    }
+	}
+	
+	// sets the final label of this instance
+	public Label getFinalLabel() {
+		// first get the text of the most frequent label
+		String frequentLabelText = (this.getFrequentLabelPercentage().split(" - "))[0];
+		Label frequentLabel = null;
+
+		// find the label whose text is same as frequent label
+		for (Label label : this.getDataset().getLabels()) {
+			if (label.getText().equals(frequentLabelText)) {
+				frequentLabel = label;
+			}
+		}
+		this.finalLabel = frequentLabel;
+		return frequentLabel;
+	}
 }

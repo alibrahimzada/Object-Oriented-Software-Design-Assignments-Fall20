@@ -157,7 +157,7 @@ public class DataManager {
 
     public void addLabelAssignments() {
         // this function adds the previous label assignments from different simulations
-        String labeledDataDirectoryName = (String) this.dataLabelingSystem.getConfigurations().get("labeledDataDirectory");
+        String labeledDataDirectoryName = (String) this.dataLabelingSystem.getConfigurations().getLabeledDataDirectory();
         File labeledDataDirectory = new File(labeledDataDirectoryName);
         if (labeledDataDirectory.exists()) {
             File[] labelAssignmentFiles = this.getLabelAssignmentFiles(labeledDataDirectory);
@@ -167,7 +167,7 @@ public class DataManager {
                     Object obj = new JSONParser().parse(new FileReader(labeledDataDirectoryName + "/" + fileName));
                     JSONObject jsonObject = (JSONObject) obj;
 					Map<String, Object> datasetJSON = (HashMap<String, Object>) jsonObject;
-					int currentDatasetId = ((Long) this.dataLabelingSystem.getConfigurations().get("currentDatasetId")).intValue();
+					int currentDatasetId = this.dataLabelingSystem.getConfigurations().getCurrentDatasetId();
 					Dataset dataset = this.getDataset(currentDatasetId);
 					if (dataset.getId() != Integer.parseInt(fileName.substring(7, 8))) {
 						continue;

@@ -11,7 +11,7 @@ public class UserInterface {
 
 	public UserInterface() {
 		this.dataLabelingSystem = new DataLabelingSystem(this);
-		this.dataLabelingSystem.parseConfigurations();
+		this.dataLabelingSystem.getConfigurations().parseConfigurations();
 		this.dataLabelingSystem.loadUsers();
 		this.dataLabelingSystem.loadDatasets();
 		this.dataLabelingSystem.loadLabelAssignments();

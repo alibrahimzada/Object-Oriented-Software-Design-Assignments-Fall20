@@ -19,7 +19,7 @@ public class DataUpdater {
     }
 
     public void updateLabelAssignments(Dataset currentDataset) throws Exception {
-        String outputDirectory = (String) this.dataManager.getDataLabelingSystem().getConfigurations().get("labeledDataDirectory");
+        String outputDirectory = (String) this.dataManager.getDataLabelingSystem().getConfigurations().getLabeledDataDirectory();
         Map<String, Object> linkedHM = new LinkedHashMap<String, Object>();
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
@@ -52,8 +52,9 @@ public class DataUpdater {
             ArrayList<Integer> assignedLabelsId = new ArrayList<Integer>();
             for (Label label : labelAssignment.getAssignedLabels()) {
                 assignedLabelsId.add(label.getId());
-            }
-            assignmentMap.put("class label ids", assignedLabelsId);
+			}
+			assignmentMap.put("class label ids", assignedLabelsId);
+			assignmentMap.put("final label (most frequent)", labelAssignment.getInstance().getFinalLabel().getText());
             assignmentMap.put("user id", labelAssignment.getUser().getId());
             assignmentMap.put("datetime", labelAssignment.getDate().toString());
             assignmentMap.put("time spent", labelAssignment.getTimeSpent());
@@ -84,7 +85,7 @@ public class DataUpdater {
     }
 
     public void updateReport(Dataset currentDataset) throws Exception {
-        String reportDirectory = (String) this.dataManager.getDataLabelingSystem().getConfigurations().get("reportDirectory");
+        String reportDirectory = (String) this.dataManager.getDataLabelingSystem().getConfigurations().getReportDirectory();
 		Map<String, Object> linkedHM = new LinkedHashMap<String, Object>();
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 

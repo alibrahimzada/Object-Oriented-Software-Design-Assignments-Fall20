@@ -1,22 +1,13 @@
 package main;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;
-
-import java.io.FileReader;
-
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
 public class DataLabelingSystem {
 	// attributes of the DataLabelingSystem class
 	private Log systemLog;
 	private UserInterface userInterface;
-    private Map<String, Object> configurations;
+    private Configuration configurations;
 	private DataManager dataManager;
 	private User currentUser;
 	private Dataset currentDataset;
@@ -25,7 +16,7 @@ public class DataLabelingSystem {
     public DataLabelingSystem(UserInterface userInterface) {
 		this.createSystemLog(); // calling this method upon the creation of a new object
 		this.userInterface = userInterface;
-        this.configurations = new HashMap<String, Object>();
+        this.configurations = new Configuration(this);
         this.dataManager = new DataManager(this);
     }
 
@@ -50,36 +41,20 @@ public class DataLabelingSystem {
         return this.systemLog;
     }
 
-	// this method parses the config.json file and stores its content in specific attributes
-    public void parseConfigurations() {
-        try {
-            Object obj = new JSONParser().parse(new FileReader("config.json"));
-            JSONObject jsonObject = (JSONObject) obj;
-            this.configurations = (HashMap<String, Object>) jsonObject;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            System.exit(1);
-        }
-        this.systemLog.getLogger().info("successfully parsed software configurations");
-    }
-
 	// this method returns the configurations hashmap
-    public Map<String, Object> getConfigurations() {
+    public Configuration getConfigurations() {
         return this.configurations;
     }
 
 	// this method parses the user data from configurations and ask data manager to create them
     public void loadUsers() {
-        JSONArray users = (JSONArray) this.configurations.get("users"); // getting the users info from the configurations
-        this.dataManager.addUsers(users); //passing the userCount and users' info to addUsers to populate the attributes users
+        this.dataManager.addUsers(this.configurations.getUsers()); //passing the userCount and users' info to addUsers to populate the attributes users
     }
 
 	// this method parses the dataset data from configurations and ask data manager to create them
     public void loadDatasets() {
-        JSONArray datasets = (JSONArray) this.configurations.get("datasets");
-		this.dataManager.addDatasets(datasets);
-		int currentDatasetId = ((Long) this.configurations.get("currentDatasetId")).intValue();
-		this.currentDataset = this.dataManager.getDataset(currentDatasetId);
+		this.dataManager.addDatasets(this.configurations.getDatasets());
+		this.currentDataset = this.dataManager.getDataset(this.configurations.getCurrentDatasetId());
     }
 
 	// this method asks data manager to load previous label assignments from previous simulations
@@ -132,6 +107,8 @@ public class DataLabelingSystem {
 					ManualLabelingMechanism manualLabelingMechanism = new ManualLabelingMechanism();
 					manualLabelingMechanism.setUserSelections(userSelections);
 					labelAssignment = new LabelAssignment(user, instance, this.currentDataset.getLabels(), manualLabelingMechanism);
+				} else if (user.getType().equals("RuleBasedBot")) {
+					labelAssignment = new LabelAssignment(user, instance, this.currentDataset.getLabels(), new RuleBasedLabelingMechanism());
 				}
 				labelAssignment.assignLabels(this.currentDataset.getMaxLabel());
 				this.dataManager.addLabelAssignment(labelAssignment);

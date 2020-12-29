@@ -107,6 +107,8 @@ public class DataLabelingSystem {
 					ManualLabelingMechanism manualLabelingMechanism = new ManualLabelingMechanism();
 					manualLabelingMechanism.setUserSelections(userSelections);
 					labelAssignment = new LabelAssignment(user, instance, this.currentDataset.getLabels(), manualLabelingMechanism);
+				} else if (user.getType().equals("RuleBasedBot")) {
+					labelAssignment = new LabelAssignment(user, instance, this.currentDataset.getLabels(), new RuleBasedLabelingMechanism());
 				}
 				labelAssignment.assignLabels(this.currentDataset.getMaxLabel());
 				this.dataManager.addLabelAssignment(labelAssignment);

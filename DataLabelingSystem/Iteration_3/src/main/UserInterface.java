@@ -67,23 +67,11 @@ public class UserInterface {
 	public static void main(String[] args) {
 		if (!new TestSuiteRunner().runTests()) return; // run all unit tests, return if any not passed.
 
-		// UserInterface userInterface = new UserInterface();
+		UserInterface userInterface = new UserInterface();
 		
-		// userInterface.login();
+		userInterface.login();
 
-		// userInterface.labelInstances();
+		userInterface.labelInstances();
 
-		RuleBasedLabelingMechanism b = new RuleBasedLabelingMechanism();
-
-		List<Label> c = new ArrayList<Label>();
-		
-		c.add(new  Label(1, "label"));
-		c.add(new  Label(2, "effif"));
-		c.add(new  Label(2, "nrugnri"));
-		c.add(new  Label(2, "vbeuve"));
-		c.add(new  Label(2, "oeijfiowjf"));
-		
-		Instance ins = new  Instance(1, "I am an instance");
-		b.labelInstance(ins, c, 3);
 	}
 }

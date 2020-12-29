@@ -28,7 +28,7 @@ public class RuleBasedLabelingMechanism extends LabelingMechanism {
         return this.assignedLabels;
     }
 
-    public List<Label> sortLabelsBySimilarities(Instance instance, List<Label> labels){
+    private List<Label> sortLabelsBySimilarities(Instance instance, List<Label> labels){
         /*
             Given an instance, and list of labels, the method returns the list of labels
             which are sorted by their similarities.
@@ -48,7 +48,7 @@ public class RuleBasedLabelingMechanism extends LabelingMechanism {
         return sortedLabels;
     }
 
-    public double calculateSimilarty(Instance instance, Label label){
+    private double calculateSimilarty(Instance instance, Label label){
         /*
             Given an instance and a label, calculte the similarity as the average of the occurrences
             of each letter of the label in the instance.

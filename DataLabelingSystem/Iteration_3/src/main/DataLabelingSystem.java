@@ -76,9 +76,14 @@ public class DataLabelingSystem {
 	}
 
 	// this method assign labels to the instances of the current dataset
-    public void assignLabels() {
+    public void assignLabels(boolean mode) {
 		// for each user assigned to current dataset
         for (User user : this.currentDataset.getAssignedUsers()) {
+			if (mode && !user.getType().equals("Human")) {
+				continue;
+			} else if (!mode && user.getType().equals("Human")) {
+				continue;
+			}
 			// for each instance available inside current dataset
             for (Instance instance : this.currentDataset.getInstances()) {
 
@@ -102,15 +107,20 @@ public class DataLabelingSystem {
 				LabelAssignment labelAssignment = null;
 				if (user.getType().equals("RandomBot")) {
 					labelAssignment = new LabelAssignment(user, instance, this.currentDataset.getLabels(), new RandomLabelingMechanism());
+					labelAssignment.assignLabels(this.currentDataset.getMaxLabel());
 				} else if (user.getType().equals("Human")) {
+					long start = System.nanoTime();
 					String[] userSelections = this.userInterface.getUserSelections(instance);
+					long end = System.nanoTime();
 					ManualLabelingMechanism manualLabelingMechanism = new ManualLabelingMechanism();
 					manualLabelingMechanism.setUserSelections(userSelections);
 					labelAssignment = new LabelAssignment(user, instance, this.currentDataset.getLabels(), manualLabelingMechanism);
+					labelAssignment.assignLabels(this.currentDataset.getMaxLabel());
+					labelAssignment.setTimeSpent(start, end);
 				} else if (user.getType().equals("RuleBasedBot")) {
 					labelAssignment = new LabelAssignment(user, instance, this.currentDataset.getLabels(), new RuleBasedLabelingMechanism());
+					labelAssignment.assignLabels(this.currentDataset.getMaxLabel());
 				}
-				labelAssignment.assignLabels(this.currentDataset.getMaxLabel());
 				this.dataManager.addLabelAssignment(labelAssignment);
 				this.systemLog.getLogger().info(String.format("an instance with id=%d from dataset with id=%d has been labeled by a user with id=%d", instance.getId(), instance.getDataset().getId(), user.getId()));
 

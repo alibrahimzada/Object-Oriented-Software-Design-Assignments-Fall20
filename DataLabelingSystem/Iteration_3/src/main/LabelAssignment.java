@@ -35,12 +35,16 @@ public class LabelAssignment {
         this.instance.addLabelAssignment(this);
         this.date = new Date();
         long end = System.nanoTime();
-        this.timeSpent = (end - start) / 1000000D;
+        this.timeSpent = (double) (end - start) / 1_000_000_000;
     }
 
     public double getTimeSpent() {
         return this.timeSpent;
-    }
+	}
+	
+	public void setTimeSpent(long start, long end) {
+		this.timeSpent = (double) (end - start) / 1_000_000_000;
+	}
 
     public void setTimeSpent(Double timeSpent) {
         this.timeSpent = timeSpent;

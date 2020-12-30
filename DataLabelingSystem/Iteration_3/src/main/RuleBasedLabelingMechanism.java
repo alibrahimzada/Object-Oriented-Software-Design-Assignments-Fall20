@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-
+import java.util.Random;
 
 public class RuleBasedLabelingMechanism extends LabelingMechanism {
     
@@ -20,8 +19,9 @@ public class RuleBasedLabelingMechanism extends LabelingMechanism {
             text. 
         */
         List<Label> sortedLabelsBySimilarities = sortLabelsBySimilarities(instance, labels);
-
-        for (int i = 0; i < maxLabel; i++){
+		Random rand = new Random();
+        int stop = rand.nextInt(maxLabel) + 1;   // get a random number(#of labels to assign) from 1 to maxLabel
+        for (int i = 0; i < stop; i++) {
             this.assignedLabels.add(sortedLabelsBySimilarities.get(i)); // get the first N labels(N being maxLabel)
         }
 
@@ -75,8 +75,6 @@ public class RuleBasedLabelingMechanism extends LabelingMechanism {
         }
 
         similarity = similarity/labelText.length();
-
-        System.out.println(label.getText() + ":   " +   similarity);
         return similarity;
     }
 }

@@ -10,14 +10,8 @@
 		{"userId": 5, "userName": "morpheus", "loginPassword": "zion", "userType": "Human", "consistencyCheckProbability": 0.1, "isAvailable": 1}
     ],
     "datasets": [
-<<<<<<< HEAD
-        {"datasetId": 1, "datasetName": "Sentiment Dataset", "filePath": "datasets/dataset1.json", "assignedUsers": [4, 3]},
-		{"datasetId": 2, "datasetName": "Multilabel Topic Classification Dataset", "filePath": "datasets/dataset2.json", "assignedUsers": [5]},
-		{"datasetId": 3, "datasetName": "Sentiment Dataset Big", "filePath": "datasets/dataset3.json", "assignedUsers": [1, 3]}
-=======
         {"datasetId": 1, "datasetName": "Sentiment Dataset", "filePath": "datasets/dataset1.json", "assignedUsers": [1, 4]},
 		{"datasetId": 2, "datasetName": "Multilabel Topic Classification Dataset", "filePath": "datasets/dataset2.json", "assignedUsers": [5, 3]},
 		{"datasetId": 3, "datasetName": "Sentiment Dataset Big", "filePath": "datasets/dataset3.json", "assignedUsers": [4, 2]}
->>>>>>> 44a12fcfd509d4e74996f66b6f8cca210a043ec7
     ]
 }

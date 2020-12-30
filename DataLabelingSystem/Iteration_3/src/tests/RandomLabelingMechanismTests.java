@@ -26,24 +26,25 @@ public class RandomLabelingMechanismTests {
     public void labelInstanceTest(){
         List<Label> labels = createLabels();
         Instance instance = new Instance(1, "This is instance 1");
-        int maxLabel1 = 1, maxLabel2 = 5;
+        int maxLabel1 = 1, maxLabel2 = 4;
         List<Label> assignedLabels1 = this.labelingMechanism1.labelInstance(instance, labels, maxLabel1);
         List<Label> assignedLabels2 = this.labelingMechanism2.labelInstance(instance, labels, maxLabel2);
-        assertEquals(1, assignedLabels1.size());
-        assertTrue(assignedLabels2.size() >= 1 && assignedLabels2.size() <= maxLabel2);
+        assertEquals(1, assignedLabels1.size()); // to test when maxLabel = 1
+        assertTrue(assignedLabels2.size() >= 1 && assignedLabels2.size() <= maxLabel2); //to test when maxLabel>1
 
     }
 
     @Test
     public void getRandomElementTest(){
+        //testing whether a label from the passed labels is returned.
         List<Label> labels = createLabels();
         Label label = this.labelingMechanism1.getRandomElement(labels);
-        assertTrue(labels.contains(label));
-
+        assertTrue(labels.contains(label)); 
     }
 
     
     private List<Label> createLabels(){
+        // creating some labels to be chosen from while labeling randomly
         List<Label> labels = new ArrayList<Label>();
         labels.add(new Label(1, "This is label 1"));
         labels.add(new Label(2, "This is label 2"));

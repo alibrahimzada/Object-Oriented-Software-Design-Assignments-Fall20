@@ -12,6 +12,7 @@ import org.junit.runners.Suite;
     DatasetTests.class,
     RandomLabelingMechanismTests.class,
     InstanceTests.class,
+    RuleBasedLabelingMechanismTests.class,
 })
 
 

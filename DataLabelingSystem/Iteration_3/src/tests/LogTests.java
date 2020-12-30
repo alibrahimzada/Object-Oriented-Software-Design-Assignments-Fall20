@@ -32,6 +32,6 @@ public class LogTests {
     @Test
     public void fileCreationTest(){
         File f = new File(this.logger.getFileName());
-        assertTrue(f.exists() && !f.isDirectory());
+        assertTrue(f.exists() && !f.isDirectory()); // testing if the file was creatd upon the initialization of the object logger
     }
 }

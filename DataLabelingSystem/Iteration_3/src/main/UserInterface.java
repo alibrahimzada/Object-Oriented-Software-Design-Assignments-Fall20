@@ -9,6 +9,10 @@ public class UserInterface {
 
 	public UserInterface() {
 		this.dataLabelingSystem = new DataLabelingSystem(this);
+	}
+
+	// this method initiates the process of loading metadata
+	private void initiateSystem() {
 		this.dataLabelingSystem.getConfigurations().parseConfigurations();
 		this.dataLabelingSystem.loadUsers();
 		this.dataLabelingSystem.loadDatasets();
@@ -26,8 +30,8 @@ public class UserInterface {
 
 			// this condition will check if username and password are blank
 			if (userName.isBlank() && userPassword.isBlank()) {
-				// if so, the assign bots will label the current dataset and the program terminates
-				this.dataLabelingSystem.assignLabels();
+				// if so, the assigned bots will label the current dataset and the program terminates
+				this.dataLabelingSystem.assignLabels(false);
 				System.exit(0);
 			// this condition will check if the entered username and password are valid
 			} else if (this.dataLabelingSystem.authorizeLogin(userName, userPassword)) {
@@ -39,8 +43,8 @@ public class UserInterface {
 	}
 
 	private void labelInstances() {
-		this.dataLabelingSystem.assignLabels();
-		System.out.println("Hey, you have finished labeling the dataset assigned to you. Goodbye!");
+		this.dataLabelingSystem.assignLabels(true);
+		System.out.println("Bots/Humans finished labeling their assigned datasets. Goodbye!");
 	}
 
 	public String[] getUserSelections(Instance instance) {
@@ -54,7 +58,7 @@ public class UserInterface {
 		Scanner sc = new Scanner(System.in);
 		String userSelections = sc.nextLine();
 		String[] userSelectionsArray = userSelections.split("\\s+");
-		while (userSelectionsArray.length > instance.getDataset().getLabels().size()) {
+		while (userSelectionsArray.length > maxLabel) {
 			System.out.println("Invalid selection! Please try again.");
 			userSelections = sc.nextLine();
 			userSelectionsArray = userSelections.split("\\s+");
@@ -67,9 +71,10 @@ public class UserInterface {
 
 		UserInterface userInterface = new UserInterface();
 		
+		userInterface.initiateSystem();
+
 		userInterface.login();
 
 		userInterface.labelInstances();
-
 	}
 }

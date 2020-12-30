@@ -76,9 +76,14 @@ public class DataLabelingSystem {
 	}
 
 	// this method assign labels to the instances of the current dataset
-    public void assignLabels() {
+    public void assignLabels(boolean mode) {
 		// for each user assigned to current dataset
         for (User user : this.currentDataset.getAssignedUsers()) {
+			if (mode && !user.getType().equals("Human")) {
+				continue;
+			} else if (!mode && user.getType().equals("Human")) {
+				continue;
+			}
 			// for each instance available inside current dataset
             for (Instance instance : this.currentDataset.getInstances()) {
 

@@ -56,7 +56,7 @@ public class UserInterface {
 		int maxLabel = instance.getDataset().getMaxLabel();
 		System.out.println("\nPlease enter your selected label(s)' number separated by space. This instance can have at most " + maxLabel + " label(s)");
 		Scanner sc = new Scanner(System.in);
-		String userSelections = sc.nextLine();
+		String userSelections = sc.nextLine().strip();
 		String[] userSelectionsArray = userSelections.split("\\s+");
 		while (true) {
 			int isInvalid = 0;
@@ -66,15 +66,14 @@ public class UserInterface {
 					break;
 				}
 			}
-
 			if (isInvalid == 1) {
 				System.out.println("Invalid selection! You have selected an unavailable label. Please try again.");
-				userSelections = sc.nextLine();
+				userSelections = sc.nextLine().strip();
 				userSelectionsArray = userSelections.split("\\s+");
 				continue;	
 			} else if (userSelectionsArray.length > maxLabel) {
 				System.out.println("Invalid selection! You have exceeded the max. number of selections. Please try again.");
-				userSelections = sc.nextLine();
+				userSelections = sc.nextLine().strip();
 				userSelectionsArray = userSelections.split("\\s+");
 				continue;
 			}

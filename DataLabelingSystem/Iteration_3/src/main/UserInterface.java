@@ -61,7 +61,7 @@ public class UserInterface {
 		while (true) {
 			int isInvalid = 0;
 			for (int i = 0; i < userSelectionsArray.length; i++) {
-				if (Integer.parseInt(userSelectionsArray[i]) > instance.getDataset().getLabels().size()) {
+				if (userSelections.isBlank() || Integer.parseInt(userSelectionsArray[i]) > instance.getDataset().getLabels().size()) {
 					isInvalid = 1;
 					break;
 				}

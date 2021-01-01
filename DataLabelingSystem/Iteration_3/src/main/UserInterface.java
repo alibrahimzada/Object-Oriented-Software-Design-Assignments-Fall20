@@ -58,10 +58,27 @@ public class UserInterface {
 		Scanner sc = new Scanner(System.in);
 		String userSelections = sc.nextLine();
 		String[] userSelectionsArray = userSelections.split("\\s+");
-		while (userSelectionsArray.length > maxLabel) {
-			System.out.println("Invalid selection! Please try again.");
-			userSelections = sc.nextLine();
-			userSelectionsArray = userSelections.split("\\s+");
+		while (true) {
+			int isInvalid = 0;
+			for (int i = 0; i < userSelectionsArray.length; i++) {
+				if (Integer.parseInt(userSelectionsArray[i]) > instance.getDataset().getLabels().size()) {
+					isInvalid = 1;
+					break;
+				}
+			}
+
+			if (isInvalid == 1) {
+				System.out.println("Invalid selection! You have selected an unavailable label. Please try again.");
+				userSelections = sc.nextLine();
+				userSelectionsArray = userSelections.split("\\s+");
+				continue;	
+			} else if (userSelectionsArray.length > maxLabel) {
+				System.out.println("Invalid selection! You have exceeded the max. number of selections. Please try again.");
+				userSelections = sc.nextLine();
+				userSelectionsArray = userSelections.split("\\s+");
+				continue;
+			}
+			break;
 		}
 		return userSelectionsArray;  // split user selections by whitespace
 	}

@@ -3,7 +3,6 @@
 import sys
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtGui import QCursor
 from PyQt5.QtWidgets import QApplication, QMainWindow
 
 class UserInterface(object):
@@ -64,8 +63,6 @@ class UserInterface(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.TitleLabel.sizePolicy().hasHeightForWidth())
         self.TitleLabel.setSizePolicy(sizePolicy)
-        self.TitleLabel.setSizeIncrement(QtCore.QSize(0, 0))
-        self.TitleLabel.setBaseSize(QtCore.QSize(0, 0))
         font = QtGui.QFont()
         font.setFamily("MS Sans Serif")
         font.setPointSize(35)
@@ -82,7 +79,7 @@ class UserInterface(object):
         self.statusbar = QtWidgets.QStatusBar(UserInterface)
         self.statusbar.setObjectName("statusbar")
         UserInterface.setStatusBar(self.statusbar)
-# your_button.setCursor(QCursor(QtCore.Qt.PointingHandCursor))
+
         self.LoadAnswerKey.setCursor(QtCore.Qt.PointingHandCursor)
         self.LoadPolls.setCursor(QtCore.Qt.PointingHandCursor)
         self.LoadStdListsBtn.setCursor(QtCore.Qt.PointingHandCursor)
@@ -102,6 +99,7 @@ class UserInterface(object):
     '''
     _translate = QtCore.QCoreApplication.translate
     UserInterface.setWindowTitle(_translate("UserInterface", "MainWindow"))
+    
     self.TitleLabel.setText(_translate("UserInterface", "Poll Analysis System"))
 
     self.LoadStdListsBtn.setText(_translate("UserInterface", "Load Student Lists"))

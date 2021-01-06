@@ -38,6 +38,14 @@ class UserInterface(object):
 
 
 
+  def retranslateUi(self, UserInterface):
+      _translate = QtCore.QCoreApplication.translate
+      UserInterface.setWindowTitle(_translate("UserInterface", "MainWindow"))
+      self.LoadStdListsBtn.setText(_translate("UserInterface", "Load Student Lists"))
+      self.LoadPollsBtn.setStyleSheet(_translate("UserInterface", "background-color:green; color:white"))
+      self.LoadPollsBtn.setText(_translate("UserInterface", "Load Polls"))
+      self.LoadAnswerKeysBtn.setStyleSheet(_translate("UserInterface", "background-color:green; color:white"))
+      self.LoadAnswerKeysBtn.setText(_translate("UserInterface", "Load Answer Keys"))
 
 def main():
     app = QApplication([])

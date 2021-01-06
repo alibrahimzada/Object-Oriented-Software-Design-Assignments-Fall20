@@ -54,30 +54,60 @@ class UserInterface(object):
         self.ExportGlobalReportBtn.setObjectName("ExportGlobalReportBtn")
 
 
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.TitleLabel.sizePolicy().hasHeightForWidth())
+        self.TitleLabel.setSizePolicy(sizePolicy)
+        self.TitleLabel.setSizeIncrement(QtCore.QSize(0, 0))
+        self.TitleLabel.setBaseSize(QtCore.QSize(0, 0))
+        font = QtGui.QFont()
+        font.setFamily("MS Sans Serif")
+        font.setPointSize(35)
+        font.setBold(True)
+        font.setUnderline(False)
+        font.setWeight(75)
+        font.setStrikeOut(False)
+        font.setKerning(True)
+        self.TitleLabel.setFont(font)
+        self.TitleLabel.setAutoFillBackground(False)
+        self.TitleLabel.setStyleSheet("background-color: green; color: white")
+        self.TitleLabel.setLineWidth(20)
+        self.TitleLabel.setMidLineWidth(20)
+        self.TitleLabel.setAlignment(QtCore.Qt.AlignCenter)
+        self.TitleLabel.setObjectName("TitleLabel")
+        UserInterface.setCentralWidget(self.centralwidget)
+        self.statusbar = QtWidgets.QStatusBar(UserInterface)
+        self.statusbar.setObjectName("statusbar")
+        UserInterface.setStatusBar(self.statusbar)
 
         self.retranslateUi(UserInterface)
         QtCore.QMetaObject.connectSlotsByName(UserInterface)
+
   def retranslateUi(self, UserInterface):
     ''' 
         This is somewhat self explantory, just a function that sets the text/style of the widgets we have.
         This is how we do it in pyqt but we can always get rid of this function and just write whatever we have
         here into the setup ui function but this is the correct way to do it.
     '''
+    _translate = QtCore.QCoreApplication.translate
+    UserInterface.setWindowTitle(_translate("UserInterface", "MainWindow"))
+    self.LoadStdListsBtn.setText(_translate("UserInterface", "Load Student Lists"))
+    self.LoadPollsBtn.setStyleSheet(_translate("UserInterface", "background-color:green; color:white"))
+    self.LoadPollsBtn.setText(_translate("UserInterface", "Load Polls"))
+    self.LoadAnswerKeysBtn.setStyleSheet(_translate("UserInterface", "background-color:green; color:white"))
+    self.LoadAnswerKeysBtn.setText(_translate("UserInterface", "Load Answer Keys"))
+    self.ExportAttendReportBtn.setStyleSheet(_translate("UserInterface", "background-color:green; color:white"))
+    self.ExportAttendReportBtn.setText(_translate("UserInterface", "Export Attendance Report"))
+    self.ExportStatsBtn.setText(_translate("UserInterface", "Export Stats"))
+    self.ExportGlobalReportBtn.setStyleSheet(_translate("UserInterface", "background-color:green; color:white"))
+    self.ExportGlobalReportBtn.setText(_translate("UserInterface", "Export Global Report"))
+    self.TitleLabel.setStatusTip(_translate("UserInterface", "This is a normal label, nothing to see here."))
+    self.TitleLabel.setText(_translate("UserInterface", "Poll Analysis System"))
 
-      _translate = QtCore.QCoreApplication.translate
-      UserInterface.setWindowTitle(_translate("UserInterface", "MainWindow"))
-      self.LoadStdListsBtn.setText(_translate("UserInterface", "Load Student Lists"))
-      self.LoadPollsBtn.setStyleSheet(_translate("UserInterface", "background-color:green; color:white"))
-      self.LoadPollsBtn.setText(_translate("UserInterface", "Load Polls"))
-      self.LoadAnswerKeysBtn.setStyleSheet(_translate("UserInterface", "background-color:green; color:white"))
-      self.LoadAnswerKeysBtn.setText(_translate("UserInterface", "Load Answer Keys"))
-      self.ExportAttendReportBtn.setStyleSheet(_translate("UserInterface", "background-color:green; color:white"))
-      self.ExportAttendReportBtn.setText(_translate("UserInterface", "Export Attendance Report"))
-      self.ExportStatsBtn.setText(_translate("UserInterface", "Export Stats"))
-      self.ExportGlobalReportBtn.setStyleSheet(_translate("UserInterface", "background-color:green; color:white"))
-      self.ExportGlobalReportBtn.setText(_translate("UserInterface", "Export Global Report"))
-      self.TitleLabel.setStatusTip(_translate("UserInterface", "This is a normal label, nothing to see here."))
-      self.TitleLabel.setText(_translate("UserInterface", "Poll Analysis System"))
+
+
+
 
 def main():
     app = QApplication([]) #Qapplication requires that we pass it system arguments, but since we have none, we just put an empty list.
@@ -87,3 +117,6 @@ def main():
     window.show()
     sys.exit(app.exec_()) #app.exec is what shows our window basically, without it, we won't see anything. 
 
+
+if __name__ == '__main__':
+    main()

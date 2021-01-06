@@ -63,6 +63,11 @@ class UserInterface(object):
         self.ExportGlobalReportBtn.setObjectName("ExportGlobalReportBtn")
 
 
+
+        self.retranslateUi(UserInterface)
+        QtCore.QMetaObject.connectSlotsByName(UserInterface)
+
+
   def retranslateUi(self, UserInterface):
       _translate = QtCore.QCoreApplication.translate
       UserInterface.setWindowTitle(_translate("UserInterface", "MainWindow"))

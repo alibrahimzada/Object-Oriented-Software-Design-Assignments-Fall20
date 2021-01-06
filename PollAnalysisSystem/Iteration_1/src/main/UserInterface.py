@@ -93,6 +93,7 @@ class UserInterface(object):
     _translate = QtCore.QCoreApplication.translate
     UserInterface.setWindowTitle(_translate("UserInterface", "MainWindow"))
     self.LoadStdListsBtn.setText(_translate("UserInterface", "Load Student Lists"))
+    self.LoadStdListsBtn.setStatusTip(_translate("UserInterface","This is just a button, why are you hovering over many things weirdly?"))
     self.LoadPollsBtn.setStyleSheet(_translate("UserInterface", "background-color:green; color:white"))
     self.LoadPollsBtn.setText(_translate("UserInterface", "Load Polls"))
     self.LoadAnswerKeysBtn.setStyleSheet(_translate("UserInterface", "background-color:green; color:white"))
@@ -102,6 +103,7 @@ class UserInterface(object):
     self.ExportStatsBtn.setText(_translate("UserInterface", "Export Stats"))
     self.ExportGlobalReportBtn.setStyleSheet(_translate("UserInterface", "background-color:green; color:white"))
     self.ExportGlobalReportBtn.setText(_translate("UserInterface", "Export Global Report"))
+    self.LoadStdListsBtn.setStatusTip(_translate("UserInterface","This is also just a button, come on"))
     self.TitleLabel.setStatusTip(_translate("UserInterface", "This is a normal label, nothing to see here."))
     self.TitleLabel.setText(_translate("UserInterface", "Poll Analysis System"))
 

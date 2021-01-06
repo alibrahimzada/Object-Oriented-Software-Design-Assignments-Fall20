@@ -1,0 +1,2 @@
+PyQt5==5.15.2
+PyQt5-sip==12.8.1 ## this actually will just get installed when you install pyqt5 btw. -Khaled

@@ -1,4 +1,6 @@
 
+
+import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow
 
@@ -34,6 +36,31 @@ class UserInterface(object):
         self.LoadAnswerKeysBtn.setFont(font)
         self.LoadAnswerKeysBtn.setObjectName("LoadAnswerKeysBtn")
 
+        self.ExportAttendReportBtn = QtWidgets.QPushButton(self.centralwidget)
+        self.ExportAttendReportBtn.setGeometry(QtCore.QRect(60, 310, 171, 51))
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(75)
+        self.ExportAttendReportBtn.setFont(font)
+        self.ExportAttendReportBtn.setObjectName("ExportAttendReportBtn")
+        self.ExportStatsBtn = QtWidgets.QPushButton(self.centralwidget)
+        self.ExportStatsBtn.setGeometry(QtCore.QRect(290, 310, 171, 51))
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(75)
+        self.ExportStatsBtn.setFont(font)
+        self.ExportStatsBtn.setStyleSheet("background-color:green; color:white;")
+        self.ExportStatsBtn.setObjectName("ExportStatsBtn")
+        self.ExportGlobalReportBtn = QtWidgets.QPushButton(self.centralwidget)
+        self.ExportGlobalReportBtn.setGeometry(QtCore.QRect(520, 310, 171, 51))
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(75)
+        self.ExportGlobalReportBtn.setFont(font)
+        self.ExportGlobalReportBtn.setAutoDefault(False)
+        self.ExportGlobalReportBtn.setDefault(False)
+        self.ExportGlobalReportBtn.setFlat(False)
+        self.ExportGlobalReportBtn.setObjectName("ExportGlobalReportBtn")
 
 
   def retranslateUi(self, UserInterface):
@@ -44,6 +71,13 @@ class UserInterface(object):
       self.LoadPollsBtn.setText(_translate("UserInterface", "Load Polls"))
       self.LoadAnswerKeysBtn.setStyleSheet(_translate("UserInterface", "background-color:green; color:white"))
       self.LoadAnswerKeysBtn.setText(_translate("UserInterface", "Load Answer Keys"))
+      self.ExportAttendReportBtn.setStyleSheet(_translate("UserInterface", "background-color:green; color:white"))
+      self.ExportAttendReportBtn.setText(_translate("UserInterface", "Export Attendance Report"))
+      self.ExportStatsBtn.setText(_translate("UserInterface", "Export Stats"))
+      self.ExportGlobalReportBtn.setStyleSheet(_translate("UserInterface", "background-color:green; color:white"))
+      self.ExportGlobalReportBtn.setText(_translate("UserInterface", "Export Global Report"))
+      self.TitleLabel.setStatusTip(_translate("UserInterface", "This is a normal label, nothing to see here."))
+      self.TitleLabel.setText(_translate("UserInterface", "Poll Analysis System"))
 
 def main():
     app = QApplication([])

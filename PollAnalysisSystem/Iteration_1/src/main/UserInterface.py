@@ -147,13 +147,13 @@ class UserInterface(object):
         return self.files
 
     def upload_std_list(self):
-        self.stdLists = self.files_loader()
+        self.std_list = self.files_loader()
 
     def upload_answer_key(self):
-        self.answerKeyList = self.files_loader()
+        self.answer_key_list = self.files_loader()
 
     def upload_polls(self):
-        self.pollsList = self.files_loader()
+        self.polls_list = self.files_loader()
 
     def download_attendance_report(self):
         pass #we will not be saving by opening a dialog so this shall remain like this  till we figure out how we will export.

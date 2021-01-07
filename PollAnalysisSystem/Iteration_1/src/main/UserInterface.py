@@ -139,7 +139,7 @@ class UserInterface(object):
     def filesLoader(self, DialogName="Choose Directory"):
         ''' Opens a directory, loads all files in it and makes a IO.textIoWrapper objects list and returns it'''
         dirname = QFileDialog.getExistingDirectory(caption=DialogName)
-        self.files = [] #tthis will be a list of files that are inside the directory you load.
+        self.files = [] #this will be a list of files that are inside the directory you load.
         print(os.path.join(os.getcwd()))
         for filename in os.listdir(dirname):
             fullPath = dirname + '/' + filename

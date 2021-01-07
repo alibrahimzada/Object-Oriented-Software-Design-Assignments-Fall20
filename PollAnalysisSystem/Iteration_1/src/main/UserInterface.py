@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import QApplication, QFileDialog, QMainWindow
 
 class UserInterface(object):
 
-    def setupUi(self, UserInterface):
+    def setup_ui(self, UserInterface):
         UserInterface.setObjectName("UserInterface")
         UserInterface.resize(730, 461)
         UserInterface.setStyleSheet("background-color:white")
@@ -16,85 +16,81 @@ class UserInterface(object):
         font.setWeight(75)
         self.centralwidget = QtWidgets.QWidget(UserInterface)
         self.centralwidget.setObjectName("centralwidget")
-        self.TitleLabel = QtWidgets.QLabel(self.centralwidget)
-        self.TitleLabel.setGeometry(QtCore.QRect(0, 0, 751, 81))
-        self.LoadStdListsBtn = QtWidgets.QPushButton(self.centralwidget)
-        self.LoadStdListsBtn.setGeometry(QtCore.QRect(30, 150, 200, 70))
-        self.LoadStdListsBtn.setMinimumSize(QtCore.QSize(200, 70))
-        self.LoadStdListsBtn.setFont(font)
-        self.LoadStdListsBtn.setStyleSheet("background-color:green; color:white")
-        self.LoadStdListsBtn.setObjectName("LoadStdListsBtn")
+        self.title_label = QtWidgets.QLabel(self.centralwidget)
+        self.title_label.setGeometry(QtCore.QRect(0, 0, 751, 81))
+        self.load_std_list_btn = QtWidgets.QPushButton(self.centralwidget)
+        self.load_std_list_btn.setGeometry(QtCore.QRect(30, 150, 200, 70))
+        self.load_std_list_btn.setMinimumSize(QtCore.QSize(200, 70))
+        self.load_std_list_btn.setFont(font)
+        self.load_std_list_btn.setStyleSheet("background-color:green; color:white")
+        self.load_std_list_btn.setObjectName("load_std_list_btn")
 
-        self.LoadAnswerKey = QtWidgets.QPushButton(self.centralwidget)
-        self.LoadAnswerKey.setGeometry(QtCore.QRect(260, 150, 200, 70))
-        self.LoadAnswerKey.setMinimumSize(QtCore.QSize(200, 70))
-        self.LoadAnswerKey.setFont(font)
-        self.LoadAnswerKey.setObjectName("LoadAnswerKey")
+        self.load_answer_key_btn = QtWidgets.QPushButton(self.centralwidget)
+        self.load_answer_key_btn.setGeometry(QtCore.QRect(260, 150, 200, 70))
+        self.load_answer_key_btn.setMinimumSize(QtCore.QSize(200, 70))
+        self.load_answer_key_btn.setFont(font)
+        self.load_answer_key_btn.setObjectName("load_answer_key_btn")
 
-        self.LoadPolls = QtWidgets.QPushButton(self.centralwidget)
-        self.LoadPolls.setGeometry(QtCore.QRect(490, 150, 200, 70))
-        self.LoadPolls.setMinimumSize(QtCore.QSize(200, 70))
-        self.LoadPolls.setFont(font)
-        self.LoadPolls.setObjectName("LoadPolls")
+        self.load_polls_btn = QtWidgets.QPushButton(self.centralwidget)
+        self.load_polls_btn.setGeometry(QtCore.QRect(490, 150, 200, 70))
+        self.load_polls_btn.setMinimumSize(QtCore.QSize(200, 70))
+        self.load_polls_btn.setFont(font)
+        self.load_polls_btn.setObjectName("load_polls_btn")
 
-        self.ExportAttendReportBtn = QtWidgets.QPushButton(self.centralwidget)
-        self.ExportAttendReportBtn.setGeometry(QtCore.QRect(30, 310, 200, 70))
-        self.ExportAttendReportBtn.setMinimumSize(QtCore.QSize(200, 70))
-        self.ExportAttendReportBtn.setFont(font)
-        self.ExportAttendReportBtn.setObjectName("ExportAttendReportBtn")
+        self.export_attendance_report_btn = QtWidgets.QPushButton(self.centralwidget)
+        self.export_attendance_report_btn.setGeometry(QtCore.QRect(30, 310, 200, 70))
+        self.export_attendance_report_btn.setMinimumSize(QtCore.QSize(200, 70))
+        self.export_attendance_report_btn.setFont(font)
+        self.export_attendance_report_btn.setObjectName("export_attendance_report_btn")
         
 
-        self.ExportStatsBtn = QtWidgets.QPushButton(self.centralwidget)
-        self.ExportStatsBtn.setGeometry(QtCore.QRect(260, 310, 200, 70))
-        self.ExportStatsBtn.setMinimumSize(QtCore.QSize(200, 70))
-        self.ExportStatsBtn.setFont(font)
-        self.ExportStatsBtn.setStyleSheet("background-color:green; color:white;")
-        self.ExportStatsBtn.setObjectName("ExportStatsBtn")
+        self.export_stats_btn = QtWidgets.QPushButton(self.centralwidget)
+        self.export_stats_btn.setGeometry(QtCore.QRect(260, 310, 200, 70))
+        self.export_stats_btn.setMinimumSize(QtCore.QSize(200, 70))
+        self.export_stats_btn.setFont(font)
+        self.export_stats_btn.setStyleSheet("background-color:green; color:white;")
+        self.export_stats_btn.setObjectName("export_stats_btn")
 
-        self.ExportGlobalReportBtn = QtWidgets.QPushButton(self.centralwidget)
-        self.ExportGlobalReportBtn.setGeometry(QtCore.QRect(490, 310, 200, 70))
-        self.ExportGlobalReportBtn.setMinimumSize(QtCore.QSize(200, 70))
-        self.ExportGlobalReportBtn.setFont(font)
-        self.ExportGlobalReportBtn.setObjectName("ExportGlobalReportBtn")
+        self.export_global_report_btn = QtWidgets.QPushButton(self.centralwidget)
+        self.export_global_report_btn.setGeometry(QtCore.QRect(490, 310, 200, 70))
+        self.export_global_report_btn.setMinimumSize(QtCore.QSize(200, 70))
+        self.export_global_report_btn.setFont(font)
+        self.export_global_report_btn.setObjectName("export_global_report_btn")
 
         ## CUSTOMIZATION, you probably won't change anything here so please don't change unless you ask me first.
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.TitleLabel.sizePolicy().hasHeightForWidth())
-        self.TitleLabel.setSizePolicy(sizePolicy)
+
         font = QtGui.QFont()
         font.setFamily("MS Sans Serif")
         font.setPointSize(35)
         font.setBold(True)
         font.setWeight(75)
         font.setKerning(True)
-        self.TitleLabel.setFont(font)
-        self.TitleLabel.setStyleSheet("background-color: green; color: white")
-        self.TitleLabel.setLineWidth(20)
-        self.TitleLabel.setMidLineWidth(20)
-        self.TitleLabel.setAlignment(QtCore.Qt.AlignCenter)
-        self.TitleLabel.setObjectName("TitleLabel")
+        self.title_label.setFont(font)
+        self.title_label.setStyleSheet("background-color: green; color: white")
+        self.title_label.setLineWidth(20)
+        self.title_label.setMidLineWidth(20)
+        self.title_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.title_label.setObjectName("title_label")
         UserInterface.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(UserInterface)
         self.statusbar.setObjectName("statusbar")
         UserInterface.setStatusBar(self.statusbar)
 
-        self.LoadAnswerKey.setCursor(QtCore.Qt.PointingHandCursor)
-        self.LoadPolls.setCursor(QtCore.Qt.PointingHandCursor)
-        self.LoadStdListsBtn.setCursor(QtCore.Qt.PointingHandCursor)
-        self.ExportAttendReportBtn.setCursor(QtCore.Qt.PointingHandCursor)
-        self.ExportGlobalReportBtn.setCursor(QtCore.Qt.PointingHandCursor)
-        self.ExportStatsBtn.setCursor(QtCore.Qt.PointingHandCursor)
+        self.load_answer_key_btn.setCursor(QtCore.Qt.PointingHandCursor)
+        self.load_polls_btn.setCursor(QtCore.Qt.PointingHandCursor)
+        self.load_std_list_btn.setCursor(QtCore.Qt.PointingHandCursor)
+        self.export_attendance_report_btn.setCursor(QtCore.Qt.PointingHandCursor)
+        self.export_global_report_btn.setCursor(QtCore.Qt.PointingHandCursor)
+        self.export_stats_btn.setCursor(QtCore.Qt.PointingHandCursor)
 
 
    
 
-        self.retranslateUi(UserInterface)
+        self.retranslate_ui(UserInterface)
         QtCore.QMetaObject.connectSlotsByName(UserInterface)
 
 
-    def retranslateUi(self, UserInterface):
+    def retranslate_ui(self, UserInterface):
         ''' 
         This is somewhat self explantory, just a function that sets the text/style of the widgets we have.
         This is how we do it in pyqt but we can always get rid of this function and just write whatever we have
@@ -103,66 +99,67 @@ class UserInterface(object):
         _translate = QtCore.QCoreApplication.translate
         UserInterface.setWindowTitle(_translate("UserInterface", "MainWindow"))
         
-        self.TitleLabel.setText(_translate("UserInterface", "Poll Analysis System"))
+        self.title_label.setText(_translate("UserInterface", "Poll Analysis System"))
 
-        self.LoadStdListsBtn.setText(_translate("UserInterface", "Load Student Lists"))
-        self.LoadStdListsBtn.setStatusTip(_translate("UserInterface","This is just a button, why are you hovering over many things weirdly?"))
-        self.LoadAnswerKey.setStyleSheet(_translate("UserInterface", "background-color:green; color:white"))
-        self.LoadAnswerKey.setText(_translate("UserInterface", "Load Answer Keys"))
+        self.load_std_list_btn.setText(_translate("UserInterface", "Load Student Lists"))
+        self.load_std_list_btn.setStatusTip(_translate("UserInterface","This is just a button, why are you hovering over many things weirdly?"))
+        self.load_answer_key_btn.setStyleSheet(_translate("UserInterface", "background-color:green; color:white"))
+        self.load_answer_key_btn.setText(_translate("UserInterface", "Load Answer Keys"))
 
-        self.LoadPolls.setStyleSheet(_translate("UserInterface", "background-color:green; color:white"))
-        self.LoadPolls.setText(_translate("UserInterface", "Load Polls"))
+        self.load_polls_btn.setStyleSheet(_translate("UserInterface", "background-color:green; color:white"))
+        self.load_polls_btn.setText(_translate("UserInterface", "Load Polls"))
 
-        self.ExportAttendReportBtn.setStyleSheet(_translate("UserInterface", "background-color:green; color:white"))
-        self.ExportAttendReportBtn.setText(_translate("UserInterface", "Export Attendance Report"))
+        self.export_attendance_report_btn.setStyleSheet(_translate("UserInterface", "background-color:green; color:white"))
+        self.export_attendance_report_btn.setText(_translate("UserInterface", "Export Attendance Report"))
 
-        self.ExportStatsBtn.setText(_translate("UserInterface", "Export Stats"))
+        self.export_stats_btn.setText(_translate("UserInterface", "Export Stats"))
 
-        self.ExportGlobalReportBtn.setStyleSheet(_translate("UserInterface", "background-color:green; color:white"))
-        self.ExportGlobalReportBtn.setText(_translate("UserInterface", "Export Global Report"))
+        self.export_global_report_btn.setStyleSheet(_translate("UserInterface", "background-color:green; color:white"))
+        self.export_global_report_btn.setText(_translate("UserInterface", "Export Global Report"))
 
-        self.LoadStdListsBtn.setStatusTip(_translate("UserInterface","This is also just a button, come on"))
-        self.TitleLabel.setStatusTip(_translate("UserInterface", "This is a normal label, nothing to see here."))
+        self.load_std_list_btn.setStatusTip(_translate("UserInterface","This is also just a button, come on"))
+        self.title_label.setStatusTip(_translate("UserInterface", "This is a normal label, nothing to see here."))
 
         ##### MAPPING:
-        self.LoadStdListsBtn.clicked.connect(self.uploadStdList)
-        self.LoadAnswerKey.clicked.connect(self.uploadAnswerKey)
-        self.LoadPolls.clicked.connect(self.uploadPolls)
-        self.ExportAttendReportBtn.clicked.connect(self.downloadAttendanceReport)
-        self.ExportStatsBtn.clicked.connect(self.downloadStats)
-        self.ExportGlobalReportBtn.clicked.connect(self.downloadGlobalReport)
+        self.load_std_list_btn.clicked.connect(self.upload_std_list)
+        self.load_answer_key_btn.clicked.connect(self.upload_answer_key)
+        self.load_polls_btn.clicked.connect(self.upload_polls)
+        self.export_attendance_report_btn.clicked.connect(self.download_attendance_report)
+        self.export_stats_btn.clicked.connect(self.download_stats)
+        self.export_global_report_btn.clicked.connect(self.download_global_report)
 
 
 
     ############# BINDINGS.
 
-    def filesLoader(self, DialogName="Choose Directory"):
+    def files_loader(self, DialogName="Choose Directory"):
         ''' Opens a directory, loads all files in it and makes a IO.textIoWrapper objects list and returns it'''
         dirname = QFileDialog.getExistingDirectory(caption=DialogName)
         self.files = [] #this will be a list of files that are inside the directory you load.
         print(os.path.join(os.getcwd()))
         for filename in os.listdir(dirname):
-            fullPath = dirname + '/' + filename
-            # print(fullPath) #just in case you want to check
-            with open(fullPath, 'r') as singleFile:
+            full_path = dirname + '/' + filename
+            # print(full_path) #just in case you want to check
+            with open(full_path, 'r') as singleFile:
                 # print(singleFile)
                 self.files.append(singleFile)
+        print(self.files)
         return self.files
 
-    def uploadStdList(self):
-        self.stdLists = self.filesLoader()
+    def upload_std_list(self):
+        self.stdLists = self.files_loader()
 
-    def uploadAnswerKey(self):
-        self.answerKeyList = self.filesLoader()
+    def upload_answer_key(self):
+        self.answerKeyList = self.files_loader()
 
-    def uploadPolls(self):
-        self.pollsList = self.filesLoader()
+    def upload_polls(self):
+        self.pollsList = self.files_loader()
 
-    def downloadAttendanceReport(self):
+    def download_attendance_report(self):
         pass #we will not be saving by opening a dialog so this shall remain like this  till we figure out how we will export.
-    def downloadGlobalReport(self):
+    def download_global_report(self):
         pass
-    def downloadStats(self):
+    def download_stats(self):
         pass
 
 
@@ -176,7 +173,7 @@ def main():
     window = QMainWindow() #the main window to which we pass our widgets
     window.setFixedSize(730, 461)
     ui = UserInterface()
-    ui.setupUi(window)
+    ui.setup_ui(window)
     window.show()
     sys.exit(app.exec_()) #app.exec is what shows our window basically, without it, we won't see anything. 
 

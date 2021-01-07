@@ -88,14 +88,7 @@ class UserInterface(object):
         self.ExportStatsBtn.setCursor(QtCore.Qt.PointingHandCursor)
 
 
-        ##### MAPPING:
-        self.LoadStdListsBtn.clicked.connect(self.uploadStdList)
-        self.LoadAnswerKey.clicked.connect(self.uploadAnswerKey)
-        self.LoadPolls.clicked.connect(self.uploadPolls)
-        self.ExportAttendReportBtn.clicked.connect(self.downloadAttendanceReport)
-        self.ExportStatsBtn.clicked.connect(self.downloadStats)
-        self.ExportGlobalReportBtn.clicked.connect(self.downloadGlobalReport)
-
+   
 
         self.retranslateUi(UserInterface)
         QtCore.QMetaObject.connectSlotsByName(UserInterface)
@@ -130,6 +123,15 @@ class UserInterface(object):
 
         self.LoadStdListsBtn.setStatusTip(_translate("UserInterface","This is also just a button, come on"))
         self.TitleLabel.setStatusTip(_translate("UserInterface", "This is a normal label, nothing to see here."))
+
+        ##### MAPPING:
+        self.LoadStdListsBtn.clicked.connect(self.uploadStdList)
+        self.LoadAnswerKey.clicked.connect(self.uploadAnswerKey)
+        self.LoadPolls.clicked.connect(self.uploadPolls)
+        self.ExportAttendReportBtn.clicked.connect(self.downloadAttendanceReport)
+        self.ExportStatsBtn.clicked.connect(self.downloadStats)
+        self.ExportGlobalReportBtn.clicked.connect(self.downloadGlobalReport)
+
 
 
     ############# BINDINGS

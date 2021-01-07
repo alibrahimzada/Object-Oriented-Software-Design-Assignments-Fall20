@@ -1,5 +1,5 @@
 class Department:
-    def __init__(self, name, instructors, students):
+    def __init__(self, name):
         self.name = name
 
 

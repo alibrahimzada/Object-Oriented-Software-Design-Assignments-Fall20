@@ -1,7 +1,7 @@
 
 
 import sys
-
+import os
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QFileDialog, QMainWindow
 
@@ -134,39 +134,36 @@ class UserInterface(object):
 
 
 
-    ############# BINDINGS
-    # READ ME: I feel liks this is somewhat repatative so I made a function that opens a dialog for all buttons and then we just return the path of the file opened to the function that was triggered. 
-    # However, we can still make this better but not sure how so will leave it for now.
-    def choseFileDialog(self, DialogName="Choose File"):
-        filename = QFileDialog.getOpenFileName(caption=DialogName) #Did not add a file type because not sure what type we are always getting
-        path = filename[0] 
-        #the function returns a tuple, the first value of the tuple is the path and the second value is the type of files you are allowing to choose.
-        return path
+    ############# BINDINGS.
+
+    def filesLoader(self, DialogName="Choose Directory"):
+        ''' Opens a directory, loads all files in it and makes a IO.textIoWrapper objects list and returns it'''
+        dirname = QFileDialog.getExistingDirectory(caption=DialogName)
+        self.files = [] #tthis will be a list of files that are inside the directory you load.
+        print(os.path.join(os.getcwd()))
+        for filename in os.listdir(dirname):
+            fullPath = dirname + '/' + filename
+            # print(fullPath) #just in case you want to check
+            with open(fullPath, 'r') as singleFile:
+                # print(singleFile)
+                self.files.append(singleFile)
+        return self.files
 
     def uploadStdList(self):
-        path = self.choseFileDialog()
-        print(path)
-
-        # with open(path, "r") as StdList:
-            # print("bla")
-
-        
+        self.stdLists = self.filesLoader()
 
     def uploadAnswerKey(self):
-        path = self.choseFileDialog()
+        self.answerKeyList = self.filesLoader()
 
     def uploadPolls(self):
-        path = self.choseFileDialog()
+        self.pollsList = self.filesLoader()
 
     def downloadAttendanceReport(self):
-        path = self.choseFileDialog()
-
+        pass #we will not be saving by opening a dialog so this shall remain like this  till we figure out how we will export.
     def downloadGlobalReport(self):
-        path = self.choseFileDialog()
-
+        pass
     def downloadStats(self):
-        path = self.choseFileDialog()
-
+        pass
 
 
 

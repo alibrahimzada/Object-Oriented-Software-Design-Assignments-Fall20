@@ -1,17 +1,21 @@
 class Answer:
-    def __init__(self, text):
+    def __init__(self, text, is_correct=False):
         self.__text = text
-        self.__isCorrect = False
+        self.__isCorrect = is_correct
     
     @property
     def text(self):
         return self.__text
     
     @text.setter
-    def academic_year(self, value):
+    def text(self, value):
         self.__text = value
     
     @property
-    def is_correct(self):
+    def isCorrect(self):
         return self.__isCorrect
-    #Will add the setter for iscorrect soon but I have to read about this first.
+
+    @isCorrect.setter
+    def text(self, value):
+        self.__text = value
+    

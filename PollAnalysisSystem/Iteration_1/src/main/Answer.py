@@ -16,6 +16,6 @@ class Answer:
         return self.__isCorrect
 
     @isCorrect.setter
-    def text(self, value):
-        self.__text = value
+    def isCorrect(self, value):
+        self.__isCorrect = value
     

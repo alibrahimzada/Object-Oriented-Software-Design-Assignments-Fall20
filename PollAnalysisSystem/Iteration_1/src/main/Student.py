@@ -8,7 +8,7 @@ class Student:
         self.__registrations= []
         self.__poll_submissions = []
 
-    # id Year attribute
+    # id  attribute
     @property
     def id(self):
         return self.__id

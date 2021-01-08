@@ -1,5 +1,5 @@
 class Student:
-    def __init__(self, id, name, surname, email, department,registrations,poll_submissions):
+    def _init_(self, id, name, surname, email, department):
         self.__id = id
         self.__name = name
         self.__surname = surname
@@ -32,7 +32,7 @@ class Student:
         return self.__surname
 
     @surname.setter
-    def student(self, value):
+    def surname(self, value):
         self.__surname = value
 
     # email attribute
@@ -57,8 +57,14 @@ class Student:
     @property
     def registrations(self):
         return self.__registrations
+        
+    def add_registration(self, value):
+        self.__registrations.append(value)
 
     # poll_submissions attribute
     @property
     def poll_submissions(self):
         return self.__poll_submissions
+        
+    def add_poll_submission(self, value):
+        self.__poll_submissions.append(value)

@@ -1,7 +1,4 @@
 import xlrd
-
-# course_code - theoritical_credit - practical_credit - ects - course_name - instructor_name - department_name - 
-# student_number - student_name - student_surname - description 
 from main.Course import Course
 from main.Department import Department
 from main.Instructor import Instructor
@@ -10,9 +7,6 @@ from main.Student import Student
 file = xlrd.open_workbook('../../student_lists/CES3063_Fall2020_rptSinifListesi.XLS', encoding_override='cp1252')
 sheet = file.sheet_by_index(0)
 
-i = 0
-general = ""
-
 # Initializing objects
 instructor = None
 current_department = None
@@ -20,6 +14,9 @@ student = None
 department = None
 course = None
 
+
+i = 0
+general = ""
 while i < sheet.nrows:
     if sheet.row_values(i):
         # First we will check for the general info that starts with a Date and ends with department name

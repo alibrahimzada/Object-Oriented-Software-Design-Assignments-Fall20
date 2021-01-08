@@ -1,5 +1,5 @@
 class Instructor:
-    def __init__(self, name, department,registrations):
+    def _init_(self, name, department):
         self.__name = name
         self.__department = department
         self.__registrations= []
@@ -27,3 +27,6 @@ class Instructor:
     @property
     def registrations(self):
         return self.__registrations
+
+    def add_registration(self, value):
+        self.__registrations.append(value)

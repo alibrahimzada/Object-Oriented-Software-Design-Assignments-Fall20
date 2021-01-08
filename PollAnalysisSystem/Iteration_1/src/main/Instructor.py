@@ -1,5 +1,5 @@
 class Instructor:
-    def _init_(self, name, department):
+    def __init__(self, name, department):
         self.__name = name
         self.__department = department
         self.__registrations= []

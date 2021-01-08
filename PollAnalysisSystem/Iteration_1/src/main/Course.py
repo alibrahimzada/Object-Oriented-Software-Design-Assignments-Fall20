@@ -1,12 +1,13 @@
 class Course:
-    def __init__(self, code, name, theoretical_credit, practical_credit, ects):
+    def __init__(self, code, name, theoretical_credits, practical_credits, ects):
         self.__code = code
-        self.name = name
-        self.__theoretical_credit = theoretical_credit
-        self.practical_credit = practical_credit
-        self.ects = ects
+        self.__name = name
+        self.__theoretical_credits = theoretical_credits
+        self.__practical_credits = practical_credits
+        self.__ects = ects
 
 
+    # Course code attribute
     @property
     def code(self):
         return self.__code
@@ -15,7 +16,7 @@ class Course:
     def code(self, value):
         self.__code = value
 
-
+    # Course name attribute
     @property
     def name(self):
         return self.__name
@@ -24,26 +25,27 @@ class Course:
     def name(self, value):
         self.__name = value
 
-
+    # Course Theoretical credits attribute
     @property
-    def theoretical_credit(self):
-        return self.__theoretical_credit
+    def theoretical_credits(self):
+        return self.__theoretical_credits
 
-    @theoretical_credit.setter
-    def theoretical_credit(self, value):
-        self.__theoretical_credit = value
+    @theoretical_credits.setter
+    def theoretical_credits(self, value):
+        self.__theoretical_credits = value
 
 
-
+    # Course Practical credits attribute
     @property
-    def practical_credit(self):
-        return self.__practical_credit
+    def practical_credits(self):
+        return self.__practical_credits
 
-    @practical_credit.setter
-    def practical_credit(self, value):
-        self.__practical_credit = value
+    @practical_credits.setter
+    def practical_credits(self, value):
+        self.__practical_credits = value
 
 
+    # Course ECTS attribute
     @property
     def ects(self):
         return self.__ects

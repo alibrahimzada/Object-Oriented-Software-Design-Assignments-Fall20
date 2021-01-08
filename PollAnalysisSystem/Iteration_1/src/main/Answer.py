@@ -1,10 +1,12 @@
 class Answer:
 
-    def __init__(self, text, is_correct=False):
+    def __init__(self, text):
         self.__text = text
-        self.__is_correct = is_correct
+        self.__is_correct = False
         self.__poll_submissions = []
     
+    
+    # text attribute
     @property
     def text(self):
         return self.__text
@@ -13,6 +15,7 @@ class Answer:
     def text(self, value):
         self.__text = value
     
+    # Correct or Not attribute
     @property
     def is_correct(self):
         return self.__is_correct
@@ -21,10 +24,10 @@ class Answer:
     def is_correct(self, value):
         self.__is_correct = value
     
+    # Submissions attribute
     @property
     def poll_submissions(self):
         return self.__poll_submissions
 
     def add_poll_submission(self, value):
         self.__poll_submissions.append(value)
-    

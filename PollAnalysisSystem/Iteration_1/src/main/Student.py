@@ -5,7 +5,7 @@ class Student:
         self.__surname = surname
         self.__email = email
         self.__department = department
-        self.__registration= []
+        self.__registrations= []
         self.__poll_submissions = []
 
     # id Year attribute

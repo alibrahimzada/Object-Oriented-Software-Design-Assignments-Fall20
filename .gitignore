@@ -4,3 +4,16 @@ PollAnalysisSystem/Iteration_1/src/main/__pycache__/PollAnalysisSystem.cpython-3
 PollAnalysisSystem/Iteration_1/src/tests/__pycache__/__init__.cpython-36.pyc
 PollAnalysisSystem/Iteration_1/src/main/__pycache__/StatsReportSerializer.cpython-36.pyc
 PollAnalysisSystem/Iteration_1/src/tests/__pycache__/TestSuitRunner.cpython-36.pyc
+myenv/
+.vscode/
+*.log
+reports/
+labeled_datasets/
+.Ds_Store
+_pycache_/
+PollAnalysisSystem/Iteration_1/src/main/__pycache__/Answer.cpython-37.pyc
+PollAnalysisSystem/Iteration_1/src/main/__pycache__/PollAnalysisSystem.cpython-37.pyc
+PollAnalysisSystem/Iteration_1/src/main/__pycache__/Question.cpython-37.pyc
+PollAnalysisSystem/Iteration_1/src/tests/__pycache__/TestSuitRunner.cpython-37.pyc
+PollAnalysisSystem/Iteration_1/src/tests/__pycache__/__init__.cpython-37.pyc
+

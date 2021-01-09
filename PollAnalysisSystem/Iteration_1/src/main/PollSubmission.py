@@ -1,5 +1,6 @@
 from datetime import datetime
 
+
 class PollSubmission(object):
     def __init__(self, date, poll, student, questions, answers):
         self.__date = datetime.strptime(date, '%b %d, %Y %H:%M:%S')
@@ -7,7 +8,6 @@ class PollSubmission(object):
         self.__student = student
         self.__questions = questions
         self.__answers = answers
-
 
     # Date attribute
     @property

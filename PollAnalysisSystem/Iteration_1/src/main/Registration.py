@@ -1,4 +1,6 @@
-class Registration:
+
+
+class Registration(object):
     def __init__(self, academic_year, academic_semester, student, course, instructor):
         self.__academic_year = academic_year
         self.__academic_semester = academic_semester

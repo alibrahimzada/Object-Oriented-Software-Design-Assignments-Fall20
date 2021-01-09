@@ -137,19 +137,16 @@ class UserInterface(object):
 	def __files_loader(self, dialogue_name = "Choose Directory"):
 		''' Opens a directory, loads all files in it and makes a IO.textIoWrapper objects list and returns it'''
 		dirname = QFileDialog.getExistingDirectory(caption = dialogue_name)
-		self.files = [] #this will be a list of files that are inside the directory you load.
-		print(os.path.join(os.getcwd()))
+		files = [] #this will be a list of files that are inside the directory you load.
 		for filename in os.listdir(dirname):
 			full_path = dirname + '/' + filename
-			# print(full_path) #just in case you want to check
 			with open(full_path, 'r') as single_file:
-				# print(singleFile)
-				self.files.append(single_file)
-		print(self.files)
-		return self.files
+				files.append(single_file)
+		return files
 
 	def __upload_std_list(self):
-		self.std_list = self.__files_loader()
+		std_list = self.__files_loader()
+		self.poll_analysis_system.load_student_list(std_list)
 
 	def __upload_answer_key(self):
 		self.answer_key_list = self.__files_loader()

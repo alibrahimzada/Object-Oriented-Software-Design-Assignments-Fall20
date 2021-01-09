@@ -1,78 +1,100 @@
 import xlrd
+
 from main.Course import Course
 from main.Department import Department
 from main.Instructor import Instructor
 from main.Student import Student
+from main.Registration import Registration
 
-file = xlrd.open_workbook('../../student_lists/CES3063_Fall2020_rptSinifListesi.XLS', encoding_override='cp1252')
-sheet = file.sheet_by_index(0)
+class StudentListParser(object):
+	def __init__(self, poll_analysis_system):
+		self.__poll_analysis_system = poll_analysis_system
+		self.__registrations = {}
 
-# Initializing objects
-instructor = None
-current_department = None
-student = None
-department = None
-course = None
+	@property
+	def poll_analysis_system(self):
+		return self.__poll_analysis_system
 
+	@poll_analysis_system.setter
+	def poll_analysis_system(self, value):
+		self.__poll_analysis_system = value
 
-i = 0
-general = ""
-while i < sheet.nrows:
-    if sheet.row_values(i):
-        # First we will check for the general info that starts with a Date and ends with department name
-        if type(sheet.row_values(i)[0]) == float and sheet.row_values(i)[1] == "":
-            i += 2
-            semester = sheet.row_values(i)[0]
+	@property
+	def registrations(self):
+		return self.__registrations
 
-            i += 2
-            # Getting the Department of the course
-            department = Department(name=sheet.row_values(i)[0].split("Ders")[0])
+	@registrations.setter
+	def registrations(self, value):
+		self.__registrations = value
+	
+	def __parse_sheet(self, sheet, filename):
+		filename = filename.split(".")[0]
+		self.__registrations.setdefault(filename, [])
 
-            i += 2
-            # Getting information about the course
-            codes = sheet.row_values(i)[6].split(" ")
-            course_code = codes[0]
-            theorcred = codes[1][1:]
-            praccred = codes[3][:-1]
-            ects = codes[4]
-            course_name = ' '.join(codes[6:])
-            course = Course(code=course_code, name=course_name, theoretical_credits=theorcred,
-                            practical_credits=praccred, ects=ects)
+		i = 0
+		academic_year, academic_semester = '', ''
+		while i < sheet.nrows and sheet.row_values(i):
+			# first we will check for the general info that starts with a Date and ends with department name
+			if type(sheet.row_values(i)[0]) == float and sheet.row_values(i)[1] == '':
+				i += 2
+				year_semester = sheet.row_values(i)[0]
+				academic_year = ' '.join(year_semester.split(' ')[:2])
+				academic_semester = ' '.join(year_semester.split(' ')[2:])
 
-            i += 2
+				i += 4
+				# getting information about the course
+				codes = sheet.row_values(i)[6].split(" ")
+				course_code = codes[0]
+				theoritical_credit = codes[1][1:]
+				practical_credit = codes[3][:-1]
+				ects = codes[4]
+				course_name = ' '.join(codes[6:])
+				course = Course(code=course_code, name=course_name, theoretical_credit=theoritical_credit,
+								practical_credit=practical_credit, ects=ects)
 
-            # Putting them all together
-            general = (str(semester) + " " + str(course.code) + " " + str(course.theoretical_credits) + " " + str(
-                course.practical_credits) + " " + str(course.ects) + " " + str(course.name))
+				i += 2
+				# getting information about the instructor
+				instructor_name = sheet.row_values(i)[6]
+				instructor = Instructor(name=instructor_name)
 
-            # Getting information about the instructor
-            instr_name = sheet.row_values(i)[6]
-            instructor = Instructor(name=instr_name, department=department)
+				i += 2
 
-            i += 2
+			elif sheet.row_values(i)[1] == "No":
+				if "(" in sheet.row_values(i - 2)[0]:
+					department = Department(name=sheet.row_values(i - 2)[0].split("(")[0])
+				else:
+					department = Department(name=sheet.row_values(i - 2)[0])
+				i += 1
 
-        elif sheet.row_values(i)[1] == "No":
-            if "(" in sheet.row_values(i - 2)[0]:
-                current_department = Department(name=sheet.row_values(i - 2)[0].split("(")[0])
-            else:
-                current_department = Department(name=sheet.row_values(i - 2)[0])
-            i += 1
+			elif type(sheet.row_values(i)[1] == float):
+				if sheet.row_values(i)[1] != "":
+					std_num = sheet.row_values(i)[2]
+					name = sheet.row_values(i)[4]
+					surname = sheet.row_values(i)[7]
+					description = sheet.row_values(i)[10]
 
-        elif type(sheet.row_values(i)[1] == float):
-            if sheet.row_values(i)[1] != "":
-                std_num = sheet.row_values(i)[2]
-                name = sheet.row_values(i)[4]
-                surname = sheet.row_values(i)[7]
-                description = sheet.row_values(i)[10]
+					student = Student(_id=std_num, name=name, surname=surname, department=department)
 
-                # Getting information about the Student
-                student = Student(id=std_num, name=name, surname=surname, email="", department=current_department)
+					instructor.department = department
+					
+					registration = Registration(academic_year=academic_year, academic_semester=academic_semester,
+												student=student, course=course, instructor=instructor)
+					
+					instructor.add_registration(course, registration)
+					department.add_instructor(instructor.name, instructor)
+					department.add_student(student.id, student)
+					course.add_registration(registration)
+					student.add_registration(registration)
+					self.__registrations[filename].append(registration)
 
-                student_info = (str(student.id) + " " + str(student.name) + " " + str(student.surname) + " " + str(
-                    description))
-                print(general + " " + instructor.name + " " + student.department.name + " " + student_info)
-                i += 1
-            else:
-                i += 1
-        else:
-            i += 1
+					i += 1
+				else:
+					i += 1
+			else:
+				i += 1
+
+	def parse_student_list(self, student_lists):
+		for file_ in student_lists:
+			workbook = xlrd.open_workbook(file_.name, encoding_override='cp1252')
+			sheet = workbook.sheet_by_index(0)
+			self.__parse_sheet(sheet, file_.name)

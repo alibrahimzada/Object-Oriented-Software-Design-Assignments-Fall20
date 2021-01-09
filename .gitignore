@@ -10,10 +10,9 @@ myenv/
 reports/
 labeled_datasets/
 .Ds_Store
-_pycache_/
 PollAnalysisSystem/Iteration_1/src/main/__pycache__/Answer.cpython-37.pyc
 PollAnalysisSystem/Iteration_1/src/main/__pycache__/PollAnalysisSystem.cpython-37.pyc
 PollAnalysisSystem/Iteration_1/src/main/__pycache__/Question.cpython-37.pyc
 PollAnalysisSystem/Iteration_1/src/tests/__pycache__/TestSuitRunner.cpython-37.pyc
 PollAnalysisSystem/Iteration_1/src/tests/__pycache__/__init__.cpython-37.pyc
-
+__pycache__/

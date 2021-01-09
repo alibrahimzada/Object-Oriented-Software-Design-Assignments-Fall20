@@ -1,4 +1,3 @@
-import os
 import csv
 from collections import defaultdict
 from Question import Question

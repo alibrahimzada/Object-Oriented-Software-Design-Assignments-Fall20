@@ -28,3 +28,10 @@ class Poll(object):
     @day.setter
     def day(self, value):
         self.__day = value
+
+    @property
+    def poll_submissions(self):
+        return self.__poll_submissions
+
+    def add_poll_submission(self, value):
+        self.__poll_submissions.append(value)

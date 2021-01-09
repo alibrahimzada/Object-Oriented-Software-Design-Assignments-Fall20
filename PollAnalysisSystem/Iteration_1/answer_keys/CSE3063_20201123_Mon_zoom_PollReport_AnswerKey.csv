@@ -10,4 +10,3 @@ Which of the following differences between class diagrams and object diagrams ar
 Which of the following is a technique for hiding the internal implementation details of an object?,Encapsulation
 How do you model the following situation: A doctor treats multiple patients a patient can be treated by  multiple doctors. Info of which doctor has treated which patient (can be multiple times) the date and diagnosis are stored.,Doctor---Treatment---Patient (treatment info stored in Treatment)
 A class diagram shows ... view of a system.,static
-Are you attending this lecture?,Yes

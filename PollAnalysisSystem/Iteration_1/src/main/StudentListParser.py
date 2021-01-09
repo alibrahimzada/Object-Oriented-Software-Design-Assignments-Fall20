@@ -93,8 +93,8 @@ class StudentListParser(object):
 			else:
 				i += 1
 
-	def parse_student_list(self, student_lists):
-		for file_ in student_lists:
-			workbook = xlrd.open_workbook(file_.name, encoding_override='cp1252')
+	def parse_student_list(self, student_list_files):
+		for filename in student_list_files:
+			workbook = xlrd.open_workbook(filename, encoding_override='cp1252')
 			sheet = workbook.sheet_by_index(0)
-			self.__parse_sheet(sheet, file_.name)
+			self.__parse_sheet(sheet, filename)

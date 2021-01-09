@@ -137,22 +137,20 @@ class UserInterface(object):
 	def __files_loader(self, dialogue_name = "Choose a file or multiple files!"):
 		''' Opens a directory, loads all files in it and makes a IO.textIoWrapper objects list and returns it'''
 		chosen_files = QFileDialog.getOpenFileNames(caption = dialogue_name) #we will allow a certain type of file when we are sure, right now, we can choose any file.
-		files_list = [] #this will be a list of TextWrapperIO objects that we send to stdparser class.
+		files_list = [] # this will be a list of file paths selected by the user
 
 		# we are looping over the 0th index of chosen files because GetOpenFileNmaes returns a tuple of the files chosen, and the type of files we are allowing.
 		for file_path in chosen_files[0]:
-			with open(file_path, 'r') as single_file:
-				print(file_path)
-				files_list.append(single_file)
+			files_list.append(file_path)
 		return files_list
-	
 
 	def __upload_std_list(self):
-		std_list = self.__files_loader()
-		self.poll_analysis_system.load_student_list(std_list)
+		std_list_files = self.__files_loader()
+		self.poll_analysis_system.load_student_list(std_list_files)
 
 	def __upload_answer_key(self):
-		self.answer_key_list = self.__files_loader()
+		answer_key_files = self.__files_loader()
+		self.poll_analysis_system.load_answer_key(answer_key_files)
 
 	def __upload_polls(self):
 		self.polls_list = self.__files_loader()

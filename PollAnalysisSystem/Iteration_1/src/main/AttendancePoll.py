@@ -1,8 +1,9 @@
-class AttendancePoll:
-    def __init__(self, name, day, date):
-        self.__name = name
-        self.__day = day
-        self.__date = date
+
+from main.Poll import Poll
+
+class AttendancePoll(Poll):
+    def __init__(self, name, date, day):
+		super(name, date, day).__init__()
 
     # Name attribute
     @property

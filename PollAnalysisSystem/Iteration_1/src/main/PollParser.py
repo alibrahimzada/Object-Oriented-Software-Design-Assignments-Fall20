@@ -1,0 +1,5 @@
+
+
+class PollParser(object):
+
+	pass

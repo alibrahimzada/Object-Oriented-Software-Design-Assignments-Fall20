@@ -1,0 +1,5 @@
+
+
+class PollSubmission(object):
+
+	pass

@@ -1,4 +1,5 @@
 import xlrd
+from unidecode import unidecode
 
 from main.Course import Course
 from main.Department import Department
@@ -26,6 +27,24 @@ class StudentListParser(object):
 	@registrations.setter
 	def registrations(self, value):
 		self.__registrations = value
+	
+	def get_student(self, full_name):
+		if full_name == 'hamiorak@somemail.com':   # this condition statically checks for a student who wrote his name wrong
+			full_name = 'ahmed hami orak'
+		for student_list in self.__registrations:
+			for registration in self.__registrations[student_list]:
+				first_name = registration.student.name.lower()
+				last_name = registration.student.surname.lower()
+				splitted_full_name = full_name.lower().split()
+				first_last = first_name + last_name
+
+				counter = 0
+				for i in range(len(splitted_full_name)):
+					if unidecode(splitted_full_name[i]) in unidecode(splitted_full_name[i]):
+						counter += 1
+				if counter > 1:
+					return registration.student
+		return None
 	
 	def __parse_sheet(self, sheet, filename):
 		filename = filename.split(".")[0]

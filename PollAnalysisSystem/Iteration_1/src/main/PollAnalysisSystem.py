@@ -20,6 +20,10 @@ class PollAnalysisSystem(object):
 	@property
 	def answer_key_parser(self):
 		return self.__answer_key_parser
+	
+	@property
+	def student_list_parser(self):
+		return self.__student_list_parser
 
 	def load_student_list(self, student_list_files):
 		self.__student_list_parser.parse_student_list(student_list_files)

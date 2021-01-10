@@ -1,4 +1,4 @@
-CSE3063_20201123_Mon_zoom_PollReport,
+CSE3063_20201123_Mon_zoom_PollReport_1,
 "How do you model the following situation with a UML class diagram: A season worker may be employed in one or several 
  seasons the beginning and the end of each employment period is saved",association class
 What is a synonym for strong aggregation?,composition
@@ -10,3 +10,5 @@ Which of the following differences between class diagrams and object diagrams ar
 Which of the following is a technique for hiding the internal implementation details of an object?,Encapsulation
 How do you model the following situation: A doctor treats multiple patients a patient can be treated by  multiple doctors. Info of which doctor has treated which patient (can be multiple times) the date and diagnosis are stored.,Doctor---Treatment---Patient (treatment info stored in Treatment)
 A class diagram shows ... view of a system.,static
+CSE3063_20201123_Mon_zoom_PollReport_2,
+Are you attending this lecture?,Yes

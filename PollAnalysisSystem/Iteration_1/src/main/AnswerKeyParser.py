@@ -1,7 +1,6 @@
 import csv
-from collections import defaultdict
-from Question import Question
-from Answer import Answer
+from main.Question import Question
+from main.Answer import Answer
 
 class AnswerKeyParser(object):
 
@@ -20,26 +19,25 @@ class AnswerKeyParser(object):
 		"""
 
 		for file_name in answer_key_files:
-			title, question_answers_dict = self.parse_answer_key(file_name)
-			self.__answer_keys[title] = question_answers_dict
+			self.__parse_answer_key(file_name)
 
-	def parse_answer_key(self, file_path):
+	def __parse_answer_key(self, file_path):
 		"""
 			Parses a given an answer key file. 
 		"""
-		question_answers_dict = defaultdict(list)
+
 		with open(file_path) as csv_file:
 			csv_reader = csv.reader(csv_file, delimiter=',')
 			for idx, row in enumerate(csv_reader):
-				if idx == 0:
+				if row[1] == '':
 					title = row[0]
-				else: 
+					self.__answer_keys.setdefault(title, {})
+				else:
 					answers_text_list = row[1].split(';') # a semicolon separates the multiple answers
-					# is a multiple choice question if more than one answer is given
+				# 	# is a multiple choice question if more than one answer is given
 					is_multiple_choice = True if len(answers_text_list) > 1 else False 
 					question = Question(row[0], is_multiple_choice)
+					self.__answer_keys[title].setdefault(question, [])
 					for answer_text in answers_text_list:
 						answer = Answer(answer_text, is_correct = True)
-						question_answers_dict[question].append(answer)
-
-		return title, question_answers_dict
+						self.__answer_keys[title][question].append(answer)

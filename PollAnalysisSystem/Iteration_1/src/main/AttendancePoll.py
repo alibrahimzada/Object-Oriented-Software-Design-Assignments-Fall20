@@ -2,32 +2,38 @@
 from main.Poll import Poll
 
 class AttendancePoll(Poll):
-    def __init__(self, name, date, day):
-		super(name, date, day).__init__()
 
-    # Name attribute
-    @property
-    def name(self):
-        return self.__name
+	def __init__(self, name, date, day):
+		Poll.__init__(self, name, date, day)
 
-    @name.setter
-    def name(self, value):
-        self.__name = value
+	@property
+	def name(self):
+		return self._name
 
-    # Day attribute
-    @property
-    def day(self):
-        return self.__day
+	@name.setter
+	def name(self, value):
+		self._name = value
 
-    @day.setter
-    def day(self, value):
-        self.__day = value
+	@property
+	def date(self):
+		return self._date
 
-    # Date attribute
-    @property
-    def date(self):
-        return self.__date
+	@date.setter
+	def date(self, value):
+		self._date = value
 
-    @date.setter
-    def date(self, value):
-        self.__date = value
+	@property
+	def day(self):
+		return self._day
+
+	@day.setter
+	def day(self, value):
+		self._day = value
+
+	@property
+	def poll_submissions(self):
+		return self._poll_submissions
+
+	@property
+	def questions_answers(self):
+		return self._questions_answers

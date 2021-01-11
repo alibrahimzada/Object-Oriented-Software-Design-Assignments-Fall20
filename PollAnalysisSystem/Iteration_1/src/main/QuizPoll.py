@@ -2,32 +2,38 @@
 from main.Poll import Poll
 
 class QuizPoll(Poll):
-    def __init__(self, name, date, day):
-		super(name, date, day).__init__()
+	
+	def __init__(self, name, date, day):
+		Poll.__init__(self, name, date, day)
 
-    # Name attribute
-    @property
-    def name(self):
-        return self.__name
+	@property
+	def name(self):
+		return self._name
 
-    @name.setter
-    def name(self, value):
-        self.__name = value
+	@name.setter
+	def name(self, value):
+		self._name = value
 
-    # Day attribute
-    @property
-    def day(self):
-        return self.__day
+	@property
+	def date(self):
+		return self._date
 
-    @day.setter
-    def day(self, value):
-        self.__day = value
+	@date.setter
+	def date(self, value):
+		self._date = value
 
-    # Date attribute
-    @property
-    def date(self):
-        return self.__date
+	@property
+	def day(self):
+		return self._day
 
-    @date.setter
-    def date(self, value):
-        self.__date = value
+	@day.setter
+	def day(self, value):
+		self._day = value
+
+	@property
+	def poll_submissions(self):
+		return self._poll_submissions
+
+	@property
+	def questions_answers(self):
+		return self._questions_answers

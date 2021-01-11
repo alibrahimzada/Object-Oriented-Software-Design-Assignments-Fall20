@@ -2,39 +2,19 @@
 
 class Poll(object):
 
-    def __init__(self, name, date, day):
-        self._name = name
-        self._date = date
-        self._day = day
-        self._poll_submissions = []
+	def __init__(self, name, date, day):
+		self._name = name
+		self._date = date
+		self._day = day
+		self._poll_submissions = []
+		self._questions_answers = {}
 
-    @property
-    def name(self):
-        return self._name
+	def add_poll_submission(self, value):
+		self._poll_submissions.append(value)
 
-    @name.setter
-    def name(self, value):
-      self._name = value
-    
-    @property
-    def date(self):
-        return self._date
-    
-    @date.setter
-    def date(self, value):
-        self._date = value
-    
-    @property
-    def day(self):
-        return self._day
-    
-    @day.setter
-    def day(self, value):
-        self._day = value
-
-    @property
-    def poll_submissions(self):
-        return self._poll_submissions
-
-    def add_poll_submission(self, value):
-        self._poll_submissions.append(value)
+	def add_questions_answers(self, questions, answers):
+		for i in range(len(questions)):
+			self._questions_answers.setdefault(questions[i], [])
+			for answer in answers[i]:
+				if answer not in self._questions_answers[questions[i]]:
+					self._questions_answers[questions[i]].append(answer)

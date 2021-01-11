@@ -2,52 +2,43 @@ from datetime import datetime
 
 
 class PollSubmission(object):
-    def __init__(self, date, poll, student, questions, answers):
-        self.__date = date
-        self.__poll = poll
-        self.__student = student
-        self.__questions = questions
-        self.__answers = answers
 
-    # Date attribute
-    @property
-    def date(self):
-        return self.__date
+	def __init__(self, date, poll, student):
+		self.__date = date
+		self.__poll = poll
+		self.__student = student
+		self.__questions_answers = {}
 
-    @date.setter
-    def date(self, value):
-        self.__date = value
+	# Date attribute
+	@property
+	def date(self):
+		return self.__date
 
-    # Poll attribute
-    @property
-    def poll(self):
-        return self.__poll
+	@date.setter
+	def date(self, value):
+		self.__date = value
 
-    @poll.setter
-    def poll(self, value):
-        self.__poll = value
+	# Poll attribute
+	@property
+	def poll(self):
+		return self.__poll
 
-    # Student attribute
-    @property
-    def student(self):
-        return self.__student
+	@poll.setter
+	def poll(self, value):
+		self.__poll = value
 
-    @student.setter
-    def student(self, value):
-        self.__student = value
+	# Student attribute
+	@property
+	def student(self):
+		return self.__student
 
-    # Questions attribute
-    @property
-    def questions(self):
-        return self.__questions
+	@student.setter
+	def student(self, value):
+		self.__student = value
 
-    def add_question(self, value):
-        self.__questions.append(value)
-
-    # Answers attribute
-    @property
-    def answers(self):
-        return self.__answers
-
-    def add_answer(self, value):
-        self.__answers.append(value)
+	def add_questions_answers(self, questions, answers):
+		for i in range(len(questions)):
+			self.__questions_answers.setdefault(questions[i], answers[i])
+			questions[i].add_poll_submission(self)
+			for answer in answers[i]:
+				answer.add_poll_submission(self)

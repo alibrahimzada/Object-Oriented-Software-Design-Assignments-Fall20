@@ -6,6 +6,7 @@ class AnswerKeyParser(object):
 
 	def __init__(self, poll_analysis_system):
 		self.__answer_keys = {}   # {poll_name: {Question: [Answer, ...], ...}, ...}
+		self.__wrong_answers = {}
 		self.__poll_analysis_system = poll_analysis_system
 
 	@property
@@ -41,3 +42,29 @@ class AnswerKeyParser(object):
 					for answer_text in answers_text_list:
 						answer = Answer(answer_text, is_correct = True)
 						self.__answer_keys[title][question].append(answer)
+
+	def get_questions(self, poll_name, questions_set):
+		submission_questions = []
+		self.__wrong_answers.setdefault(poll_name, {})
+		for question in self.__answer_keys[poll_name]:
+			if question.text in questions_set:
+				submission_questions.append(question)
+		return submission_questions
+
+	def get_answers(self, poll_name, answers_list):
+		submission_answers = []   # list of lists
+		correct_answer_texts = {answer.text: answer for question in self.__answer_keys[poll_name] for answer in self.__answer_keys[poll_name][question]}
+		for answers in answers_list:
+			current_answers = []
+			for answer_text in answers:
+				if answer_text in correct_answer_texts:
+					current_answers.append(correct_answer_texts[answer_text])
+				else:
+					if answer_text in self.__wrong_answers[poll_name]:
+						current_answers.append(self.__wrong_answers[poll_name][answer_text])
+					else:
+						wrong_answer = Answer(answer_text)
+						current_answers.append(wrong_answer)
+						self.__wrong_answers[poll_name][answer_text] = wrong_answer
+			submission_answers.append(current_answers)
+		return submission_answers

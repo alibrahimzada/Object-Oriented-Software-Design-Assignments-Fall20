@@ -1,5 +1,6 @@
 import xlrd
 from unidecode import unidecode
+import ntpath
 
 from main.Course import Course
 from main.Department import Department
@@ -29,26 +30,28 @@ class StudentListParser(object):
 		self.__registrations = value
 	
 	def get_student(self, full_name):
-		if full_name == 'hamiorak@somemail.com':   # this condition statically checks for a student who wrote his name wrong
-			full_name = 'ahmed hami orak'
+		if full_name == 'Ayşe Karahasan': full_name = 'Ayşenur Karahasan'
+
 		for student_list in self.__registrations:
 			for registration in self.__registrations[student_list]:
 				first_name = registration.student.name.lower()
 				last_name = registration.student.surname.lower()
-				splitted_full_name = full_name.lower().split()
-				first_last = first_name + last_name
+				lower_full_name = full_name.lower()
+				splitted_full_name = lower_full_name.split()
+				first_last = first_name + ' ' + last_name
+				splitted_first_last = first_last.split()
 
 				counter = 0
-				for i in range(len(splitted_full_name)):
-					if unidecode(splitted_full_name[i]) in unidecode(splitted_full_name[i]):
+				for word in set(splitted_first_last):
+					if unidecode(word) in unidecode(lower_full_name):
 						counter += 1
 				if counter > 1:
 					return registration.student
 		return None
 	
-	def __parse_sheet(self, sheet, filename):
-		filename = filename.split(".")[0]
-		self.__registrations.setdefault(filename, [])
+	def __parse_sheet(self, sheet, file_path):
+		file_name = ntpath.basename(file_path).split('.')[0]
+		self.__registrations.setdefault(file_name, [])
 
 		i = 0
 		academic_year, academic_semester = '', ''
@@ -104,7 +107,7 @@ class StudentListParser(object):
 					department.add_student(student.id, student)
 					course.add_registration(registration)
 					student.add_registration(registration)
-					self.__registrations[filename].append(registration)
+					self.__registrations[file_name].append(registration)
 
 					i += 1
 				else:

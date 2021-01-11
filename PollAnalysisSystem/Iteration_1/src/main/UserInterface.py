@@ -153,14 +153,17 @@ class UserInterface(object):
 		self.poll_analysis_system.load_answer_key(answer_key_files)
 
 	def __upload_polls(self):
-		self.polls_list = self.__files_loader()
+		polls_files = self.__files_loader()
+		self.poll_analysis_system.load_polls(polls_files)
 
 	def __export_attendance_report(self):
-		pass #we will not be saving by opening a dialog so this shall remain like this  till we figure out how we will export.
+		self.poll_analysis_system.export_attendance()
+
 	def __export_global_report(self):
-		pass
+		self.poll_analysis_system.export_global_report()
+
 	def __export_stats(self):
-		pass
+		self.poll_analysis_system.export_statistics()
 
 def main():
     app = QApplication([]) #Qapplication requires that we pass it system arguments, but since we have none, we just put an empty list.

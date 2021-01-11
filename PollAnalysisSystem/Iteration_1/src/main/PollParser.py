@@ -7,6 +7,8 @@ from collections import defaultdict
 from main.Question import Question
 from main.Answer import Answer
 from main.Poll import Poll
+from main.AttendancePoll import AttendancePoll
+from main.QuizPoll import QuizPoll
 from main.PollSubmission import PollSubmission
 from main.Student import Student
 
@@ -27,8 +29,7 @@ class PollParser(object):
 		""" Reads all poll reports and parses them """
 
 		for file_path in poll_reports_files:
-			file_name = ntpath.basename(file_path).split('.')[0]
-			self.__polls.setdefault(file_name, 0)
+			self.__file_name = ntpath.basename(file_path).split('.')[0]
 			self.parse_poll_report(file_path)
 
 	def parse_poll_report(self, file_path):
@@ -51,34 +52,41 @@ class PollParser(object):
 		"""
 		row[1] = ''.join([char for char in row[1] if not char.isdigit()]).strip()
 		student_name, student_email, submission_datetime = row[1], row[2], row[3]
-		student_instance = self.__student_list_parser.get_student(student_name)
-		if student_instance == None: return
-		student_instance.email = student_email
+		student = self.__student_list_parser.get_student(student_name)
+		if student == None: return
+		student.email = student_email
 		questions_answers = row[4:]
 		questions_set, answers_list = self.process_questions_answers(questions_answers)
 		poll_name = self.get_poll_name(questions_set)
 		if poll_name is None: return
-		poll_info = (poll_name, answers_list, student_instance, submission_datetime)
+		poll_info = (poll_name, questions_set, answers_list, student, submission_datetime)
 		self.update_polls(poll_info)
-		
+
 	def update_polls(self, poll_info):
 		"""
 			Given information about a row, creates a poll submission corresponding to the 
 			row, then appends it to the the poll's submissions.
 		"""
-		poll_name, answers_list, student, submission_datetime = poll_info
-		questions = self.__answer_key_parser.answer_keys[poll_name]
+		poll_name, questions_set, answers_list, student, submission_datetime = poll_info
+		poll_questions = list(self.__answer_key_parser.answer_keys[poll_name].keys())   # list of all question objects of a poll
+		submission_questions = self.__answer_key_parser.get_questions(poll_name, questions_set)   # list of submitted question objects
+		submission_answers = self.__answer_key_parser.get_answers(poll_name, answers_list)   # list of submitted answer objects
 		poll_weekday = poll_name.split('_')[2]
 		poll_date = datetime(int(poll_name.split('_')[1][:4]), int(poll_name.split('_')[1][4:6]), int(poll_name.split('_')[1][6:]))
 		if poll_name not in self.polls: # create a poll if it does not exist
-			poll = Poll(poll_name, poll_date, poll_weekday)
+			if 'Are you attending this lecture?' in [q.text for q in submission_questions]:
+				poll = AttendancePoll(poll_name, poll_date, poll_weekday)
+			else:
+				poll = QuizPoll(poll_name, poll_date, poll_weekday)
 		else:
 			poll = self.polls[poll_name]
 
-		#PollSubmission
+		# #PollSubmission
 		submission_datetime = datetime.strptime(submission_datetime, '%b %d, %Y %H:%M:%S')
-		poll_submission = PollSubmission(submission_datetime, poll, student, list(questions), answers_list)
+		poll_submission = PollSubmission(submission_datetime, poll, student)
+		poll_submission.add_questions_answers(submission_questions, submission_answers)
 		poll.add_poll_submission(poll_submission)
+		poll.add_questions_answers(submission_questions, submission_answers)
 		self.polls[poll_name] = poll
 	
 	def process_questions_answers(self, questions_answers):
@@ -104,10 +112,13 @@ class PollParser(object):
 			Matching a question set from a row from a csv file to an answer key to get the poll's name.
 		"""
 		for poll_name, questions_answers in self.__answer_key_parser.answer_keys.items():
+			poll_date = poll_name.split('_')[1].strip()
+			report_date = self.__file_name.split('_')[1].strip()
 			this_poll = True
-			for question in questions_answers:
-				if question.text not in questions_set:
+			poll_questions = [q.text for q in questions_answers]
+			for question in questions_set:
+				if question not in poll_questions:
 					this_poll = False
-			if this_poll:
+			if this_poll and poll_date == report_date:
 				return poll_name
 		return None # no answer key does not correspond to the passed questions_set

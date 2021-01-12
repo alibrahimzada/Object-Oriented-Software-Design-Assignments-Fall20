@@ -1,10 +1,11 @@
 
 
 class Student(object):
-	def __init__(self, _id, name, surname, department):
+	def __init__(self, _id, name, surname, department, description):
 		self.__id = _id
 		self.__name = name
 		self.__surname = surname
+		self.__description = description
 		self.__email = ''
 		self.__department = department
 		self.__registrations= []
@@ -36,6 +37,15 @@ class Student(object):
 	@surname.setter
 	def surname(self, value):
 		self.__surname = value
+
+	# description attribute
+	@property
+	def description(self):
+		return self.__description
+
+	@description.setter
+	def description(self, value):
+		self.__description = value
 
 	# email attribute
 	@property

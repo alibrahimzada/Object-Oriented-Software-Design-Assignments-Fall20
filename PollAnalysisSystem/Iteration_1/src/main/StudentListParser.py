@@ -95,7 +95,7 @@ class StudentListParser(object):
 					surname = sheet.row_values(i)[7]
 					description = sheet.row_values(i)[10]
 
-					student = Student(_id=std_num, name=name, surname=surname, department=department)
+					student = Student(_id=std_num, name=name, surname=surname, department=department, description=description)
 
 					instructor.department = department
 					

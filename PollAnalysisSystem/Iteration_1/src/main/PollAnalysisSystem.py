@@ -25,6 +25,10 @@ class PollAnalysisSystem(object):
 	def student_list_parser(self):
 		return self.__student_list_parser
 
+	@property
+	def poll_parser(self):
+		return self.__poll_parser
+	
 	def load_student_list(self, student_list_files):
 		self.__student_list_parser.parse_student_list(student_list_files)
 
@@ -38,7 +42,7 @@ class PollAnalysisSystem(object):
 		pass
 
 	def export_statistics(self):
-		pass
+		self.__stats_report_serializer.export_reports()
 
 	def export_global_report(self):
 		pass

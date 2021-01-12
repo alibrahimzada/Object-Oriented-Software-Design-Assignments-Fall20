@@ -51,14 +51,16 @@ class AnswerKeyParser(object):
 				submission_questions.append(question)
 		return submission_questions
 
-	def get_answers(self, poll_name, answers_list):
+	def get_answers(self, poll_name, submission_questions, answers_list):
 		submission_answers = []   # list of lists
-		correct_answer_texts = {answer.text: answer for question in self.__answer_keys[poll_name] for answer in self.__answer_keys[poll_name][question]}
-		for answers in answers_list:
+		correct_answer = {answer.text: (answer, question) for question in self.__answer_keys[poll_name] for answer in self.__answer_keys[poll_name][question]}
+		for i in range(len(submission_questions)):
+			question = submission_questions[i]
+			answers = answers_list[i]
 			current_answers = []
 			for answer_text in answers:
-				if answer_text in correct_answer_texts:
-					current_answers.append(correct_answer_texts[answer_text])
+				if answer_text in correct_answer and question == correct_answer[answer_text][1]:
+					current_answers.append(correct_answer[answer_text][0])
 				else:
 					if answer_text in self.__wrong_answers[poll_name]:
 						current_answers.append(self.__wrong_answers[poll_name][answer_text])

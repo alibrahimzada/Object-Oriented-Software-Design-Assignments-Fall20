@@ -3,3 +3,4 @@ PyQt5-sip==12.8.1 ## this actually will just get installed when you install pyqt
 
 xlrd~=2.0.1
 unidecode==1.1.2
+pandas==1.0.3

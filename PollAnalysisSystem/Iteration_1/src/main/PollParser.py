@@ -87,6 +87,7 @@ class PollParser(object):
 		poll_submission.add_questions_answers(submission_questions, submission_answers)
 		poll.add_poll_submission(poll_submission)
 		poll.add_questions_answers(submission_questions, submission_answers)
+		student.add_poll_submission(poll_name, poll_submission)
 		self.polls[poll_name] = poll
 	
 	def process_questions_answers(self, questions_answers):

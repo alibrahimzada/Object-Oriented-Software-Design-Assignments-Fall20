@@ -35,6 +35,10 @@ class PollSubmission(object):
 	@student.setter
 	def student(self, value):
 		self.__student = value
+	
+	@property
+	def questions_answers(self):
+		return self.__questions_answers
 
 	def add_questions_answers(self, questions, answers):
 		for i in range(len(questions)):

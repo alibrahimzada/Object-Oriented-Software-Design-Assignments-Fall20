@@ -45,7 +45,11 @@ class StudentListParser(object):
 				for word in set(splitted_first_last):
 					if unidecode(word) in unidecode(lower_full_name):
 						counter += 1
-				if counter > 1:
+				if unidecode(first_last) == 'ahmet fazil emir' and unidecode(lower_full_name) == 'ahmet hamza demir':
+					continue
+				if unidecode(first_last) == 'mehmet ali gozukizil' and unidecode(lower_full_name) == 'mehmet ali yuksel':
+					continue
+				elif counter > 1:
 					return registration.student
 		return None
 	

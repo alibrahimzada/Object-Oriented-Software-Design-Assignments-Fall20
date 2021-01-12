@@ -58,7 +58,7 @@ class PollParser(object):
 		questions_answers = row[4:]
 		questions_set, answers_list = self.process_questions_answers(questions_answers)
 		poll_name = self.get_poll_name(questions_set)
-		if poll_name is None: return
+		if poll_name is None: return # no answer key does not correspond to the passed questions_set
 		poll_info = (poll_name, questions_set, answers_list, student, submission_datetime)
 		self.update_polls(poll_info)
 
@@ -71,7 +71,7 @@ class PollParser(object):
 		poll_questions = list(self.__answer_key_parser.answer_keys[poll_name].keys())   # list of all question objects of a poll
 		submission_questions = self.__answer_key_parser.get_questions(poll_name, questions_set)   # list of submitted question objects
 		submission_answers = self.__answer_key_parser.get_answers(poll_name, answers_list)   # list of submitted answer objects
-		poll_weekday = poll_name.split('_')[2]
+		poll_weekday = poll_name.split('_')[2] 
 		poll_date = datetime(int(poll_name.split('_')[1][:4]), int(poll_name.split('_')[1][4:6]), int(poll_name.split('_')[1][6:]))
 		if poll_name not in self.polls: # create a poll if it does not exist
 			if 'Are you attending this lecture?' in [q.text for q in submission_questions]:
@@ -110,10 +110,12 @@ class PollParser(object):
 
 	def get_poll_name(self, questions_set):
 		"""
-			Matching a question set from a row from a csv file to an answer key to get the poll's name.
+			Matching a question set & (date of the poll_report and the poll) from a row 
+			from a csv file to an answer key to get the poll's name.
+			
 		"""
 		for poll_name, questions_answers in self.__answer_key_parser.answer_keys.items():
-			poll_date = poll_name.split('_')[1].strip()
+			poll_date = poll_name.split('_')[1].strip() # date taken from the name in the answer key
 			report_date = self.__file_name.split('_')[1].strip()
 			this_poll = True
 			poll_questions = [q.text for q in questions_answers]

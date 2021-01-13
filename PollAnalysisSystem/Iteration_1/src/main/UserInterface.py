@@ -163,7 +163,7 @@ class UserInterface(object):
 		self.poll_analysis_system.export_global_report()
 
 	def __export_stats(self):
-		self.poll_analysis_system.export_statistics()
+		self.poll_analysis_system.export_stats_global()
 
 def main():
     app = QApplication([]) #Qapplication requires that we pass it system arguments, but since we have none, we just put an empty list.

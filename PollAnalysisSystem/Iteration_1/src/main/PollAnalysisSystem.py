@@ -1,7 +1,6 @@
 import logging
 from tests import TestSuitRunner
 from main.AttendanceReportSerializer import AttendanceReportSerializer
-from main.GlobalReportSerializer import GlobalReportSerializer
 from main.StatsReportSerializer import StatsReportSerializer
 from main.StudentListParser import StudentListParser
 from main.AnswerKeyParser import AnswerKeyParser
@@ -15,7 +14,6 @@ class PollAnalysisSystem(object):
 		self.__answer_key_parser = AnswerKeyParser(self)
 		self.__poll_parser = PollParser(self)
 		self.__attendance_report_serializer = AttendanceReportSerializer(self)
-		self.__global_report_serializer = GlobalReportSerializer(self)
 		self.__stats_report_serializer = StatsReportSerializer(self)
 		self.__logger = self.create_logger()
 		
@@ -55,7 +53,5 @@ class PollAnalysisSystem(object):
 	def export_attendance(self):
 		pass
 
-	def export_statistics(self):
+	def export_stats_global(self):
 		self.__stats_report_serializer.export_reports()
-	def export_global_report(self):
-		pass

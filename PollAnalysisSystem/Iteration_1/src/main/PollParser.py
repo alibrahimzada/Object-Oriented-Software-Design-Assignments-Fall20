@@ -38,7 +38,7 @@ class PollParser(object):
 		"""
 		with open(file_path) as csv_file:
 			csv_reader = csv.reader(csv_file, delimiter=',')
-			for idx, row in enumerate(csv_reader):
+			for idx, row in enumerate(csv_reader): #how to model this in a seq diagram?
 				if idx == 0:
 					continue
 				self.process_row(row)
@@ -52,15 +52,15 @@ class PollParser(object):
 		"""
 		row[1] = ''.join([char for char in row[1] if not char.isdigit()]).strip()
 		student_name, student_email, submission_datetime = row[1], row[2], row[3]
-		student = self.__student_list_parser.get_student(student_name)
+		student = self.__student_list_parser.get_student(student_name) #also this? should I actually add that class and access it? wouldn't that be too much detail?
 		if student == None: return
 		student.email = student_email
 		questions_answers = row[4:]
-		questions_set, answers_list = self.process_questions_answers(questions_answers)
+		questions_set, answers_list = self.process_questions_answers(questions_answers) #here too
 		poll_name = self.get_poll_name(questions_set)
 		if poll_name is None: return # no answer key does not correspond to the passed questions_set
 		poll_info = (poll_name, questions_set, answers_list, student, submission_datetime)
-		self.update_polls(poll_info)
+		self.update_polls(poll_info) # this is a mess:'D
 
 	def update_polls(self, poll_info):
 		"""

@@ -121,7 +121,7 @@ class UserInterface(object):
         self.export_attendance_report_btn.setStyleSheet(_translate("window", "background-color:green; color:white"))
         self.export_attendance_report_btn.setText(_translate("window", "Export Attendance Report"))
 
-        self.export_stats_btn.setText(_translate("window", "Export Stats"))
+        self.export_stats_btn.setText(_translate("window", "Export Stats & Global Report"))
 
         self.load_std_list_btn.setStatusTip(_translate("window", "This is also just a button, come on"))
         self.title_label.setStatusTip(_translate("window", "This is a normal label, nothing to see here."))

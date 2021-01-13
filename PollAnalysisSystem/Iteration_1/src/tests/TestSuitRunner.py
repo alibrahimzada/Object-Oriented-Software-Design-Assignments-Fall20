@@ -6,6 +6,9 @@ import unittest
 from tests.AnswerTests import TestAnswerMethods
 from tests.QuestionTests import TestQuestionMethods
 from tests.AttendancePollTests import TestAttendancePollMethods
+from tests.PollTests import TestPollMethods
+from tests.QuizPollTests import TestQuizPollMethods
+from tests.CourseTests import TestCourseMethods
 
 
 class TestSuitRunner():
@@ -26,7 +29,9 @@ class TestSuitRunner():
             Gather all the tests in a test suite.
         """
         test_suite = unittest.TestSuite()
-        test_classes = [TestAnswerMethods, TestQuestionMethods, TestAttendancePollMethods]
+        test_classes = [TestAnswerMethods, TestQuestionMethods, TestAttendancePollMethods,
+                        TestPollMethods, TestQuizPollMethods, TestCourseMethods,
+                        ]
         for test_class in test_classes:
             test_suite.addTest(unittest.makeSuite(test_class))
         return test_suite

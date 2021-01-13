@@ -1,5 +1,4 @@
 import unittest
-from main.Poll import Poll
 from main.AttendancePoll import AttendancePoll
 
 

@@ -124,3 +124,5 @@ class StudentListParser(object):
 			workbook = xlrd.open_workbook(filename, encoding_override='cp1252')
 			sheet = workbook.sheet_by_index(0)
 			self.__parse_sheet(sheet, filename)
+			self.poll_analysis_system.logger.info(f'Student List: {filename.split("/")[-1]} was parsed successfully.')
+		self.poll_analysis_system.logger.info('All Student Lists were parsed successfully')

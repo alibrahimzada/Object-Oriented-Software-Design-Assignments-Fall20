@@ -21,6 +21,10 @@ class AnswerKeyParser(object):
 
 		for file_name in answer_key_files:
 			self.__parse_answer_key(file_name)
+			self.__poll_analysis_system.logger.info(f'Answer Key: {file_name.split("/")[-1]} was parsed successfully.')
+		self.__poll_analysis_system.logger.info('All Answer Keys were parsed successfully')
+
+
 
 	def __parse_answer_key(self, file_path):
 		"""

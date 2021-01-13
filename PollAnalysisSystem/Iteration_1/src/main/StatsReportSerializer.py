@@ -1,6 +1,9 @@
 import os
 import pandas as pd
 import matplotlib.pyplot as plt
+from datetime import date
+
+from main.AttendancePoll import AttendancePoll
 
 class StatsReportSerializer(object):
 
@@ -9,6 +12,7 @@ class StatsReportSerializer(object):
 		self.__poll_parser = poll_analysis_system.poll_parser
 		self.__student_list_parser = poll_analysis_system.student_list_parser
 		self.__answer_key_parser = poll_analysis_system.answer_key_parser
+		self.__global_df = pd.DataFrame()
 
 	@property
 	def poll_analysis_system(self):
@@ -17,7 +21,9 @@ class StatsReportSerializer(object):
 	def export_reports(self):
 		for poll_name in self.__poll_parser.polls:
 			poll = self.__poll_parser.polls[poll_name]
+			if isinstance(poll, AttendancePoll): continue
 			self.export_quiz_report(poll_name, poll)
+		self.export_global_report()
 
 	def export_quiz_report(self, poll_name, poll):
 		if not os.path.exists('statistics'):
@@ -51,23 +57,44 @@ class StatsReportSerializer(object):
 
 		self.create_chart()
 
-		data_frame = pd.DataFrame()
-		data_frame['Student ID'] = student_numbers
-		data_frame['Name'] = names
-		data_frame['Surname'] = surnames
-		data_frame['Remarks'] = remarks
+		quiz_df = pd.DataFrame()
+		quiz_df['Student ID'] = student_numbers
+		quiz_df['Name'] = names
+		quiz_df['Surname'] = surnames
+		quiz_df['Remarks'] = remarks
+		student_info = {'Student ID': student_numbers, 'Name': names, 'Surnames': surnames, 'Remarks': remarks}
 
 		question_counter = 1
 		for question_text in self.__quiz_questions:
 			if question_text not in ['n questions', 'success rate', 'success %']:
-				data_frame['Q' + str(question_counter)] = self.__quiz_questions[question_text]
+				quiz_df['Q' + str(question_counter)] = self.__quiz_questions[question_text]
 				question_counter += 1
 
-		data_frame['n questions'] = self.__quiz_questions['n questions']
-		data_frame['success rate'] = self.__quiz_questions['success rate']
-		data_frame['success %'] = self.__quiz_questions['success %']
-		data_frame.to_excel('quiz_report.xlsx', index=False)
+		quiz_df['n questions'] = self.__quiz_questions['n questions']
+		quiz_df['success rate'] = self.__quiz_questions['success rate']
+		quiz_df['success %'] = self.__quiz_questions['success %']
+		quiz_df.to_excel('quiz_report.xlsx', index=False)
 		os.chdir('..')
+		os.chdir('..')
+		self.add_global_report(poll_name, poll, student_info)
+
+	def add_global_report(self, poll_name, poll, student_info):
+		for column in student_info:
+			if column in self.__global_df: continue
+			self.__global_df[column] = student_info[column]
+		
+		if poll_name + ' Date' not in self.__global_df:
+			self.__global_df[poll_name + ' Date'] = [str(poll.date.date()) for i in range(len(student_info['Student ID']))]
+		if poll_name + ' n questions' not in self.__global_df:
+			self.__global_df[poll_name + ' n questions'] = self.__quiz_questions['n questions']
+		if poll_name + ' success %' not in self.__global_df:
+			self.__global_df[poll_name + ' success %'] = self.__quiz_questions['success %']
+
+	def export_global_report(self):
+		if not os.path.exists('global_report'):
+			os.mkdir('global_report')
+		os.chdir('global_report')
+		self.__global_df.to_excel('global_report.xlsx', index=False)
 		os.chdir('..')
 
 	def export_absent_student(self):

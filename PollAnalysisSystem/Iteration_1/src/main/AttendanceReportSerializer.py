@@ -21,14 +21,14 @@ class AttendanceReportSerializer(object):
     def export_reports(self):
         self.full_data = pd.DataFrame()
         for poll_name in self.__poll_parser.polls:
-            poll = self.__poll_parser.polls[poll_name]
-            self.export_attendance_report(poll_name, poll)
-            
+            self.export_attendance_report(poll_name)
+
         self.full_data = self.full_data.groupby(['Student ID', 'Name', 'Surname'])['Attendance'].agg(['sum']).rename(
             columns={'sum': 'Attendance out of ' + str(len(self.__poll_parser.polls))})
-            
+
         self.full_data.to_excel("attendance_report.xlsx")
         os.chdir('..')
+
     def export_attendance_report(self, poll_name):
         if not os.path.exists('attendance_report'):
             os.mkdir('attendance_report')

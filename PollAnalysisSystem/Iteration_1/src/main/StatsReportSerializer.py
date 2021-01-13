@@ -133,4 +133,22 @@ class StatsReportSerializer(object):
 		plt.savefig('Q' + str(q_counter) + '.png', bbox_inches='tight')
 
 	def create_bar_chart(self, question, q_counter):
-		pass
+		fig = plt.figure()
+		colors = []
+		sizes = []
+		labels = {}
+		label_counter = 1
+		for answer in self.__answer_distribution[question]:
+			if answer.is_correct:
+				colors.append('green')
+			else:
+				colors.append('red')
+			labels.setdefault('Ans. ' + str(label_counter), answer.text)
+			sizes.append(self.__answer_distribution[question][answer])
+			plt.bar(['Ans. ' + str(label_counter)], sizes[-1], color=colors[-1], label='Ans. ' + 
+					str(label_counter) + ' : ' + labels['Ans. ' + str(label_counter)])
+			label_counter += 1
+		plt.ylabel('Number Of Students')
+		plt.title(question.text)
+		plt.legend(loc='lower center', bbox_to_anchor=[0.5, -0.35])
+		plt.savefig('Q' + str(q_counter) + '.png', bbox_inches='tight')

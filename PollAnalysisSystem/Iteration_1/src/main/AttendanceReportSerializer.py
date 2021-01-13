@@ -19,6 +19,10 @@ class AttendanceReportSerializer(object):
         self.__poll_analysis_system = value
 
     def export_reports(self):
+        if not os.path.exists('attendance_report'):
+            os.mkdir('attendance_report')
+        os.chdir('attendance_report')
+
         self.full_data = pd.DataFrame()
         for poll_name in self.__poll_parser.polls:
             self.export_attendance_report(poll_name)
@@ -30,14 +34,7 @@ class AttendanceReportSerializer(object):
         os.chdir('..')
 
     def export_attendance_report(self, poll_name):
-        if not os.path.exists('attendance_report'):
-            os.mkdir('attendance_report')
-        os.chdir('attendance_report')
 
-        if not os.path.exists(poll_name):
-            os.mkdir(poll_name)
-
-        os.chdir(poll_name)
         student_numbers, names, surnames, attended = [], [], [], []
         for std_list in self.__student_list_parser.registrations:
             for registration in self.__student_list_parser.registrations[std_list]:

@@ -70,7 +70,7 @@ class PollParser(object):
 		poll_name, questions_set, answers_list, student, submission_datetime = poll_info
 		poll_questions = list(self.__answer_key_parser.answer_keys[poll_name].keys())   # list of all question objects of a poll
 		submission_questions = self.__answer_key_parser.get_questions(poll_name, questions_set)   # list of submitted question objects
-		submission_answers = self.__answer_key_parser.get_answers(poll_name, answers_list)   # list of submitted answer objects
+		submission_answers = self.__answer_key_parser.get_answers(poll_name, submission_questions, answers_list)   # list of submitted answer objects
 		poll_weekday = poll_name.split('_')[2] 
 		poll_date = datetime(int(poll_name.split('_')[1][:4]), int(poll_name.split('_')[1][4:6]), int(poll_name.split('_')[1][6:]))
 		if poll_name not in self.polls: # create a poll if it does not exist

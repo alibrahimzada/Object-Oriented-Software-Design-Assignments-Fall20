@@ -16,3 +16,5 @@ PollAnalysisSystem/Iteration_1/src/main/__pycache__/Question.cpython-37.pyc
 PollAnalysisSystem/Iteration_1/src/tests/__pycache__/TestSuitRunner.cpython-37.pyc
 PollAnalysisSystem/Iteration_1/src/tests/__pycache__/__init__.cpython-37.pyc
 __pycache__/
+statistics/
+venv/

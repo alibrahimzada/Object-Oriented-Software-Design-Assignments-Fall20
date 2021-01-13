@@ -5,6 +5,7 @@ sys.path.insert(1, os.getcwd() + '/src')
 import unittest
 from tests.AnswerTests import TestAnswerMethods
 from tests.QuestionTests import TestQuestionMethods
+from tests.AttendancePollTests import TestAttendancePollMethods
 
 
 class TestSuitRunner():
@@ -25,7 +26,7 @@ class TestSuitRunner():
             Gather all the tests in a test suite.
         """
         test_suite = unittest.TestSuite()
-        test_classes = [TestAnswerMethods, TestQuestionMethods]
+        test_classes = [TestAnswerMethods, TestQuestionMethods, TestAttendancePollMethods]
         for test_class in test_classes:
             test_suite.addTest(unittest.makeSuite(test_class))
         return test_suite

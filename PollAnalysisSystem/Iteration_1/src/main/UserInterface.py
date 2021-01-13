@@ -162,7 +162,7 @@ class UserInterface(object):
         self.poll_analysis_system.export_attendance()
 
     def __export_stats(self):
-        self.poll_analysis_system.export_stats_global()
+        self.poll_analysis_system.export_statistics()
 
     def __progress_bar_loading(self):
         progress = 0

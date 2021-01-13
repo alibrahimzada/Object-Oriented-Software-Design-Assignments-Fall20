@@ -4,7 +4,7 @@ import pandas as pd
 
 class AttendanceReportSerializer(object):
 
-    def _init_(self, poll_analysis_system):
+    def __init__(self, poll_analysis_system):
         self.__poll_analysis_system = poll_analysis_system
         self.__poll_parser = poll_analysis_system.poll_parser
         self.__student_list_parser = poll_analysis_system.student_list_parser
@@ -20,22 +20,24 @@ class AttendanceReportSerializer(object):
 
     def export_reports(self):
         self.full_data = pd.DataFrame()
-
         for poll_name in self.__poll_parser.polls:
-            print(poll_name)
             poll = self.__poll_parser.polls[poll_name]
             self.export_attendance_report(poll_name, poll)
-        print(self.full_data.groupby(['Student ID', 'Name', 'Surname'])['Attendance'].agg(['sum']).rename(
-            columns={'sum': 'Attendance out of ' + str(len(self.__poll_parser.polls))}))
-
-    def export_attendance_report(self, poll_name, poll):
+            
+        self.full_data = self.full_data.groupby(['Student ID', 'Name', 'Surname'])['Attendance'].agg(['sum']).rename(
+            columns={'sum': 'Attendance out of ' + str(len(self.__poll_parser.polls))})
+            
+        self.full_data.to_excel("attendance_report.xlsx")
+        os.chdir('..')
+    def export_attendance_report(self, poll_name):
         if not os.path.exists('attendance_report'):
             os.mkdir('attendance_report')
         os.chdir('attendance_report')
+
         if not os.path.exists(poll_name):
             os.mkdir(poll_name)
-        os.chdir(poll_name)
 
+        os.chdir(poll_name)
         student_numbers, names, surnames, attended = [], [], [], []
         for std_list in self.__student_list_parser.registrations:
             for registration in self.__student_list_parser.registrations[std_list]:
@@ -54,6 +56,3 @@ class AttendanceReportSerializer(object):
         data_frame['Attendance'] = attended
 
         self.full_data = self.full_data.append(data_frame)
-
-        os.chdir('..')
-        os.chdir('..')

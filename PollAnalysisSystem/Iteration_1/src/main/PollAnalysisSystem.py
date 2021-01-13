@@ -33,7 +33,10 @@ class PollAnalysisSystem(object):
 		return self.__logger
 
 	def create_logger(self):
-		logging.basicConfig(level=logging.NOTSET,  # set root logger to NOSET & write to stdout
+		log_file = 'PollAnalysisSystem.log'
+		handlers = [logging.FileHandler(log_file), logging.StreamHandler()] # write to file & stdout
+		logging.basicConfig(level=logging.NOTSET,  # set root logger to NOSET 
+							handlers = handlers,
 							format="%(asctime)s;%(levelname)s;%(message)s",  # log format
 							datefmt='%Y-%m-%d %H:%M:%S')  # date format
 		logging.getLogger('matplotlib.font_manager').disabled = True  # avoid the warnings thrown by matplotlib

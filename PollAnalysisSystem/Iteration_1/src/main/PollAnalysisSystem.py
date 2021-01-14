@@ -45,15 +45,12 @@ class PollAnalysisSystem(object):
 
 		
 	def load_student_list(self, student_list_files):
-		self.__logger.info('Student Lists were loaded successfully.')
 		self.__student_list_parser.parse_student_list(student_list_files)
 
 	def load_answer_key(self, answer_key_files):
-		self.__logger.info('Answer Keys were loaded successfully.')
 		self.__answer_key_parser.read_answer_keys(answer_key_files)
 
 	def load_polls(self, poll_reports_files):
-		self.__logger.info('Poll Reports were loaded successfully.')
 		self.__poll_parser.read_poll_reports(poll_reports_files)
 
 	def export_attendance(self):

@@ -21,10 +21,6 @@ class AnswerKeyParser(object):
 
 		for file_name in answer_key_files:
 			self.__parse_answer_key(file_name)
-			self.__poll_analysis_system.logger.info(f'Answer Key: {file_name.split("/")[-1]} was parsed successfully.')
-		self.__poll_analysis_system.logger.info('All Answer Keys were parsed successfully')
-
-
 
 	def __parse_answer_key(self, file_path):
 		"""
@@ -36,6 +32,11 @@ class AnswerKeyParser(object):
 			for idx, row in enumerate(csv_reader):
 				if row[1] == '':
 					title = row[0]
+					if title in self.__answer_keys:
+						self.__poll_analysis_system.logger.info(f'Answer Key: Your loaded answer key is already loaded. System did not load it again.')
+						return
+					else:
+						self.__poll_analysis_system.logger.info(f'Answer Key: {title} was parsed successfully.')
 					self.__answer_keys.setdefault(title, {})
 				else:
 					answers_text_list = row[1].split(';') # a semicolon separates the multiple answers

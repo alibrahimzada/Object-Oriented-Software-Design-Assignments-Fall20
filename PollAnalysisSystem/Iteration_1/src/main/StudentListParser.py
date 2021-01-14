@@ -55,6 +55,11 @@ class StudentListParser(object):
 	
 	def __parse_sheet(self, sheet, file_path):
 		file_name = ntpath.basename(file_path).split('.')[0]
+		if file_name in self.__registrations:
+			self.poll_analysis_system.logger.info(f'Student List: {file_name} is already loaded. System did not load it again.')
+			return
+		else:
+			self.poll_analysis_system.logger.info(f'Student List: {file_name} was parsed successfully.')
 		self.__registrations.setdefault(file_name, [])
 
 		i = 0
@@ -124,5 +129,3 @@ class StudentListParser(object):
 			workbook = xlrd.open_workbook(filename, encoding_override='cp1252')
 			sheet = workbook.sheet_by_index(0)
 			self.__parse_sheet(sheet, filename)
-			self.poll_analysis_system.logger.info(f'Student List: {filename.split("/")[-1]} was parsed successfully.')
-		self.poll_analysis_system.logger.info('All Student Lists were parsed successfully')

@@ -145,7 +145,8 @@ class UserInterface(object):
         # we are looping over the 0th index of chosen files because GetOpenFileNmaes returns a tuple of the files chosen, and the type of files we are allowing.
         for file_path in chosen_files[0]:
             files_list.append(file_path)
-        self.__progress_bar_loading()
+        if files_list:
+            self.__progress_bar_loading()
         return files_list
 
     def __upload_std_list(self):
@@ -168,6 +169,7 @@ class UserInterface(object):
 
     def __progress_bar_loading(self):
         progress = 0
+        
         while progress < 100:
             progress += .0002
             self.progressBar.setProperty("value", progress)

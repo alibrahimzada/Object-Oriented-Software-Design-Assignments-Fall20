@@ -9,6 +9,14 @@ class Poll(object):
 		self._poll_submissions = []
 		self._questions_answers = {}
 
+	@property
+	def poll_submissions(self):
+		return self._poll_submissions
+	
+	@property
+	def questions_answers(self):
+		return self._questions_answers
+
 	def add_poll_submission(self, value):
 		self._poll_submissions.append(value)
 

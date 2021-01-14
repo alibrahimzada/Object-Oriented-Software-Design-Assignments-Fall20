@@ -54,7 +54,7 @@ class PollAnalysisSystem(object):
 		self.__poll_parser.read_poll_reports(poll_reports_files)
 
 	def export_attendance(self):
-		self.__attendance_report_serializer.export_reports()
+		self.__attendance_report_serializer.export_attendance_report()
 
 	def export_statistics(self):
 		self.__stats_report_serializer.export_reports()

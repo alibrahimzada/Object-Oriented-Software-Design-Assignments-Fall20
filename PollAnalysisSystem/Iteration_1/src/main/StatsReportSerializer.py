@@ -17,13 +17,11 @@ class StatsReportSerializer(object):
 	def export_reports(self):
 		for poll_name in self.__poll_parser.polls:
 			poll = self.__poll_parser.polls[poll_name]
-			if isinstance(poll, AttendancePoll): continue
 			self.__export_quiz_report(poll_name, poll)
 			self.__poll_analysis_system.logger.info(f'Statistics Report for {poll_name} was exported successfully.')
 		self.__poll_analysis_system.logger.info('All Statistics Reports were exported successfully.')
 		self.__export_global_report()
 		self.__poll_analysis_system.logger.info('Global Report was exported successfully')
-
 
 	def __export_quiz_report(self, poll_name, poll):
 		if not os.path.exists('statistics'):
@@ -76,6 +74,7 @@ class StatsReportSerializer(object):
 		quiz_df.to_excel('quiz_report.xlsx', index=False)
 		os.chdir('..')
 		os.chdir('..')
+		if isinstance(poll, AttendancePoll): return
 		self.__add_global_report(poll_name, poll, student_info)
 
 	def __add_global_report(self, poll_name, poll, student_info):

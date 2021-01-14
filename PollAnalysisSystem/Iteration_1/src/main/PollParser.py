@@ -1,7 +1,8 @@
 import os
 import csv
 import ntpath
-from datetime import datetime
+import json
+from datetime import datetime, date
 
 from collections import defaultdict
 from main.Question import Question
@@ -32,6 +33,7 @@ class PollParser(object):
 			self.__file_name = ntpath.basename(file_path).split('.')[0]
 			self.parse_poll_report(file_path)
 			self.__poll_analysis_system.logger.info(f'Poll Report: {file_path.split("/")[-1]} was parsed successfully.')
+		self.export_json()
 
 	def parse_poll_report(self, file_path):
 		"""
@@ -126,3 +128,27 @@ class PollParser(object):
 			if this_poll and poll_date == report_date:
 				return poll_name
 		return None # no answer key does not correspond to the passed questions_set
+
+	def export_json(self):
+		is_db_available = True
+		if not os.path.exists('db'):
+			is_db_available = False
+			os.mkdir('db')
+		os.chdir('db')
+
+		content = {}
+		if is_db_available:
+			with open('db.json') as db:
+				content = json.load(db)
+
+		for poll_name in self.polls:
+			poll_date = str(self.polls[poll_name].date.date())
+			for poll_submission in self.polls[poll_name].poll_submissions:
+				content.setdefault(poll_date, [])
+				student_id = poll_submission.student.id
+				if student_id in content[poll_date]: continue
+				content[poll_date].append(student_id)
+
+		with open('db.json', 'w') as fw:
+			json.dump(content, fw, sort_keys=True, indent=4)
+		os.chdir('..')

@@ -137,7 +137,7 @@ class UserInterface(object):
 
     def __files_loader(self, dialogue_name="Choose a file or multiple files!"):
         ''' Opens a directory, loads all files in it and makes a IO.textIoWrapper objects list and returns it'''
-        chosen_files = QFileDialog.getOpenFileNames( directory="D:\C O D E\OOSD\MAIN\CSE3063F20P1_GRP12\PollAnalysisSystem\Iteration_1",
+        chosen_files = QFileDialog.getOpenFileNames( directory=os.getcwd(),
             caption=dialogue_name)
         
         # we will allow a certain type of file when we are sure, right now, we can choose any file.

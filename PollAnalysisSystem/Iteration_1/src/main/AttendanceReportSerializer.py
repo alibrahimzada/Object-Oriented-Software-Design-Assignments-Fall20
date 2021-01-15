@@ -8,7 +8,7 @@ class AttendanceReportSerializer(object):
 		self.__poll_analysis_system = poll_analysis_system
 
 	def export_attendance_report(self):
-		db = self.get_db()
+		db = self.__get_db()
 		if not os.path.exists('attendance_report'):
 			os.mkdir('attendance_report')
 		os.chdir('attendance_report')
@@ -48,7 +48,7 @@ class AttendanceReportSerializer(object):
 		os.chdir('..')
 		self.__poll_analysis_system.logger.info("Successfully exported Attendance Report")
 
-	def get_db(self):
+	def __get_db(self):
 		os.chdir('db')
 
 		content = {}

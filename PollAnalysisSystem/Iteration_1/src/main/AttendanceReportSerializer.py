@@ -6,8 +6,6 @@ class AttendanceReportSerializer(object):
 
 	def __init__(self, poll_analysis_system):
 		self.__poll_analysis_system = poll_analysis_system
-		self.__poll_parser = poll_analysis_system.poll_parser
-		self.__answer_key_parser = poll_analysis_system.answer_key_parser
 
 	def export_attendance_report(self):
 		db = self.get_db()

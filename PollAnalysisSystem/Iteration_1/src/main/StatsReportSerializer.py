@@ -9,14 +9,11 @@ class StatsReportSerializer(object):
 
 	def __init__(self, poll_analysis_system):
 		self.__poll_analysis_system = poll_analysis_system
-		self.__poll_parser = poll_analysis_system.poll_parser
-		self.__student_list_parser = poll_analysis_system.student_list_parser
-		self.__answer_key_parser = poll_analysis_system.answer_key_parser
 		self.__global_df = pd.DataFrame()
 
 	def export_reports(self):
-		for poll_name in self.__poll_parser.polls:
-			poll = self.__poll_parser.polls[poll_name]
+		for poll_name in self.__poll_analysis_system.poll_parser:
+			poll = self.__poll_analysis_system.poll_parser.polls[poll_name]
 			self.__export_quiz_report(poll_name, poll)
 			self.__poll_analysis_system.logger.info(f'Statistics Report for {poll_name} was exported successfully.')
 		self.__poll_analysis_system.logger.info('All Statistics Reports were exported successfully.')
@@ -33,13 +30,13 @@ class StatsReportSerializer(object):
 
 		self.__answer_distribution = {}
 		self.__quiz_questions = {'n questions': [], 'success rate': [], 'success %': []}
-		for question in self.__answer_key_parser.answer_keys[poll_name]:
+		for question in self.__poll_analysis_system.answer_key_parser.answer_keys[poll_name]:
 			self.__quiz_questions.setdefault(question.text, [])
 			self.__answer_distribution.setdefault(question, {})
 
 		student_numbers, names, surnames, remarks = [], [], [], []
-		for std_list in self.__student_list_parser.registrations:
-			for registration in self.__student_list_parser.registrations[std_list]:
+		for std_list in self.__poll_analysis_system.student_list_parser.registrations:
+			for registration in self.__poll_analysis_system.student_list_parser.registrations[std_list]:
 				student_numbers.append(registration.student.id)
 				names.append(registration.student.name)
 				surnames.append(registration.student.surname)
@@ -110,10 +107,11 @@ class StatsReportSerializer(object):
 		self.__quiz_questions['success rate'].append('0/0')
 		self.__quiz_questions['success %'].append('')
 
-		for question in self.__answer_key_parser.answer_keys[poll_name]:
+		answer_key_parser = self.__poll_analysis_system.answer_key_parser
+		for question in answer_key_parser.answer_keys[poll_name]:
 			self.__quiz_questions['n questions'][-1] += 1
 			if question in poll_submission.questions_answers:
-				if poll_submission.questions_answers[question] == self.__answer_key_parser.answer_keys[poll_name][question]:
+				if poll_submission.questions_answers[question] == answer_key_parser.answer_keys[poll_name][question]:
 					self.__quiz_questions[question.text].append('1')
 					new_correct = int(self.__quiz_questions['success rate'][-1][0]) + 1
 					self.__quiz_questions['success rate'][-1] = str(new_correct) + self.__quiz_questions['success rate'][-1][1:]

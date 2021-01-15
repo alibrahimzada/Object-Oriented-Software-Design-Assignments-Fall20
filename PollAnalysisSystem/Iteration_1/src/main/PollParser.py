@@ -4,10 +4,8 @@ import ntpath
 import json
 from datetime import datetime, date
 
-from collections import defaultdict
 from main.Question import Question
 from main.Answer import Answer
-from main.Poll import Poll
 from main.AttendancePoll import AttendancePoll
 from main.QuizPoll import QuizPoll
 from main.PollSubmission import PollSubmission
@@ -19,23 +17,21 @@ class PollParser(object):
 	def __init__(self, poll_analysis_system):
 		self.__polls = {}   # {poll_name: Poll}
 		self.__poll_analysis_system = poll_analysis_system
-		self.__answer_key_parser = self.__poll_analysis_system.answer_key_parser
-		self.__student_list_parser = self.__poll_analysis_system.student_list_parser
 
 	@property
 	def polls(self):
 		return self.__polls
 
-	def read_poll_reports(self, poll_reports_files):
+	def read_poll_reports(self, poll_report_files):
 		""" Reads all poll reports and parses them """
 
-		for file_path in poll_reports_files:
+		for file_path in poll_report_files:
 			self.__file_name = ntpath.basename(file_path).split('.')[0]
-			self.parse_poll_report(file_path)
+			self.__parse_poll_report(file_path)
 			self.__poll_analysis_system.logger.info(f'Poll Report: {file_path.split("/")[-1]} was parsed successfully.')
-		self.export_json()
+		self.__export_db()
 
-	def parse_poll_report(self, file_path):
+	def __parse_poll_report(self, file_path):
 		"""
 			Given a file name, it goes through the rows and process one row at a time
 		"""
@@ -44,9 +40,9 @@ class PollParser(object):
 			for idx, row in enumerate(csv_reader): #how to model this in a seq diagram?
 				if idx == 0:
 					continue
-				self.process_row(row)
+				self.__process_row(row)
 
-	def process_row(self, row):
+	def __process_row(self, row):
 		"""
 			Given a row from the csv file, extracts the information from the row, 
 			then finds the poll_name corresponding to the row by matching the questions
@@ -55,25 +51,26 @@ class PollParser(object):
 		"""
 		row[1] = ''.join([char for char in row[1] if not char.isdigit()]).strip()
 		student_name, student_email, submission_datetime = row[1], row[2], row[3]
-		student = self.__student_list_parser.get_student(student_name) #also this? should I actually add that class and access it? wouldn't that be too much detail?
+		student = self.__poll_analysis_system.student_list_parser.get_student(student_name)
 		if student == None: return
 		student.email = student_email
 		questions_answers = row[4:]
-		questions_set, answers_list = self.process_questions_answers(questions_answers) #here too
-		poll_name = self.get_poll_name(questions_set)
+		questions_set, answers_list = self.__process_questions_answers(questions_answers)
+		poll_name = self.__get_poll_name(questions_set)
 		if poll_name is None: return # no answer key does not correspond to the passed questions_set
 		poll_info = (poll_name, questions_set, answers_list, student, submission_datetime)
-		self.update_polls(poll_info) # this is a mess:'D
+		self.__update_polls(poll_info)
 
-	def update_polls(self, poll_info):
+	def __update_polls(self, poll_info):
 		"""
 			Given information about a row, creates a poll submission corresponding to the 
 			row, then appends it to the the poll's submissions.
 		"""
 		poll_name, questions_set, answers_list, student, submission_datetime = poll_info
-		poll_questions = list(self.__answer_key_parser.answer_keys[poll_name].keys())   # list of all question objects of a poll
-		submission_questions = self.__answer_key_parser.get_questions(poll_name, questions_set)   # list of submitted question objects
-		submission_answers = self.__answer_key_parser.get_answers(poll_name, submission_questions, answers_list)   # list of submitted answer objects
+		answer_key_parser = self.__poll_analysis_system.answer_key_parser
+		poll_questions = list(answer_key_parser.answer_keys[poll_name].keys())   # list of all question objects of a poll
+		submission_questions = answer_key_parser.get_questions(poll_name, questions_set)   # list of submitted question objects
+		submission_answers = answer_key_parser.get_answers(poll_name, submission_questions, answers_list)   # list of submitted answer objects
 		poll_weekday = poll_name.split('_')[2] 
 		poll_date = datetime(int(poll_name.split('_')[1][:4]), int(poll_name.split('_')[1][4:6]), int(poll_name.split('_')[1][6:]))
 		if poll_name not in self.polls: # create a poll if it does not exist
@@ -93,7 +90,7 @@ class PollParser(object):
 		student.add_poll_submission(poll_name, poll_submission)
 		self.polls[poll_name] = poll
 	
-	def process_questions_answers(self, questions_answers):
+	def __process_questions_answers(self, questions_answers):
 		"""
 			Separates the questions and the answers. returns a set of the questins' texts,
 			and a list of the answers' texts
@@ -111,13 +108,14 @@ class PollParser(object):
 		return questions_set, answers_list
 
 
-	def get_poll_name(self, questions_set):
+	def __get_poll_name(self, questions_set):
 		"""
 			Matching a question set & (date of the poll_report and the poll) from a row 
 			from a csv file to an answer key to get the poll's name.
 			
 		"""
-		for poll_name, questions_answers in self.__answer_key_parser.answer_keys.items():
+		answer_key_parser = self.__poll_analysis_system.answer_key_parser
+		for poll_name, questions_answers in answer_key_parser.answer_keys.items():
 			poll_date = poll_name.split('_')[1].strip() # date taken from the name in the answer key
 			report_date = self.__file_name.split('_')[1].strip()
 			this_poll = True
@@ -129,7 +127,7 @@ class PollParser(object):
 				return poll_name
 		return None # no answer key does not correspond to the passed questions_set
 
-	def export_json(self):
+	def __export_db(self):
 		is_db_available = True
 		if not os.path.exists('db'):
 			is_db_available = False

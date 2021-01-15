@@ -46,6 +46,7 @@ class AttendanceReportSerializer(object):
 
 		data_frame.to_excel('attendance_report.xlsx', index=False)
 		os.chdir('..')
+		self.__poll_analysis_system.logger.info("Successfully exported Attendance Report")
 
 	def get_db(self):
 		os.chdir('db')

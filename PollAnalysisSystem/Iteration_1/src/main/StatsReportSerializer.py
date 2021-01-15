@@ -12,7 +12,7 @@ class StatsReportSerializer(object):
 		self.__global_df = pd.DataFrame()
 
 	def export_reports(self):
-		for poll_name in self.__poll_analysis_system.poll_parser:
+		for poll_name in self.__poll_analysis_system.poll_parser.polls:
 			poll = self.__poll_analysis_system.poll_parser.polls[poll_name]
 			self.__export_quiz_report(poll_name, poll)
 			self.__poll_analysis_system.logger.info(f'Statistics Report for {poll_name} was exported successfully.')

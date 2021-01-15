@@ -9,7 +9,7 @@ class StatsReportSerializer(object):
 
 	def __init__(self, poll_analysis_system):
 		self.__poll_analysis_system = poll_analysis_system
-		self.__global_df = pd.DataFrame()
+		self.__global_df = self.__create_global_df()
 
 	def export_reports(self):
 		for poll_name in self.__poll_analysis_system.poll_parser.polls:
@@ -86,11 +86,17 @@ class StatsReportSerializer(object):
 		if poll_name + ' success %' not in self.__global_df:
 			self.__global_df[poll_name + ' success %'] = self.__quiz_questions['success %']
 
+	def __create_global_df(self):
+		if not os.path.exists('global_report'):
+			return pd.DataFrame()
+		else:
+			return pd.read_csv('global_report/global_report.csv')
+
 	def __export_global_report(self):
 		if not os.path.exists('global_report'):
 			os.mkdir('global_report')
 		os.chdir('global_report')
-		self.__global_df.to_excel('global_report.xlsx', index=False)
+		self.__global_df.to_csv('global_report.csv', index=False)
 		os.chdir('..')
 
 	def __export_absent_student(self):

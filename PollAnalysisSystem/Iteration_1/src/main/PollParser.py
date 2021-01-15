@@ -73,13 +73,13 @@ class PollParser(object):
 		submission_answers = answer_key_parser.get_answers(poll_name, submission_questions, answers_list)   # list of submitted answer objects
 		poll_weekday = poll_name.split('_')[2] 
 		poll_date = datetime(int(poll_name.split('_')[1][:4]), int(poll_name.split('_')[1][4:6]), int(poll_name.split('_')[1][6:]))
-		if poll_name not in self.polls: # create a poll if it does not exist
+		if poll_name not in self.__polls: # create a poll if it does not exist
 			if 'Are you attending this lecture?' in [q.text for q in submission_questions]:
 				poll = AttendancePoll(poll_name, poll_date, poll_weekday)
 			else:
 				poll = QuizPoll(poll_name, poll_date, poll_weekday)
 		else:
-			poll = self.polls[poll_name]
+			poll = self.__polls[poll_name]
 
 		# #PollSubmission
 		submission_datetime = datetime.strptime(submission_datetime, '%b %d, %Y %H:%M:%S')
@@ -88,7 +88,7 @@ class PollParser(object):
 		poll.add_poll_submission(poll_submission)
 		poll.add_questions_answers(submission_questions, submission_answers)
 		student.add_poll_submission(poll_name, poll_submission)
-		self.polls[poll_name] = poll
+		self.__polls[poll_name] = poll
 	
 	def __process_questions_answers(self, questions_answers):
 		"""
@@ -139,9 +139,9 @@ class PollParser(object):
 			with open('db.json') as db:
 				content = json.load(db)
 
-		for poll_name in self.polls:
-			poll_date = str(self.polls[poll_name].date.date())
-			for poll_submission in self.polls[poll_name].poll_submissions:
+		for poll_name in self.__polls:
+			poll_date = str(self.__polls[poll_name].date.date())
+			for poll_submission in self.__polls[poll_name].poll_submissions:
 				content.setdefault(poll_date, [])
 				student_id = poll_submission.student.id
 				if student_id in content[poll_date]: continue

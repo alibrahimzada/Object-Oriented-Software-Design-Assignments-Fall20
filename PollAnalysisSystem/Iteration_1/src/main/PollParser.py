@@ -17,6 +17,7 @@ class PollParser(object):
 	def __init__(self, poll_analysis_system):
 		self.__polls = {}   # {poll_name: Poll}
 		self.__poll_analysis_system = poll_analysis_system
+		self.__anomalies = {}
 
 	@property
 	def polls(self):
@@ -36,6 +37,7 @@ class PollParser(object):
 
 		if not exception_found:
 			self.__export_db()
+			self.__export_anomalies()
 
 	def __parse_poll_report(self, file_path):
 		"""
@@ -57,13 +59,16 @@ class PollParser(object):
 		"""
 		row[1] = ''.join([char for char in row[1] if not char.isdigit()]).strip()
 		student_name, student_email, submission_datetime = row[1], row[2], row[3]
-		student = self.__poll_analysis_system.student_list_parser.get_student(student_name)
-		if student == None: return
-		student.email = student_email
 		questions_answers = row[4:]
 		questions_set, answers_list = self.__process_questions_answers(questions_answers)
 		poll_name = self.__get_poll_name(questions_set)
 		if poll_name is None: return # no answer key does not correspond to the passed questions_set
+		student = self.__poll_analysis_system.student_list_parser.get_student(student_name)
+		if student == None:
+			self.__anomalies.setdefault(poll_name, [])
+			self.__anomalies[poll_name].append((student_email, student_name))
+			return
+		student.email = student_email
 		poll_info = (poll_name, questions_set, answers_list, student, submission_datetime)
 		self.__update_polls(poll_info)
 
@@ -156,3 +161,7 @@ class PollParser(object):
 		with open('db.json', 'w') as fw:
 			json.dump(content, fw, sort_keys=True, indent=4)
 		os.chdir('..')
+	
+	def __export_anomalies(self):
+		with open('anomalies.json', 'w') as fw:
+			json.dump(self.__anomalies, fw, sort_keys=True, indent=4)

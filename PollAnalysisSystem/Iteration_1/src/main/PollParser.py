@@ -24,12 +24,18 @@ class PollParser(object):
 
 	def read_poll_reports(self, poll_report_files):
 		""" Reads all poll reports and parses them """
-
+		exception_found = False
 		for file_path in poll_report_files:
 			self.__file_name = ntpath.basename(file_path).split('.')[0]
-			self.__parse_poll_report(file_path)
-			self.__poll_analysis_system.logger.info(f'Poll Report: {file_path.split("/")[-1]} was parsed successfully.')
-		self.__export_db()
+			try:
+				self.__parse_poll_report(file_path)
+				self.__poll_analysis_system.logger.info(f'Poll Report: {self.__file_name} was parsed successfully.')
+			except:
+				self.__poll_analysis_system.logger.error(f'The provided Poll Report: {self.__file_name} is not valid.')
+				exception_found = True
+
+		if not exception_found:
+			self.__export_db()
 
 	def __parse_poll_report(self, file_path):
 		"""

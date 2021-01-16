@@ -126,6 +126,11 @@ class StudentListParser(object):
 
 	def parse_student_list(self, student_list_files):
 		for filename in student_list_files:
-			workbook = xlrd.open_workbook(filename, encoding_override='cp1252')
-			sheet = workbook.sheet_by_index(0)
-			self.__parse_sheet(sheet, filename)
+			try: 
+				workbook = xlrd.open_workbook(filename, encoding_override='cp1252')
+				sheet = workbook.sheet_by_index(0)
+				self.__parse_sheet(sheet, filename)
+			except: 
+				file_name = ntpath.basename(filename).split(".")[0]
+				self.poll_analysis_system.logger.error(f'The provided Student List: {file_name} is not valid.')
+			

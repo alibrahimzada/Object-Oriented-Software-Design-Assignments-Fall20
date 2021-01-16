@@ -1,5 +1,6 @@
 import logging
 
+from tests.TestSuitRunner import TestSuitRunner
 from main.AnswerKeyParser import AnswerKeyParser
 from main.AttendanceReportSerializer import AttendanceReportSerializer
 from main.PollParser import PollParser
@@ -9,6 +10,7 @@ from main.StudentListParser import StudentListParser
 class PollAnalysisSystem(object):
 	def __init__(self, user_interface):
 		self.__user_interface = user_interface
+		self.run_tests()
 		self.__student_list_parser = StudentListParser(self)
 		self.__answer_key_parser = AnswerKeyParser(self)
 		self.__poll_parser = PollParser(self)
@@ -32,6 +34,9 @@ class PollAnalysisSystem(object):
 	def logger(self):
 		return self.__logger
 
+	def run_tests(self):
+		TestSuitRunner().run_tests() # run all tests
+	
 	def create_logger(self):
 		log_file = 'PollAnalysisSystem.log'
 		handlers = [logging.FileHandler(log_file), logging.StreamHandler()] # write to file & stdout

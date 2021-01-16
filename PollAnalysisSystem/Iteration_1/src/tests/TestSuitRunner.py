@@ -6,7 +6,6 @@ import unittest
 from tests.AnswerTests import TestAnswerMethods
 from tests.QuestionTests import TestQuestionMethods
 from tests.AttendancePollTests import TestAttendancePollMethods
-from tests.PollTests import TestPollMethods
 from tests.QuizPollTests import TestQuizPollMethods
 from tests.CourseTests import TestCourseMethods
 from tests.DepartmentTests import TestDepartmentMethods
@@ -33,14 +32,14 @@ class TestSuitRunner():
         """
         test_suite = unittest.TestSuite()
         test_classes = [TestAnswerMethods, TestQuestionMethods, TestAttendancePollMethods,
-                        TestPollMethods, TestQuizPollMethods, TestCourseMethods,
-                        TestDepartmentMethods, TestInstructorMethods, TestStudentMethods, 
-                        TestPollSubmissionMethods]
+                        TestQuizPollMethods, TestCourseMethods,TestDepartmentMethods,
+                        TestInstructorMethods, TestStudentMethods, TestPollSubmissionMethods]
         for test_class in test_classes:
             test_suite.addTest(unittest.makeSuite(test_class))
         return test_suite
 
-test_suite = TestSuitRunner().run_tests()
+#run
+# test_suite = TestSuitRunner().run_tests()
 
 
 

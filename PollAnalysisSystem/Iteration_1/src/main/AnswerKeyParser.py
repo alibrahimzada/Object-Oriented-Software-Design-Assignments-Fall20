@@ -1,6 +1,7 @@
 import csv
 from main.Question import Question
 from main.Answer import Answer
+import ntpath
 
 class AnswerKeyParser(object):
 
@@ -18,10 +19,13 @@ class AnswerKeyParser(object):
 			Reads all the answer key files and populates the dictionary
 			with the parsed answer keys. 
 		"""
-
 		for file_name in answer_key_files:
-			self.__parse_answer_key(file_name)
-
+			try: 
+				self.__parse_answer_key(file_name)
+			except: 
+				answer_key = ntpath.basename(file_name).split(".")[0]
+				self.__poll_analysis_system.logger.error(f'The provided Answer Key: {answer_key} is not valid.')
+	
 	def __parse_answer_key(self, file_path):
 		"""
 			Parses a given an answer key file. 

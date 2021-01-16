@@ -12,6 +12,9 @@ class StatsReportSerializer(object):
 		self.__global_df = self.__create_global_df()
 
 	def export_reports(self):
+		if len(self.__poll_analysis_system.poll_parser.polls) < 1:
+			self.__poll_analysis_system.logger.error("Failed to export the stats and global due to unloaded files.")
+			return 
 		for poll_name in self.__poll_analysis_system.poll_parser.polls:
 			poll = self.__poll_analysis_system.poll_parser.polls[poll_name]
 			self.__export_quiz_report(poll_name, poll)

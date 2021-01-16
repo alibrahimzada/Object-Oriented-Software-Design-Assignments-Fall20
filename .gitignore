@@ -19,3 +19,5 @@ __pycache__/
 statistics/
 venv/
 global_report/
+attendance_report/
+db/

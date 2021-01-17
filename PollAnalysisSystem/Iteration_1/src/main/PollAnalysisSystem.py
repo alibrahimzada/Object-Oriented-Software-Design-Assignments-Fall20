@@ -7,6 +7,7 @@ from main.PollParser import PollParser
 from main.StatsReportSerializer import StatsReportSerializer
 from main.StudentListParser import StudentListParser
 
+
 class PollAnalysisSystem(object):
 	def __init__(self, user_interface):
 		self.__user_interface = user_interface

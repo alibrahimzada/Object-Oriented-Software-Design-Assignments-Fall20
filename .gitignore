@@ -21,3 +21,5 @@ venv/
 global_report/
 attendance_report/
 db/
+anomalies.json
+cluster_analysis/

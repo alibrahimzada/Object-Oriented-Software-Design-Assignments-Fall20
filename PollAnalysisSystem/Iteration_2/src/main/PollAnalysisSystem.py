@@ -6,6 +6,7 @@ from main.AttendanceReportSerializer import AttendanceReportSerializer
 from main.PollParser import PollParser
 from main.StatsReportSerializer import StatsReportSerializer
 from main.StudentListParser import StudentListParser
+from main.QuizClusterAnalyzer import QuizClusterAnalyzer
 
 class PollAnalysisSystem(object):
 	def __init__(self, user_interface):
@@ -16,6 +17,7 @@ class PollAnalysisSystem(object):
 		self.__poll_parser = PollParser(self)
 		self.__attendance_report_serializer = AttendanceReportSerializer(self)
 		self.__stats_report_serializer = StatsReportSerializer(self)
+		self.__quiz_cluster_analyzer = QuizClusterAnalyzer(self) 
 		self.__logger = self.create_logger()
 
 	@property
@@ -63,3 +65,6 @@ class PollAnalysisSystem(object):
 
 	def export_statistics(self):
 		self.__stats_report_serializer.export_reports()
+		
+	def create_clusters(self, poll_name):
+		self.__quiz_cluster_analyzer.create_hcluster(poll_name)

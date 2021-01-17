@@ -93,7 +93,7 @@ class StatsReportSerializer(object):
 		if not os.path.exists('global_report'):
 			return pd.DataFrame()
 		else:
-			return pd.read_csv('global_report/global_report.csv')
+			return pd.read_csv(os.path.join('global_report', 'global_report.csv'))
 
 	def __export_global_report(self):
 		if not os.path.exists('global_report'):

@@ -247,7 +247,7 @@ class UserInterface(object):
 		self.ui = Ui_image_MainWindow()
 		self.ui.setupUi(self.__new_window)
 		pixmap = QPixmap(img)
-		self.ui.Image_placeholder_2.setPixmap((pixmap))
+		self.ui.Image_placeholder.setPixmap((pixmap))
 		self.__new_window.show()
 
 

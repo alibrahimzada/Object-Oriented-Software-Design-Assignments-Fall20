@@ -1,12 +1,12 @@
 import sys, os
-
 sys.path.insert(1, os.getcwd() + '/src')
-
+import time
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QFileDialog, QMainWindow
-import time
+from PyQt5.QtGui import QPixmap
 from main.PollAnalysisSystem import PollAnalysisSystem
-
+from main.QuizPoll import QuizPoll
+from ImageWindow import Ui_image_MainWindow
 
 class UserInterface(object):
 
@@ -68,11 +68,20 @@ class UserInterface(object):
 		self.export_stats_btn.setFont(font)
 		self.export_stats_btn.setObjectName("export_stats_btn")
 
+		self.quiz_name_label = QtWidgets.QLabel(self.centralwidget)
+		self.quiz_name_label.setGeometry(QtCore.QRect(60, 390, 121, 30))
+		self.quiz_name_label.setFont(font)
+	
+		self.quiz_name_label.setObjectName("quiz_name_label")
+		self.question_number_label = QtWidgets.QLabel(self.centralwidget)
+		self.question_number_label.setGeometry(QtCore.QRect(360, 390, 40, 21))
+
+		self.question_number_label.setFont(font)
+		self.question_number_label.setObjectName("question_number_label")
 		self.analyze_quiz_btn = QtWidgets.QPushButton(self.centralwidget)
 		self.analyze_quiz_btn.setGeometry(QtCore.QRect(469, 399, 191, 41))
 		self.analyze_quiz_btn.setObjectName("analyze_quiz_btn")
 		self.analyze_quiz_btn.setFont(font)
-
 
 
 		self.cluster_analysis_btn = QtWidgets.QPushButton(self.centralwidget)
@@ -113,6 +122,9 @@ class UserInterface(object):
 		self.load_std_list_btn.setCursor(QtCore.Qt.PointingHandCursor)
 		self.export_attendance_report_btn.setCursor(QtCore.Qt.PointingHandCursor)
 		self.export_stats_btn.setCursor(QtCore.Qt.PointingHandCursor)
+		self.analyze_quiz_btn.setCursor(QtCore.Qt.PointingHandCursor)
+		self.cluster_analysis_btn.setCursor(QtCore.Qt.PointingHandCursor)
+
 
 
 
@@ -153,9 +165,10 @@ class UserInterface(object):
 		self.cluster_analysis_btn.setStyleSheet(_translate("window", "background-color:green; color:white"))
 		self.cluster_analysis_btn.setText(_translate("window", "Clustering Analysis"))
 
+		self.quiz_name_label.setText(_translate("UserInterface", "Quiz Name"))
+		self.question_number_label.setText(_translate("UserInterface", "Q#"))
 
 
-		self.title_label.setStatusTip(_translate("window", "This is a normal label, nothing to see here."))
 
 		##### MAPPING:
 		self.load_std_list_btn.clicked.connect(self.__upload_std_list)
@@ -163,12 +176,16 @@ class UserInterface(object):
 		self.load_polls_btn.clicked.connect(self.__upload_polls)
 		self.export_attendance_report_btn.clicked.connect(self.__export_attendance_report)
 		self.export_stats_btn.clicked.connect(self.__export_stats)
+		self.analyze_quiz_btn.clicked.connect(self.__load_quiz_to_window)
+		self.quiz_name_combobox.currentTextChanged.connect(self.__update_question_numb_comboox)
+		self.cluster_analysis_btn.clicked.connect(self.__create_cluster)
+
 
 	############# BINDINGS.
 
 	def __files_loader(self, dialogue_name="Choose a file or multiple files!"):
 		''' Opens a directory, loads all files in it and makes a IO.textIoWrapper objects list and returns it'''
-		chosen_files = QFileDialog.getOpenFileNames( directory=os.getcwd(),
+		chosen_files = QFileDialog.getOpenFileNames(directory=os.getcwd(),
 			caption=dialogue_name)
 		
 		# we will allow a certain type of file when we are sure, right now, we can choose any file.
@@ -191,6 +208,7 @@ class UserInterface(object):
 	def __upload_polls(self):
 		polls_files = self.__files_loader()
 		self.poll_analysis_system.load_polls(polls_files)
+		self.__populate_quiz_name_combobox()
 
 	def __export_attendance_report(self):
 		self.poll_analysis_system.export_attendance()
@@ -204,13 +222,35 @@ class UserInterface(object):
 
 	def __progress_bar_loading(self):
 		progress = 0
-		
 		while progress < 100:
 			progress += .0002
 			self.progressBar.setProperty("value", progress)
 		time.sleep(
 			1.5)  # jsut give a feel that it is actually loading. Everything we do takes at most 2 seconds so I just set it to load in a second or two. 
 		self.progressBar.setProperty("value", 0)
+
+	def __populate_quiz_name_combobox(self):
+		for pollname in self.poll_analysis_system.poll_parser.polls:
+			self.quiz_name_combobox.addItem(pollname) # this is how you add item to a combobox. combox box is what a dropdown menu is called in PYQT5.
+
+	def __update_question_numb_comboox(self, new_value):
+		self.question_number_combobox.clear()
+		selected_poll_name = self.poll_analysis_system.poll_parser.polls[new_value]._questions_answers
+		for i in range(1, len(selected_poll_name)+1):
+			self.question_number_combobox.addItem(str(i))
+
+	def __load_quiz_to_window(self):
+		current_quiz = self.quiz_name_combobox.currentText()
+		current_quiz_num = self.question_number_combobox.currentText()
+		img = f'{os.getcwd()}\statistics\{current_quiz}\Q{current_quiz_num}.png'
+		self.__new_window = QtWidgets.QMainWindow()
+		self.ui = Ui_image_MainWindow()
+		self.ui.setupUi(self.__new_window)
+		pixmap = QPixmap(img)
+		self.ui.Image_placeholder.setPixmap((pixmap))
+		self.__new_window.show()
+
+
 
 
 def main():

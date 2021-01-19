@@ -35,6 +35,9 @@ class PollAnalysisSystem(object):
 	@property
 	def logger(self):
 		return self.__logger
+	# @property
+	# def __get_all_polls(self):
+	# 	return self.__logger
 
 	def run_tests(self):
 		TestSuitRunner().run_tests() # run all tests

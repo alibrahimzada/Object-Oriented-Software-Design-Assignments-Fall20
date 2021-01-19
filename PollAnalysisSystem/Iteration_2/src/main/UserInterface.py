@@ -23,7 +23,7 @@ class UserInterface(object):
 
 		self.centralwidget = QtWidgets.QWidget(window)
 		self.centralwidget.setObjectName("centralwidget")
-
+		self.style_sheet = "background-color:green; color:white"
 		self.title_label = QtWidgets.QLabel(self.centralwidget)
 		self.title_label.setGeometry(QtCore.QRect(0, 0, 751, 81))
 
@@ -34,7 +34,7 @@ class UserInterface(object):
 		self.seprator_line.setObjectName("seprator_line")
 
 		self.progressBar = QtWidgets.QProgressBar(self.centralwidget)
-		self.progressBar.setGeometry(QtCore.QRect(50, 392, 661, 31))
+		self.progressBar.setGeometry(QtCore.QRect(50, 510, 661, 41))
 		self.progressBar.setProperty("value", 0)
 		self.progressBar.setObjectName("progressBar")
 
@@ -42,7 +42,6 @@ class UserInterface(object):
 		self.load_std_list_btn.setGeometry(QtCore.QRect(30, 130, 200, 70))
 		self.load_std_list_btn.setMinimumSize(QtCore.QSize(200, 70))
 		self.load_std_list_btn.setFont(font)
-		self.load_std_list_btn.setStyleSheet("background-color:green; color:white")
 		self.load_std_list_btn.setObjectName("load_std_list_btn")
 
 		self.load_answer_key_btn = QtWidgets.QPushButton(self.centralwidget)
@@ -67,8 +66,28 @@ class UserInterface(object):
 		self.export_stats_btn.setGeometry(QtCore.QRect(380, 300, 280, 70))
 		self.export_stats_btn.setMinimumSize(QtCore.QSize(280, 70))
 		self.export_stats_btn.setFont(font)
-		self.export_stats_btn.setStyleSheet("background-color:green; color:white;")
 		self.export_stats_btn.setObjectName("export_stats_btn")
+
+		self.analyze_quiz_btn = QtWidgets.QPushButton(self.centralwidget)
+		self.analyze_quiz_btn.setGeometry(QtCore.QRect(469, 399, 191, 41))
+		self.analyze_quiz_btn.setObjectName("analyze_quiz_btn")
+		self.analyze_quiz_btn.setFont(font)
+
+
+
+		self.cluster_analysis_btn = QtWidgets.QPushButton(self.centralwidget)
+		self.cluster_analysis_btn.setGeometry(QtCore.QRect(470, 450, 191, 41))
+		self.cluster_analysis_btn.setObjectName("cluster_analysis_btn")
+		self.cluster_analysis_btn.setFont(font)
+
+
+		self.quiz_name_combobox = QtWidgets.QComboBox(self.centralwidget)
+		self.quiz_name_combobox.setGeometry(QtCore.QRect(60, 420, 296, 38))
+		self.quiz_name_combobox.setObjectName("quiz_name_combobox")
+
+		self.question_number_combobox = QtWidgets.QComboBox(self.centralwidget)
+		self.question_number_combobox.setGeometry(QtCore.QRect(360, 420, 76, 38))
+		self.question_number_combobox.setObjectName("question_number_combobox")
 
 		## CUSTOMIZATION, you probably won't change anything here so please don't change unless you ask me first.
 		font = QtGui.QFont()
@@ -79,7 +98,7 @@ class UserInterface(object):
 		font.setKerning(True)
 
 		self.title_label.setFont(font)
-		self.title_label.setStyleSheet("background-color: green; color: white")
+		self.title_label.setStyleSheet(self.style_sheet)		
 		self.title_label.setLineWidth(20)
 		self.title_label.setMidLineWidth(20)
 		self.title_label.setAlignment(QtCore.Qt.AlignCenter)
@@ -94,6 +113,9 @@ class UserInterface(object):
 		self.load_std_list_btn.setCursor(QtCore.Qt.PointingHandCursor)
 		self.export_attendance_report_btn.setCursor(QtCore.Qt.PointingHandCursor)
 		self.export_stats_btn.setCursor(QtCore.Qt.PointingHandCursor)
+
+
+
 
 		self.__retranslate_ui(window)
 		QtCore.QMetaObject.connectSlotsByName(window)
@@ -110,8 +132,9 @@ class UserInterface(object):
 		self.title_label.setText(_translate("window", "Poll Analysis System"))
 
 		self.load_std_list_btn.setText(_translate("window", "Load Student Lists"))
-		self.load_std_list_btn.setStatusTip(
-			_translate("window", "This is just a button, why are you hovering over many things weirdly?"))
+
+		self.load_std_list_btn.setStyleSheet(_translate("window", "background-color:green; color:white"))
+
 		self.load_answer_key_btn.setStyleSheet(_translate("window", "background-color:green; color:white"))
 		self.load_answer_key_btn.setText(_translate("window", "Load Answer Keys"))
 
@@ -121,9 +144,17 @@ class UserInterface(object):
 		self.export_attendance_report_btn.setStyleSheet(_translate("window", "background-color:green; color:white"))
 		self.export_attendance_report_btn.setText(_translate("window", "Export Attendance Report"))
 
-		self.export_stats_btn.setText(_translate("window", "Export Stats & Global Report"))
+		self.export_stats_btn.setText(_translate("window", "Export Stats and Global Report"))
+		self.export_stats_btn.setStyleSheet(_translate("window", "background-color:green; color:white"))
 
-		self.load_std_list_btn.setStatusTip(_translate("window", "This is also just a button, come on"))
+		self.analyze_quiz_btn.setStyleSheet(_translate("window", "background-color:green; color:white"))
+		self.analyze_quiz_btn.setText(_translate("window", "Analyze Quiz"))
+
+		self.cluster_analysis_btn.setStyleSheet(_translate("window", "background-color:green; color:white"))
+		self.cluster_analysis_btn.setText(_translate("window", "Clustering Analysis"))
+
+
+
 		self.title_label.setStatusTip(_translate("window", "This is a normal label, nothing to see here."))
 
 		##### MAPPING:
@@ -187,7 +218,7 @@ def main():
         [])  # Qapplication requires that we pass it system arguments, but since we have none, we just put an empty list.
     app.setStyle("Breeze")
     window = QMainWindow()  # the main window to which we pass our widgets
-    window.setFixedSize(730, 470)
+    window.setFixedSize(730, 574)
     ui = UserInterface()
     ui._UserInterface__setup_ui(window)
     window.show()

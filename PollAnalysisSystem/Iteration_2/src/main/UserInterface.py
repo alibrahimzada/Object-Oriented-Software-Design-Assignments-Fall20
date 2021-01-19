@@ -34,7 +34,7 @@ class UserInterface(object):
 		self.seprator_line.setObjectName("seprator_line")
 
 		self.progressBar = QtWidgets.QProgressBar(self.centralwidget)
-		self.progressBar.setGeometry(QtCore.QRect(50, 510, 661, 41))
+		self.progressBar.setGeometry(QtCore.QRect(30, 510, 690, 41))
 		self.progressBar.setProperty("value", 0)
 		self.progressBar.setObjectName("progressBar")
 
@@ -69,33 +69,33 @@ class UserInterface(object):
 		self.export_stats_btn.setObjectName("export_stats_btn")
 
 		self.quiz_name_label = QtWidgets.QLabel(self.centralwidget)
-		self.quiz_name_label.setGeometry(QtCore.QRect(60, 390, 121, 30))
-		self.quiz_name_label.setFont(font)
-	
+		self.quiz_name_label.setGeometry(QtCore.QRect(30, 390, 121, 30))
+		self.quiz_name_label.setFont(font)	
 		self.quiz_name_label.setObjectName("quiz_name_label")
-		self.question_number_label = QtWidgets.QLabel(self.centralwidget)
-		self.question_number_label.setGeometry(QtCore.QRect(360, 390, 40, 21))
 
+		self.question_number_label = QtWidgets.QLabel(self.centralwidget)
+		self.question_number_label.setGeometry(QtCore.QRect(330, 390, 40, 21))
 		self.question_number_label.setFont(font)
 		self.question_number_label.setObjectName("question_number_label")
+
 		self.analyze_quiz_btn = QtWidgets.QPushButton(self.centralwidget)
-		self.analyze_quiz_btn.setGeometry(QtCore.QRect(469, 399, 191, 41))
+		self.analyze_quiz_btn.setGeometry(QtCore.QRect(429, 389, 261, 45))
 		self.analyze_quiz_btn.setObjectName("analyze_quiz_btn")
 		self.analyze_quiz_btn.setFont(font)
 
 
 		self.cluster_analysis_btn = QtWidgets.QPushButton(self.centralwidget)
-		self.cluster_analysis_btn.setGeometry(QtCore.QRect(470, 450, 191, 41))
+		self.cluster_analysis_btn.setGeometry(QtCore.QRect(430, 440, 261, 45))
 		self.cluster_analysis_btn.setObjectName("cluster_analysis_btn")
 		self.cluster_analysis_btn.setFont(font)
 
 
 		self.quiz_name_combobox = QtWidgets.QComboBox(self.centralwidget)
-		self.quiz_name_combobox.setGeometry(QtCore.QRect(60, 420, 296, 38))
+		self.quiz_name_combobox.setGeometry(QtCore.QRect(30, 420, 296, 38))
 		self.quiz_name_combobox.setObjectName("quiz_name_combobox")
 
 		self.question_number_combobox = QtWidgets.QComboBox(self.centralwidget)
-		self.question_number_combobox.setGeometry(QtCore.QRect(360, 420, 76, 38))
+		self.question_number_combobox.setGeometry(QtCore.QRect(330, 420, 76, 38))
 		self.question_number_combobox.setObjectName("question_number_combobox")
 
 		## CUSTOMIZATION, you probably won't change anything here so please don't change unless you ask me first.
@@ -163,9 +163,9 @@ class UserInterface(object):
 		self.analyze_quiz_btn.setText(_translate("window", "Analyze Quiz"))
 
 		self.cluster_analysis_btn.setStyleSheet(_translate("window", "background-color:green; color:white"))
-		self.cluster_analysis_btn.setText(_translate("window", "Clustering Analysis"))
+		self.cluster_analysis_btn.setText(_translate("window", "Clustering Analysis (Cheating Detection)"))
 
-		self.quiz_name_label.setText(_translate("UserInterface", "Quiz Name"))
+		self.quiz_name_label.setText(_translate("UserInterface", "Report Name"))
 		self.question_number_label.setText(_translate("UserInterface", "Q#"))
 
 
@@ -217,7 +217,7 @@ class UserInterface(object):
 		self.poll_analysis_system.export_statistics()
 
 	def __create_cluster(self):
-		poll_name = 'CSE3063_20201123_Mon_zoom_PollReport_1'   # this will be taken from the current val of drop down menu
+		poll_name = self.quiz_name_combobox.currentText()  # this will be taken from the current val of drop down menu
 		self.poll_analysis_system.create_clusters(poll_name)
 
 	def __progress_bar_loading(self):
@@ -231,7 +231,7 @@ class UserInterface(object):
 
 	def __populate_quiz_name_combobox(self):
 		for pollname in self.poll_analysis_system.poll_parser.polls:
-			self.quiz_name_combobox.addItem(pollname) # this is how you add item to a combobox. combox box is what a dropdown menu is called in PYQT5.
+			self.quiz_name_combobox.addItem(pollname) # this is how you add item to a combobox. combobox box is what a dropdown menu is called in PYQT5.
 
 	def __update_question_numb_comboox(self, new_value):
 		self.question_number_combobox.clear()

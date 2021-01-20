@@ -241,9 +241,13 @@ class UserInterface(object):
 
 	def __update_question_numb_comboox(self, new_value):
 		self.question_number_combobox.clear()
-		selected_poll_name = self.poll_analysis_system.poll_parser.polls[new_value]._questions_answers
-		for i in range(1, len(selected_poll_name)+1):
-			self.question_number_combobox.addItem(str(i))
+		
+		try: 
+			selected_poll_name = self.poll_analysis_system.poll_parser.polls[new_value]._questions_answers
+			for i in range(1, len(selected_poll_name)+1):
+				self.question_number_combobox.addItem(str(i))
+		except KeyError:
+			pass
 
 	def __load_quiz_to_window(self):
 		current_quiz = self.quiz_name_combobox.currentText()

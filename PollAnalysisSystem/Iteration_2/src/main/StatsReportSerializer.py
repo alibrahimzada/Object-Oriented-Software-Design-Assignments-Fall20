@@ -93,7 +93,7 @@ class StatsReportSerializer(object):
 		if not os.path.exists('global_report'):
 			return pd.DataFrame()
 		else:
-			return pd.read_csv('global_report/global_report.csv')
+			return pd.read_csv(os.path.join('global_report', 'global_report.csv'))
 
 	def __export_global_report(self):
 		if not os.path.exists('global_report'):
@@ -109,7 +109,7 @@ class StatsReportSerializer(object):
 
 		for question_text in self.__quiz_questions:
 			if question_text not in ['n questions', 'success rate', 'success %']:
-				self.__quiz_questions[question_text].append('absent')
+				self.__quiz_questions[question_text].append('')
 	
 	def __validate_answers(self, poll_name, poll_submission):
 		self.__quiz_questions['n questions'].append(0)

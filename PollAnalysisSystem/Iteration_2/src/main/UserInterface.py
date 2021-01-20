@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import QApplication, QFileDialog, QMainWindow
 from PyQt5.QtGui import QPixmap
 from main.PollAnalysisSystem import PollAnalysisSystem
 from main.QuizPoll import QuizPoll
-from ImageWindow import Ui_image_MainWindow
+from main.ImageWindow import Ui_image_MainWindow
 
 class UserInterface(object):
 
@@ -168,7 +168,7 @@ class UserInterface(object):
 		self.analyze_quiz_btn.setText(_translate("window", "Analyze Quiz"))
 
 		self.cluster_analysis_btn.setStyleSheet(_translate("window", "background-color:green; color:white"))
-		self.cluster_analysis_btn.setText(_translate("window", "Clustering Analysis (Cheating Detection)"))
+		self.cluster_analysis_btn.setText(_translate("window", "Clustering Analysis (Cheat Detector)"))
 
 		self.quiz_name_label.setText(_translate("UserInterface", "Report Name"))
 		self.question_number_label.setText(_translate("UserInterface", "Q#"))
@@ -252,7 +252,7 @@ class UserInterface(object):
 	def __load_quiz_to_window(self):
 		current_quiz = self.quiz_name_combobox.currentText()
 		current_quiz_num = self.question_number_combobox.currentText()
-		img = f'{os.getcwd()}\statistics\{current_quiz}\Q{current_quiz_num}.png'
+		img = os.path.join(os.getcwd(), 'statistics', f'{current_quiz}', f'Q{current_quiz_num}.png')
 		self.__new_window = QtWidgets.QMainWindow()
 		self.ui = Ui_image_MainWindow()
 		self.ui.setupUi(self.__new_window)

@@ -24,6 +24,8 @@ class QuizClusterAnalyzer(object):
 		save_to = f'cluster_analysis/{poll_name}.png'
 		cluster = clusters.hcluster(grade_matrix, clusters.sim_distance)
 		clusters.drawdendrogram(cluster, student_ids, save_to)
+		self.__poll_analysis_system.logger.info(f"A Dendrogram for {poll_name} was created successfully")
+
 			
 
 	def get_grade_for_question(self, question, correct_answers, poll_submission):

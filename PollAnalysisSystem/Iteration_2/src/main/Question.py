@@ -1,9 +1,18 @@
 class Question:
-	def __init__(self, text, is_multiple_choice=False):
+	def __init__(self, _id, text, is_multiple_choice=False):
+		self.__id = _id
 		self.__text = text
 		self.__is_multiple_choice = is_multiple_choice
 		self.__poll = None
 		self.__poll_submissions = []
+
+	@property
+	def id(self):
+		return self.__id
+
+	@id.setter
+	def id(self, new_id):
+		self.__id = new_id
 
 	@property
 	def text(self):

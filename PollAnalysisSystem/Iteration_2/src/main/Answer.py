@@ -1,10 +1,19 @@
 class Answer:
 
-	def __init__(self, text, is_correct=False):
+	def __init__(self, _id, text, is_correct=False):
+		self.__id = _id
 		self.__text = text
 		self.__is_correct = is_correct
 		self.__poll = None
 		self.__poll_submissions = []
+
+	@property
+	def id(self):
+		return self.__id
+
+	@id.setter
+	def id(self, value):
+		self.__id = value
 
 	# text attribute
 	@property

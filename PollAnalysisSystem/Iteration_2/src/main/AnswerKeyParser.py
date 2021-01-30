@@ -20,37 +20,37 @@ class AnswerKeyParser(object):
 			with the parsed answer keys. 
 		"""
 		for file_name in answer_key_files:
-			try: 
-				self.__parse_answer_key(file_name)
-			except: 
-				answer_key = ntpath.basename(file_name).split(".")[0]
-				self.__poll_analysis_system.logger.error(f'The provided Answer Key: {answer_key} is not valid.')
-	
+			self.__parse_answer_key(file_name)
+
 	def __parse_answer_key(self, file_path):
 		"""
 			Parses a given an answer key file. 
 		"""
 
-		with open(file_path) as csv_file:
-			csv_reader = csv.reader(csv_file, delimiter=',')
-			for idx, row in enumerate(csv_reader):
-				if row[1] == '':
-					title = row[0]
-					if title in self.__answer_keys:
-						self.__poll_analysis_system.logger.info(f'Answer Key: Your loaded answer key is already loaded. System did not load it again.')
-						return
-					else:
-						self.__poll_analysis_system.logger.info(f'Answer Key: {title} was parsed successfully.')
+		with open(file_path) as txt_file:
+			lines = txt_file.readlines()
+			for line_idx in range(2, len(lines), 1):
+				if lines[line_idx] == '\n': continue
+				line = lines[line_idx].replace('\n', '')
+				if line.startswith(' '):   # current line is a poll name
+					title = line.split('\t')[0].split(':')[1]
+					self.__poll_analysis_system.logger.info(f'Answer Key: {title} was parsed successfully.')
 					self.__answer_keys.setdefault(title, {})
+				elif not line.startswith('Answer'):
+					question = line.split(' ')
+					question_number = question[0]
+					question_number = question_number.replace('.', '')
+					question_text = ' '.join(question[1:-3]).strip()
+					question_object = Question(question_number, question_text)
+					if question[-2] == 'Multiple':
+						question_object.is_multiple_choice = True
+					self.__answer_keys[title].setdefault(question_object, [])
 				else:
-					answers_text_list = row[1].split(';') # a semicolon separates the multiple answers
-				# 	# is a multiple choice question if more than one answer is given
-					is_multiple_choice = True if len(answers_text_list) > 1 else False 
-					question = Question(row[0], is_multiple_choice)
-					self.__answer_keys[title].setdefault(question, [])
-					for answer_text in answers_text_list:
-						answer = Answer(answer_text, is_correct = True)
-						self.__answer_keys[title][question].append(answer)
+					answer = line.split(' ')
+					answer_number = answer[1][0]
+					answer_text = ' '.join(answer[2:]).strip()
+					answer_object = Answer(answer_number, answer_text, True)
+					self.__answer_keys[title][question_object].append(answer_object)
 
 	def get_questions(self, poll_name, questions_set):
 		submission_questions = []

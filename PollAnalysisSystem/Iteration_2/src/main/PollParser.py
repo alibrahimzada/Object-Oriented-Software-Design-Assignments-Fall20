@@ -35,9 +35,9 @@ class PollParser(object):
 				self.__poll_analysis_system.logger.error(f'The provided Poll Report: {self.__file_name} is not valid.')
 				exception_found = True
 
-		if not exception_found:
-			self.__export_db()
-			self.__export_anomalies()
+		# if not exception_found:
+		# 	self.__export_db()
+		# 	self.__export_anomalies()
 
 	def __parse_poll_report(self, file_path):
 		"""
@@ -45,9 +45,8 @@ class PollParser(object):
 		"""
 		with open(file_path) as csv_file:
 			csv_reader = csv.reader(csv_file, delimiter=',')
-			for idx, row in enumerate(csv_reader): #how to model this in a seq diagram?
-				if idx == 0:
-					continue
+			for idx, row in enumerate(csv_reader):
+				if idx < 6: continue
 				self.__process_row(row)
 
 	def __process_row(self, row):
@@ -62,14 +61,16 @@ class PollParser(object):
 		questions_answers = row[4:]
 		questions_set, answers_list = self.__process_questions_answers(questions_answers)
 		poll_name = self.__get_poll_name(questions_set)
-		if poll_name is None: return # no answer key does not correspond to the passed questions_set
+		is_attendance_poll = False
+		if poll_name == 'attendance poll':
+			is_attendance_poll = True
 		student = self.__poll_analysis_system.student_list_parser.get_student(student_name)
 		if student == None:
 			self.__anomalies.setdefault(poll_name, [])
 			self.__anomalies[poll_name].append((student_email, student_name))
 			return
 		student.email = student_email
-		poll_info = (poll_name, questions_set, answers_list, student, submission_datetime)
+		poll_info = (poll_name, questions_set, answers_list, student, submission_datetime, is_attendance_poll)
 		self.__update_polls(poll_info)
 
 	def __update_polls(self, poll_info):
@@ -77,23 +78,25 @@ class PollParser(object):
 			Given information about a row, creates a poll submission corresponding to the 
 			row, then appends it to the the poll's submissions.
 		"""
-		poll_name, questions_set, answers_list, student, submission_datetime = poll_info
+		poll_name, questions_set, answers_list, student, submission_datetime, is_attendance_poll = poll_info
+		
 		answer_key_parser = self.__poll_analysis_system.answer_key_parser
 		poll_questions = list(answer_key_parser.answer_keys[poll_name].keys())   # list of all question objects of a poll
 		submission_questions = answer_key_parser.get_questions(poll_name, questions_set)   # list of submitted question objects
 		submission_answers = answer_key_parser.get_answers(poll_name, submission_questions, answers_list)   # list of submitted answer objects
-		poll_weekday = poll_name.split('_')[2] 
-		poll_date = datetime(int(poll_name.split('_')[1][:4]), int(poll_name.split('_')[1][4:6]), int(poll_name.split('_')[1][6:]))
+		submission_datetime = datetime.strptime(submission_datetime, '%b %d, %Y %H:%M:%S')
+		poll_weekday = submission_datetime.strftime("%A")
+		poll_date = submission_datetime.date()
+		poll_name = poll_name + ' ' + str(poll_date)
 		if poll_name not in self.__polls: # create a poll if it does not exist
-			if 'Are you attending this lecture?' in [q.text for q in submission_questions]:
+			if is_attendance_poll:
 				poll = AttendancePoll(poll_name, poll_date, poll_weekday)
 			else:
 				poll = QuizPoll(poll_name, poll_date, poll_weekday)
 		else:
 			poll = self.__polls[poll_name]
 
-		# #PollSubmission
-		submission_datetime = datetime.strptime(submission_datetime, '%b %d, %Y %H:%M:%S')
+		# PollSubmission
 		poll_submission = PollSubmission(submission_datetime, poll, student)
 		poll_submission.add_questions_answers(submission_questions, submission_answers)
 		poll.add_poll_submission(poll_submission)
@@ -127,14 +130,13 @@ class PollParser(object):
 		"""
 		answer_key_parser = self.__poll_analysis_system.answer_key_parser
 		for poll_name, questions_answers in answer_key_parser.answer_keys.items():
-			poll_date = poll_name.split('_')[1].strip() # date taken from the name in the answer key
-			report_date = self.__file_name.split('_')[1].strip()
 			this_poll = True
-			poll_questions = [q.text for q in questions_answers]
+			poll_questions = [q.text.split() for q in questions_answers]
 			for question in questions_set:
+				question = question.split()
 				if question not in poll_questions:
 					this_poll = False
-			if this_poll and poll_date == report_date:
+			if this_poll:
 				return poll_name
 		return None # no answer key does not correspond to the passed questions_set
 

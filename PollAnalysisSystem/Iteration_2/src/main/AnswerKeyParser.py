@@ -25,6 +25,11 @@ class AnswerKeyParser(object):
 			except: 
 				answer_key = ntpath.basename(file_name).split(".")[0]
 				self.__poll_analysis_system.logger.error(f'The provided Answer Key: {answer_key} is not valid.')
+		
+		if 'attendance poll' not in self.__answer_keys:
+			question = Question('1', 'Are you attending this lecture?')
+			answer = Answer('1', 'Yes', True)
+			self.__answer_keys['attendance poll'] = {question: [answer]}
 
 	def __parse_answer_key(self, file_path):
 		"""
@@ -78,7 +83,7 @@ class AnswerKeyParser(object):
 					if answer_text in self.__wrong_answers[poll_name]:
 						current_answers.append(self.__wrong_answers[poll_name][answer_text])
 					else:
-						wrong_answer = Answer(answer_text)
+						wrong_answer = Answer('1', answer_text)
 						current_answers.append(wrong_answer)
 						self.__wrong_answers[poll_name][answer_text] = wrong_answer
 			submission_answers.append(current_answers)

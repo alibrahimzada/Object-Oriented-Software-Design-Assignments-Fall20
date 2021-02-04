@@ -35,9 +35,9 @@ class PollParser(object):
 				self.__poll_analysis_system.logger.error(f'The provided Poll Report: {self.__file_name} is not valid.')
 				exception_found = True
 
-		# if not exception_found:
-		# 	self.__export_db()
-		# 	self.__export_anomalies()
+		if not exception_found:
+			self.__export_db()
+			self.__export_anomalies()
 
 	def __parse_poll_report(self, file_path):
 		"""
@@ -66,8 +66,9 @@ class PollParser(object):
 			is_attendance_poll = True
 		student = self.__poll_analysis_system.student_list_parser.get_student(student_name)
 		if student == None:
-			self.__anomalies.setdefault(poll_name, [])
-			self.__anomalies[poll_name].append((student_email, student_name))
+			quiz_date = ' '.join(submission_datetime.split()[:-1])
+			self.__anomalies.setdefault(poll_name + ' ' + quiz_date, [])
+			self.__anomalies[poll_name + ' ' + quiz_date].append((student_email, student_name))
 			return
 		student.email = student_email
 		poll_info = (poll_name, questions_set, answers_list, student, submission_datetime, is_attendance_poll)
@@ -153,7 +154,7 @@ class PollParser(object):
 				content = json.load(db)
 
 		for poll_name in self.__polls:
-			poll_date = str(self.__polls[poll_name].date.date())
+			poll_date = str(self.__polls[poll_name].date)
 			for poll_submission in self.__polls[poll_name].poll_submissions:
 				content.setdefault(poll_date, [])
 				student_id = poll_submission.student.id

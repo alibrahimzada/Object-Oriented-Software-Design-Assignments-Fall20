@@ -155,7 +155,7 @@ Answer 2: False
 
 9. Abstract classes can be instantiated. ( Single Choice)
 
-Answer 1: True
+Answer 1: False
 
 10. You can never instantiate a class that inherits from abstract class ( Single Choice)
 

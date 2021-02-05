@@ -20,7 +20,7 @@ Answer 3: can be instantiated
 
 3. An UML class diagram is .... ( Single Choice)
 
-Answer 5: has an elliptic shape
+Answer 5: has three sections
 
 4. There are two types of relations between classes in object oriented programming. Is-a relation and has-a relation. Inheritance forms is-a relation between subclass and superclass ( Single Choice)
 

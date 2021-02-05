@@ -165,8 +165,9 @@ class StatsReportSerializer(object):
 					df_row[3] = '1'
 					self.__global_accuracy[student_id][0] += 1
 					self.__quiz_questions['number of correctly answered questions'][-1] += 1
-					new_correct = int(self.__quiz_questions['rate of correctly answered questions'][-1][0]) + 1
-					self.__quiz_questions['rate of correctly answered questions'][-1] = str(new_correct) + self.__quiz_questions['rate of correctly answered questions'][-1][1:]
+					new_correct = int(self.__quiz_questions['rate of correctly answered questions'][-1].split('/')[0]) + 1
+					total = self.__quiz_questions['rate of correctly answered questions'][-1].split('/')[1]
+					self.__quiz_questions['rate of correctly answered questions'][-1] = str(new_correct) + '/' + total
 				else:
 					df_row[3] = '0'
 					self.__quiz_questions['number of wrongly answered questions'][-1] += 1
@@ -174,7 +175,7 @@ class StatsReportSerializer(object):
 				self.__quiz_questions['number of empty questions'][-1] += 1
 
 			self.__quiz_student_report[df_name].loc[len(self.__quiz_student_report[df_name])] = df_row
-			total_correct = int(self.__quiz_questions['rate of correctly answered questions'][-1][0])
+			total_correct = int(self.__quiz_questions['rate of correctly answered questions'][-1].split('/')[0])
 			self.__quiz_questions['rate of correctly answered questions'][-1] = '{}/{}'.format(total_correct, self.__quiz_questions['number of questions'][-1])
 			self.__quiz_questions['accuracy percentage'][-1] = '{}%'.format(round(total_correct * 100.0 / self.__quiz_questions['number of questions'][-1], 2))
 

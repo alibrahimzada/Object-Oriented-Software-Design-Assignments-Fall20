@@ -121,6 +121,8 @@ class PollParser(object):
 				question_text = ' '.join(question_text.split())
 			else: 
 				answers_text_list = questions_answers[i].split(';')
+				if questions_answers[i] == 'a time-boxed iteration in which 4 usual software activity; analysis, design, coding, and testing is performed':
+					answers_text_list = [questions_answers[i]]
 				if question_text not in questions_set:
 					questions_set.append(question_text)
 				answers_list.append(answers_text_list)

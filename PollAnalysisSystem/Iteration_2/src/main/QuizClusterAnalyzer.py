@@ -8,13 +8,14 @@ class QuizClusterAnalyzer(object):
 
 
 	def create_hcluster(self, poll_name):
+		poll_name_without_date = ' '.join(poll_name.split()[:-1])
 		poll = self.__poll_analysis_system.poll_parser.polls[poll_name]       
 		grade_matrix, student_ids = [], []
 		for poll_submission in poll.poll_submissions:
 			grade_list = []
 			student_ids.append(poll_submission.student.id)
 			for question in poll.questions_answers:
-				correct_answers = self.__poll_analysis_system.answer_key_parser.answer_keys[poll_name][question]                    
+				correct_answers = self.__poll_analysis_system.answer_key_parser.answer_keys[poll_name_without_date][question]
 				grade = self.get_grade_for_question(question, correct_answers, poll_submission)
 				grade_list.append(grade)
 			grade_matrix.append(grade_list)

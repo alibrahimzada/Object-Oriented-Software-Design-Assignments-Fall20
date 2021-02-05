@@ -85,7 +85,7 @@ Answer 1: a time-boxed iteration in which 4 usual software activity; analysis, d
 
 Answer 2: Groups together the pieces of data that describe a particular entity
 
-2. OO is an approach to solve problems using a software where all computations are performed in the context of objects. Based on this, in a pure OO programming language which one of the following is NOT likely to be true? ( Single Choice)
+2. OO is an approach to solve problems using a software where all computations are performed in the context of objects. Based on this in a pure OO programming language which one of the following is likely to be true? ( Single Choice)
 
 Answer 3: There can be individual functions/methods that does not belong to a class
 

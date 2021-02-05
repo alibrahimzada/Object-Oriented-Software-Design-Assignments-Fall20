@@ -6,6 +6,7 @@ class Poll(object):
 		self._name = name
 		self._date = date
 		self._day = day
+		self._time = ''
 		self._poll_submissions = []
 		self._questions_answers = {}
 

@@ -31,6 +31,14 @@ class AttendancePoll(Poll):
 		self._day = value
 
 	@property
+	def time(self):
+		return self._time
+
+	@time.setter
+	def time(self, value):
+		self._time = value
+
+	@property
 	def poll_submissions(self):
 		return self._poll_submissions
 

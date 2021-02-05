@@ -10,6 +10,7 @@ class StatsReportSerializer(object):
 	def __init__(self, poll_analysis_system):
 		self.__poll_analysis_system = poll_analysis_system
 		self.__global_df = self.__create_global_df()
+		self.__global_accuracy = {}
 
 	def export_reports(self):
 		if len(self.__poll_analysis_system.poll_parser.polls) < 1:
@@ -17,6 +18,7 @@ class StatsReportSerializer(object):
 			return 
 		for poll_name in self.__poll_analysis_system.poll_parser.polls:
 			poll = self.__poll_analysis_system.poll_parser.polls[poll_name]
+			if isinstance(poll, AttendancePoll): continue
 			self.__export_quiz_report(poll_name, poll)
 			self.__poll_analysis_system.logger.info(f'Statistics Report for {poll_name} was exported successfully.')
 		self.__poll_analysis_system.logger.info('All Statistics Reports were exported successfully.')
@@ -32,9 +34,15 @@ class StatsReportSerializer(object):
 		os.chdir(poll_name)
 
 		self.__answer_distribution = {}
-		self.__quiz_questions = {'n questions': [], 'success rate': [], 'success %': []}
-		for question in self.__poll_analysis_system.answer_key_parser.answer_keys[poll_name]:
-			self.__quiz_questions.setdefault(question.text, [])
+		self.__quiz_questions = {'number of questions': [], 
+								 'number of correctly answered questions': [], 
+								 'number of wrongly answered questions': [],
+								 'number of empty questions': [],
+								 'rate of correctly answered questions': [],
+								 'accuracy percentage': []}
+
+		poll_name_without_date = ' '.join(poll_name.split()[:-1])
+		for question in self.__poll_analysis_system.answer_key_parser.answer_keys[poll_name_without_date]:
 			self.__answer_distribution.setdefault(question, {})
 
 		student_numbers, names, surnames, remarks = [], [], [], []
@@ -46,11 +54,13 @@ class StatsReportSerializer(object):
 				remarks.append(registration.student.description)
 				poll_submissions = registration.student.poll_submissions
 
+				self.__global_accuracy.setdefault(registration.student.id, [0, 0])
 				if poll_name not in poll_submissions:
 					self.__export_absent_student()
+					self.__global_accuracy[registration.student.id][1] += len(poll.questions_answers)
 					continue
 				for poll_submission in poll_submissions[poll_name]:
-					self.__validate_answers(poll_name, poll_submission)
+					self.__validate_answers(poll_name_without_date, poll_submission, registration.student.id)
 					self.__update_answer_distribution(poll_submission)
 
 		self.__create_chart()
@@ -62,32 +72,28 @@ class StatsReportSerializer(object):
 		quiz_df['Remarks'] = remarks
 		student_info = {'Student ID': student_numbers, 'Name': names, 'Surnames': surnames, 'Remarks': remarks}
 
-		question_counter = 1
-		for question_text in self.__quiz_questions:
-			if question_text not in ['n questions', 'success rate', 'success %']:
-				quiz_df['Q' + str(question_counter)] = self.__quiz_questions[question_text]
-				question_counter += 1
+		quiz_df['number of questions'] = self.__quiz_questions['number of questions']
+		quiz_df['number of correctly answered questions'] = self.__quiz_questions['number of correctly answered questions']
+		quiz_df['number of wrongly answered questions'] = self.__quiz_questions['number of wrongly answered questions']
+		quiz_df['number of empty questions'] = self.__quiz_questions['number of empty questions']
+		quiz_df['rate of correctly answered questions'] = self.__quiz_questions['rate of correctly answered questions']
+		quiz_df['accuracy percentage'] = self.__quiz_questions['accuracy percentage']
 
-		quiz_df['n questions'] = self.__quiz_questions['n questions']
-		quiz_df['success rate'] = self.__quiz_questions['success rate']
-		quiz_df['success %'] = self.__quiz_questions['success %']
-		quiz_df.to_excel('quiz_report.xlsx', index=False)
+		filename = '{} {} {}.xlsx'.format(poll.name, poll.day, poll.time).replace(' ', '_')
+		quiz_df.to_excel(filename, index=False)
 		os.chdir('..')
 		os.chdir('..')
-		if isinstance(poll, AttendancePoll): return
-		self.__add_global_report(poll_name, poll, student_info)
 
-	def __add_global_report(self, poll_name, poll, student_info):
+		self.__add_global_report(poll, student_info)
+
+	def __add_global_report(self, poll, student_info):
 		for column in student_info:
 			if column in self.__global_df: continue
 			self.__global_df[column] = student_info[column]
 		
-		if poll_name + ' Date' not in self.__global_df:
-			self.__global_df[poll_name + ' Date'] = [str(poll.date.date()) for i in range(len(student_info['Student ID']))]
-		if poll_name + ' n questions' not in self.__global_df:
-			self.__global_df[poll_name + ' n questions'] = self.__quiz_questions['n questions']
-		if poll_name + ' success %' not in self.__global_df:
-			self.__global_df[poll_name + ' success %'] = self.__quiz_questions['success %']
+		column_name = '{} {}'.format(poll.name, poll.time).replace(' ', '_')
+		if column_name not in self.__global_df:
+			self.__global_df[column_name] = self.__quiz_questions['rate of correctly answered questions']
 
 	def __create_global_df(self):
 		if not os.path.exists('global_report'):
@@ -99,38 +105,52 @@ class StatsReportSerializer(object):
 		if not os.path.exists('global_report'):
 			os.mkdir('global_report')
 		os.chdir('global_report')
-		self.__global_df.to_csv('global_report.csv', index=False)
+
+		global_accuracy = []
+		for student_id in self.__global_df['Student ID']:
+			global_accuracy.append(round(self.__global_accuracy[student_id][0] / self.__global_accuracy[student_id][1] * 100, 2))
+
+		self.__global_df['global accuracy'] = global_accuracy
+		self.__global_df.to_csv('CSE3063_2020FALL_QuizGrading.csv')
 		os.chdir('..')
 
 	def __export_absent_student(self):
-		self.__quiz_questions['n questions'].append(0)
-		self.__quiz_questions['success rate'].append('0/0')
-		self.__quiz_questions['success %'].append('0%')
-
-		for question_text in self.__quiz_questions:
-			if question_text not in ['n questions', 'success rate', 'success %']:
-				self.__quiz_questions[question_text].append('')
+		self.__quiz_questions['number of questions'].append(0)
+		self.__quiz_questions['number of correctly answered questions'].append(0)
+		self.__quiz_questions['number of wrongly answered questions'].append(0)
+		self.__quiz_questions['number of empty questions'].append(0)
+		self.__quiz_questions['rate of correctly answered questions'].append('0/0')
+		self.__quiz_questions['accuracy percentage'].append(0)
 	
-	def __validate_answers(self, poll_name, poll_submission):
-		self.__quiz_questions['n questions'].append(0)
-		self.__quiz_questions['success rate'].append('0/0')
-		self.__quiz_questions['success %'].append('')
+	def __validate_answers(self, poll_name, poll_submission, student_id):
+		self.__quiz_questions['number of questions'].append(0)
+		self.__quiz_questions['number of correctly answered questions'].append(0)
+		self.__quiz_questions['number of wrongly answered questions'].append(0)
+		self.__quiz_questions['number of empty questions'].append(0)
+		self.__quiz_questions['rate of correctly answered questions'].append('0/0')
+		self.__quiz_questions['accuracy percentage'].append('')
 
 		answer_key_parser = self.__poll_analysis_system.answer_key_parser
-		for question in answer_key_parser.answer_keys[poll_name]:
-			self.__quiz_questions['n questions'][-1] += 1
-			if question in poll_submission.questions_answers:
-				if poll_submission.questions_answers[question] == answer_key_parser.answer_keys[poll_name][question]:
-					self.__quiz_questions[question.text].append('1')
-					new_correct = int(self.__quiz_questions['success rate'][-1][0]) + 1
-					self.__quiz_questions['success rate'][-1] = str(new_correct) + self.__quiz_questions['success rate'][-1][1:]
+		for question in answer_key_parser.answer_keys[poll_name]:   # loop over all available questions in the given poll
+			self.__quiz_questions['number of questions'][-1] += 1   # increment number of questions
+			self.__global_accuracy[student_id][1] += 1
+			if question in poll_submission.questions_answers:   # check if student answered the question
+				my_answers = [answer.text for answer in poll_submission.questions_answers[question]]
+				correct_answers = [answer.text for answer in answer_key_parser.answer_keys[poll_name][question]]
+				intersection = set(my_answers) & set(correct_answers)
+				if len(intersection) > 0:
+					self.__global_accuracy[student_id][0] += 1
+					self.__quiz_questions['number of correctly answered questions'][-1] += 1
+					new_correct = int(self.__quiz_questions['rate of correctly answered questions'][-1][0]) + 1
+					self.__quiz_questions['rate of correctly answered questions'][-1] = str(new_correct) + self.__quiz_questions['rate of correctly answered questions'][-1][1:]
 				else:
-					self.__quiz_questions[question.text].append('0')
-			else:
-				self.__quiz_questions[question.text].append('0')
-			total_correct = int(self.__quiz_questions['success rate'][-1][0])
-			self.__quiz_questions['success rate'][-1] = '{}/{}'.format(total_correct, self.__quiz_questions['n questions'][-1])
-			self.__quiz_questions['success %'][-1] = '{}%'.format(round(total_correct * 100.0 / self.__quiz_questions['n questions'][-1], 2))
+					self.__quiz_questions['number of wrongly answered questions'][-1] += 1
+			else:   # increment number of empty questions, since student did not answered the question
+				self.__quiz_questions['number of empty questions'][-1] += 1
+
+			total_correct = int(self.__quiz_questions['rate of correctly answered questions'][-1][0])
+			self.__quiz_questions['rate of correctly answered questions'][-1] = '{}/{}'.format(total_correct, self.__quiz_questions['number of questions'][-1])
+			self.__quiz_questions['accuracy percentage'][-1] = '{}%'.format(round(total_correct * 100.0 / self.__quiz_questions['number of questions'][-1], 2))
 
 	def __update_answer_distribution(self, poll_submission):
 		for question in poll_submission.questions_answers:

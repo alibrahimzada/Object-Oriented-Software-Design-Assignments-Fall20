@@ -31,6 +31,8 @@ class StudentListParser(object):
 	
 	def get_student(self, full_name):
 		if full_name == 'Ayşe Karahasan': full_name = 'Ayşenur Karahasan'
+		elif full_name == 'Shahzoda Rustamova': full_name = 'Shahzodakhon Rustamova'
+		elif full_name == 'Cager Yükseloğlu': full_name = 'Cafer Yükseloğlu'
 
 		for student_list in self.__registrations:
 			for registration in self.__registrations[student_list]:

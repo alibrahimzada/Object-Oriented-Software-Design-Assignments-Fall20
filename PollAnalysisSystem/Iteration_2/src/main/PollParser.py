@@ -64,6 +64,8 @@ class PollParser(object):
 		is_attendance_poll = False
 		if poll_name == 'attendance poll':
 			is_attendance_poll = True
+		elif poll_name == 'Poll 3:W6-3 UML Class' and student_name == 'Abbas Kutay':
+			return   # abbas kutay has 2 submissions in this poll, and we are ignoring one of them
 		student = self.__poll_analysis_system.student_list_parser.get_student(student_name)
 		if student == None:
 			quiz_date = ' '.join(submission_datetime.split()[:-1])
@@ -100,6 +102,7 @@ class PollParser(object):
 		# PollSubmission
 		poll_submission = PollSubmission(submission_datetime, poll, student)
 		poll_submission.add_questions_answers(submission_questions, submission_answers)
+		poll.time = submission_datetime.strftime("%H %M %S")
 		poll.add_poll_submission(poll_submission)
 		poll.add_questions_answers(submission_questions, submission_answers)
 		student.add_poll_submission(poll_name, poll_submission)
@@ -110,14 +113,16 @@ class PollParser(object):
 			Separates the questions and the answers. returns a set of the questins' texts,
 			and a list of the answers' texts
 		"""
-		questions_set = set([])
+		questions_set = []
 		answers_list = []
 		for i in range(len(questions_answers)):
 			if i % 2 == 0:
 				question_text = questions_answers[i]
+				question_text = ' '.join(question_text.split())
 			else: 
 				answers_text_list = questions_answers[i].split(';')
-				questions_set.add(question_text)
+				if question_text not in questions_set:
+					questions_set.append(question_text)
 				answers_list.append(answers_text_list)
 
 		return questions_set, answers_list

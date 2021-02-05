@@ -42,7 +42,7 @@ class AnswerKeyParser(object):
 				if lines[line_idx] == '\n': continue
 				line = lines[line_idx].replace('\n', '')
 				if line.startswith(' '):   # current line is a poll name
-					title = line.split('\t')[0].split(':')[1]
+					title = line.split('\t')[0].strip()
 					self.__poll_analysis_system.logger.info(f'Answer Key: {title} was parsed successfully.')
 					self.__answer_keys.setdefault(title, {})
 				elif not line.startswith('Answer'):
@@ -64,9 +64,11 @@ class AnswerKeyParser(object):
 	def get_questions(self, poll_name, questions_set):
 		submission_questions = []
 		self.__wrong_answers.setdefault(poll_name, {})
-		for question in self.__answer_keys[poll_name]:
-			if question.text in questions_set:
-				submission_questions.append(question)
+		for question_text in questions_set:
+			for question in self.__answer_keys[poll_name]:
+				if question.text == question_text:
+					submission_questions.append(question)
+					break
 		return submission_questions
 
 	def get_answers(self, poll_name, submission_questions, answers_list):

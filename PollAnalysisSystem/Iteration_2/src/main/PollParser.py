@@ -3,6 +3,8 @@ import csv
 import ntpath
 import json
 from datetime import datetime, date
+import pandas as pd
+import math
 
 from main.Question import Question
 from main.Answer import Answer
@@ -43,11 +45,11 @@ class PollParser(object):
 		"""
 			Given a file name, it goes through the rows and process one row at a time
 		"""
-		with open(file_path, encoding="utf-8") as csv_file:
-			csv_reader = csv.reader(csv_file, delimiter=',')
-			for idx, row in enumerate(csv_reader):
-				if idx < 6: continue
-				self.__process_row(row)
+		df = pd.read_csv(file_path, names=list(range(25)))
+
+		for i in range(6, len(df)):
+			row = list(df.iloc[i, :])
+			self.__process_row(row)
 
 	def __process_row(self, row):
 		"""
@@ -116,6 +118,10 @@ class PollParser(object):
 		questions_set = []
 		answers_list = []
 		for i in range(len(questions_answers)):
+			try:
+				if math.isnan(questions_answers[i]): break
+			except: pass
+			questions_answers[i] = str(questions_answers[i])
 			if i % 2 == 0:
 				question_text = questions_answers[i]
 				question_text = ' '.join(question_text.split())

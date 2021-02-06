@@ -237,7 +237,10 @@ class UserInterface(object):
 	def __populate_quiz_name_combobox(self):
 		self.quiz_name_combobox.clear()
 		for pollname in self.poll_analysis_system.poll_parser.polls:
-			self.quiz_name_combobox.addItem(pollname) # this is how you add item to a combobox. combobox box is what a dropdown menu is called in PYQT5.
+			if "attendance poll" in pollname:
+				continue
+			else:
+				self.quiz_name_combobox.addItem(pollname) # this is how you add item to a combobox. combobox box is what a dropdown menu is called in PYQT5.
 
 	def __update_question_numb_comboox(self, new_value):
 		self.question_number_combobox.clear()

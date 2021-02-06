@@ -43,7 +43,7 @@ class PollParser(object):
 		"""
 			Given a file name, it goes through the rows and process one row at a time
 		"""
-		with open(file_path) as csv_file:
+		with open(file_path, encoding="utf-8") as csv_file:
 			csv_reader = csv.reader(csv_file, delimiter=',')
 			for idx, row in enumerate(csv_reader):
 				if idx < 6: continue

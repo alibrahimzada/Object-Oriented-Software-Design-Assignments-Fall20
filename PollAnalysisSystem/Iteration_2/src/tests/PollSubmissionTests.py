@@ -31,7 +31,7 @@ class TestPollSubmissionMethods(unittest.TestCase):
 
     def test_add_questions_answers(self):
         question1, question2 = Question('q1'), Question('q2')
-        answer1, answer2  = Answer('a1'), Answer('a2')
+        answer1, answer2  = Answer(1, 'a1'), Answer(2, 'a2')
         questions, answers = [question1, question2], [[answer1], [answer2]]
         self.__poll_submission_object.add_questions_answers(questions, answers)
         expected_dict = {question1: [answer1], question2: [answer2]}

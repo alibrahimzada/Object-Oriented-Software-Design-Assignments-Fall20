@@ -27,7 +27,6 @@ class PollParser(object):
 
 	def read_poll_reports(self, poll_report_files):
 		""" Reads all poll reports and parses them """
-		exception_found = False
 		for file_path in poll_report_files:
 			self.__file_name = ntpath.basename(file_path).split('.')[0]
 			try:
@@ -35,11 +34,9 @@ class PollParser(object):
 				self.__poll_analysis_system.logger.info(f'Poll Report: {self.__file_name} was parsed successfully.')
 			except:
 				self.__poll_analysis_system.logger.error(f'The provided Poll Report: {self.__file_name} is not valid.')
-				exception_found = True
 
-		if not exception_found:
-			self.__export_db()
-			self.__export_anomalies()
+		self.__export_db()
+		self.__export_anomalies()
 
 	def __parse_poll_report(self, file_path):
 		"""
@@ -63,6 +60,9 @@ class PollParser(object):
 		questions_answers = row[4:]
 		questions_set, answers_list = self.__process_questions_answers(questions_answers)
 		poll_name = self.__get_poll_name(questions_set)
+		if poll_name == None:
+			raise Exception('file format is invalid')
+
 		is_attendance_poll = False
 		if poll_name == 'attendance poll':
 			is_attendance_poll = True

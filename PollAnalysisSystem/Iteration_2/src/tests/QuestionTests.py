@@ -5,7 +5,7 @@ from main.Question import Question
 class TestQuestionMethods(unittest.TestCase):
     
     def setUp(self):
-        self.__question_object = Question('a question', True)
+        self.__question_object = Question(1, 'a question', True)
 
     def test_text(self):
         # test getter

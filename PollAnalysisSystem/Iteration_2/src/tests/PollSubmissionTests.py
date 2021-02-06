@@ -30,7 +30,7 @@ class TestPollSubmissionMethods(unittest.TestCase):
         self.assertEqual(self.__poll_submission_object.student, 'new student') 
 
     def test_add_questions_answers(self):
-        question1, question2 = Question('q1'), Question('q2')
+        question1, question2 = Question(1, 'q1'), Question(2, 'q2')
         answer1, answer2  = Answer(1, 'a1'), Answer(2, 'a2')
         questions, answers = [question1, question2], [[answer1], [answer2]]
         self.__poll_submission_object.add_questions_answers(questions, answers)

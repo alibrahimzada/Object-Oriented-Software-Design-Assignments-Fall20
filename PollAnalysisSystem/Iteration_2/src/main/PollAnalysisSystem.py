@@ -11,7 +11,7 @@ from main.QuizClusterAnalyzer import QuizClusterAnalyzer
 class PollAnalysisSystem(object):
 	def __init__(self, user_interface):
 		self.__user_interface = user_interface
-		# self.run_tests()
+		self.run_tests()
 		self.__student_list_parser = StudentListParser(self)
 		self.__answer_key_parser = AnswerKeyParser(self)
 		self.__poll_parser = PollParser(self)

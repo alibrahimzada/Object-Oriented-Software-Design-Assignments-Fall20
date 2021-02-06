@@ -80,19 +80,23 @@ class StatsReportSerializer(object):
 		quiz_df['Remarks'] = remarks
 		student_info = {'Student ID': student_numbers, 'Name': names, 'Surnames': surnames, 'Remarks': remarks}
 
-		quiz_df['number of questions'] = self.__quiz_questions['number of questions']
-		quiz_df['number of correctly answered questions'] = self.__quiz_questions['number of correctly answered questions']
-		quiz_df['number of wrongly answered questions'] = self.__quiz_questions['number of wrongly answered questions']
-		quiz_df['number of empty questions'] = self.__quiz_questions['number of empty questions']
-		quiz_df['rate of correctly answered questions'] = self.__quiz_questions['rate of correctly answered questions']
-		quiz_df['accuracy percentage'] = self.__quiz_questions['accuracy percentage']
+		try:
+			quiz_df['number of questions'] = self.__quiz_questions['number of questions']
+			quiz_df['number of correctly answered questions'] = self.__quiz_questions['number of correctly answered questions']
+			quiz_df['number of wrongly answered questions'] = self.__quiz_questions['number of wrongly answered questions']
+			quiz_df['number of empty questions'] = self.__quiz_questions['number of empty questions']
+			quiz_df['rate of correctly answered questions'] = self.__quiz_questions['rate of correctly answered questions']
+			quiz_df['accuracy percentage'] = self.__quiz_questions['accuracy percentage']
 
-		filename = '{} {} {}.xlsx'.format(poll.name, poll.day, poll.time).replace(' ', '_')
-		quiz_df.to_excel(filename, index=False)
-		os.chdir('..')
-		os.chdir('..')
+			filename = '{} {} {}.xlsx'.format(poll.name, poll.day, poll.time).replace(' ', '_')
+			quiz_df.to_excel(filename, index=False)
+			os.chdir('..')
+			os.chdir('..')
+			self.__add_global_report(poll, student_info)
 
-		self.__add_global_report(poll, student_info)
+		except:
+			os.chdir('..')
+			os.chdir('..')
 
 	def __add_global_report(self, poll, student_info):
 		for column in student_info:

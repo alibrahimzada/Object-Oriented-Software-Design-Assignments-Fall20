@@ -64,7 +64,7 @@ class PollParser(object):
 		is_attendance_poll = False
 		if poll_name == 'attendance poll':
 			is_attendance_poll = True
-		elif poll_name == 'Poll 3:W6-3 UML Class' and student_name == 'Abbas Kutay':
+		elif poll_name == 'Poll 3 W6-3 UML Class' and student_name == 'Abbas Kutay':
 			return   # abbas kutay has 2 submissions in this poll, and we are ignoring one of them
 		student = self.__poll_analysis_system.student_list_parser.get_student(student_name)
 		if student == None:

@@ -23,3 +23,4 @@ attendance_report/
 db/
 anomalies.json
 cluster_analysis/
+quiz_student_report/

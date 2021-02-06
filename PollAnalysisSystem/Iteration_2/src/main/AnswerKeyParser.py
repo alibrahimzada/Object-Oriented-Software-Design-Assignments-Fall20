@@ -42,7 +42,7 @@ class AnswerKeyParser(object):
 				if lines[line_idx] == '\n': continue
 				line = lines[line_idx].replace('\n', '')
 				if line.startswith(' '):   # current line is a poll name
-					title = line.split('\t')[0].strip()
+					title = line.split('\t')[0].strip().replace(':', ' ')
 					self.__poll_analysis_system.logger.info(f'Answer Key: {title} was parsed successfully.')
 					self.__answer_keys.setdefault(title, {})
 				elif not line.startswith('Answer'):

@@ -7,7 +7,7 @@ Project 1: We designed and implemented a Data Labeling System for labeling insta
 
 Project 2: We designed and implemented a Poll Analysis System for analyzing poll results of Zoom using Python. This project was implemented in 2 time-boxed iterations of 2 weeks which included all of the software development activities, namely, analysis, design, coding, and testing.
 
-Supervisor: Prof. Dr. Murat Can Ganiz (@mcganiz)
+Supervisor: Prof. Dr. Murat Can Ganiz ([@mcganiz](https://github.com/mcganiz))
 
 ### Members:
 Ali Reza Ibrahimzada  
